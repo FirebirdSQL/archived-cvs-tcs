@@ -686,6 +686,39 @@ proc linesAreEquiv { source comp } {
     return [ expr [ string compare "$source" "$comp" ] == 0 ]
 }
 
+proc start_shell {} {
+    global spawn_id
+    global shellPrompt
+    global localEnv
+
+    spawn "/bin/sh"
+    set shellPrompt "shell> "
+    send "PS1='$shellPrompt'$localEnv(LINE_TERM)"
+    set timeout 10
+    expect {
+        -re "\[^\]*\[^\'\]$shellPrompt" { return 1 }
+        timeout { send_user "TIMEOUT\n" }
+        eof { send_user "Premature EOF!!\n" }
+    }
+    send "exit$localEnv(LINE_TERM)"
+    return 0
+}
+
+proc stop_shell {} {
+    global spawn_id
+    global shellPrompt
+    global localEnv
+
+    send "exit$localEnv(LINE_TERM)"
+    set timeout 10
+    expect {
+        eof { return 1 }
+        timeout { send_user "TIMEOUT\n" }
+    }
+    return 0
+}
+
+
 
 # This is the fun little procedure that correctly handles the stdout/stderr
 # streams.
@@ -693,6 +726,8 @@ proc linesAreEquiv { source comp } {
 proc doTcsDiff { srcScript outputFile } {
     global testTimeout
     global localEnv
+    global spawn_id
+    global shellPrompt
 
     set errLine ""
     set splitFile 0
@@ -703,27 +738,24 @@ proc doTcsDiff { srcScript outputFile } {
     set blankCount 0
     set lastMatch 1
 
-    spawn "/bin/sh"
-
     set stdoutMatch 1
     set stderrMatch 0
     set timeout 4
 
 # Change the shell prompt to something we can recognise, this is mainly
 # for windows where a lot of colour escape characters are used in the prompt.
-    set shellPrompt "shell> "
-    send "PS1='$shellPrompt'$localEnv(LINE_TERM)"
+    send "$localEnv(LINE_TERM)"
     expect {
-        -re "\[^\]*\[^\'\]$shellPrompt" { }
+        -re "$shellPrompt" { }
         timeout { send_user "TIMEOUT\n" }
         eof { set fileOpen 0; set failMsg "Premature EOF!!\n"; break }
     }
 
-    send "sh $srcScript$localEnv(LINE_TERM)"
+    send "source $srcScript$localEnv(LINE_TERM)"
 
 #        -re {^[^\r\n]*$srcScript\r\n} { }
     expect {
-        -re "$srcScript\[\r\n\]+" { }
+        -re "source $srcScript\[\r\n\]+" { }
         timeout { send_user "TIMEOUT\n" }
         eof { set fileOpen 0; set failMsg "Premature EOF!!\n"; break }
     }
@@ -858,12 +890,13 @@ proc doTcsDiff { srcScript outputFile } {
     }
     if { $fileOpen == 0 } { return $failMsg }
 
-    send "exit$localEnv(LINE_TERM)"
     set timeout 10
     expect {
-        eof { }
-        timeout { set failMsg "timeout waiting for test to finish" }
+        -re "$shellPrompt" { }
+        timeout { send_user "TIMEOUT\n" }
+        eof { set fileOpen 0; set failMsg "Premature EOF!!\n"; break }
     }
+
     close $file
     return $failMsg
 }
@@ -1051,14 +1084,18 @@ set exportedData ../test-files/export
 
 set testTimeout 60
 
-#runMetaSeries VECTOR_12HOUR "testsuite/tcs.test/data" darwin qa_bp qa_shr
+if { ! [start_shell] } {
+    send_user "Failed to start shell!!\n"
+}
+
+runMetaSeries VECTOR_12HOUR qa_bp qa_shr
 
 #runSeries CF_ISQL             qa_bp qa_shr
 
-runSeries C_SQL_PRED          qa_bp qa_shr
-runSeries ISC_ARRBLOB_CK      qa_bp qa_shr
+#runSeries C_SQL_PRED          qa_bp qa_shr
+#runSeries ISC_ARRBLOB_CK      qa_bp qa_shr
 
-runSeries DSQL_DOMAINS        qa_bp qa_shr
+#runSeries DSQL_DOMAINS        qa_bp qa_shr
 #runSeries DSQL_EXCEPTIONS     qa_bp qa_shr
 #runSeries SQL_EVENTS          qa_bp qa_shr
 #runSeries C_SQL_BLOB          qa_bp qa_shr
@@ -1107,3 +1144,5 @@ runSeries DSQL_DOMAINS        qa_bp qa_shr
 #runTest C_SQL_PRED_0 C_SQL_PRED qa_bp qa_shr 1
 #runTest AUTO_COMMIT.1.ESQL V4_AUTO_COMMIT qa_bp qa_shr 1
 #runTest IDML_C_SUBQ_10 IDML_C_SUBQUERYS qa_bp qa_shr 1
+
+stop_shell
