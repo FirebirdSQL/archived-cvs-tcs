@@ -425,7 +425,7 @@ sub extract_test_output
         }
 
         open (TEST_OUTPUT, "> $OUTPATH$series/$test.output");
-        print TEST_SCRIPT $row{OUTPUT};
+        print TEST_OUTPUT $row{OUTPUT};
         close(TEST_OUTPUT);
     }
     if ($ret != 0 && $ret != 100)
