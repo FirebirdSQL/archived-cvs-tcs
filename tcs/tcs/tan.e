@@ -20,6 +20,9 @@
  * 
  * Contributor(s): ______________________________________.
  * $Log$
+ * Revision 1.2  2000/11/14 13:22:05  fsg
+ * Changes to get tan compiled, not very useful at the moment
+ *
  */
 
 #include <stdio.h>
@@ -2137,13 +2140,13 @@ fprintf (output, "Runs like %s showing failures: version %s on %s:\n",
  * once and then we change databases.
  */
 
-/* gpre doesn't like the aggregate functions, 
- * so don't do it until gpre is fixed
- * FSG 14.Nov.2000
+/* We need to quote DATE in this to
+   prevent gpre from segfaulting
+   FSG 14.Nov.2000*/
 
 
 EXEC SQL DECLARE LR CURSOR FOR 
-     SELECT RUN, COUNT(*), MAX(DATE), MIN(DATE)
+     SELECT RUN, COUNT(*), MAX("DATE"), MIN("DATE")
      FROM LTCS.FAILURES
      WHERE RUN LIKE :input_pattern
      GROUP BY RUN
@@ -2170,18 +2173,18 @@ while (!SQLCODE)
     }
 
 EXEC SQL CLOSE LR;
-*/
+
 /* Close does not drop the request handle, so we drop it here.
  * Note that this depends on this SQL cursor being the only
  * request outstanding for LTCS that doesn't have it's own
  * request handle stashed away in dbb
  */
-/*RELEASE_REQUESTS FOR LTCS;
+/*RELEASE_REQUESTS FOR LTCS;*/
 
 if (!count)
     fprintf (output, "No runs showing failures on %s/%s\n", 
 		dbb->dbb_system, dbb->dbb_platform);
-*/
+
 return TRUE;
 }
 
