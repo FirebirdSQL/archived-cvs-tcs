@@ -1,4 +1,7 @@
-/* $Log$ 
+/* $Log$
+/* Revision 1.1  2000/12/08 08:12:36  fsg
+/* Added test for auto increment build number on commit
+/* 
 */
 
 This file is used to test the autoincrement feature.
@@ -10,3 +13,4 @@ I hope this works
 
 Frank
 
+this_build should be 2 now
