@@ -1,4 +1,4 @@
 svr 6.0
-sb bp_fb
-se qa_fb
-srn Firebird
+sb qa_bp
+se qa_shr
+srn DA_TST

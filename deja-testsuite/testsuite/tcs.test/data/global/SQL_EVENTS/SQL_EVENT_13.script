@@ -77,49 +77,30 @@ $ CREATE event_custom.h
 #    define GDS_VERSION     gds_$version
 #endif
 
+#ifndef WIN32
+#define HANDLE int
+#define LPHANDLE int *
+#endif
+
 /* Function prototypes */
 
 extern void init_server PROTO((char **,short));
 
 extern void parse_server_args PROTO((int,char *[],int *,short *));
 
-extern void create_client PROTO((int *,
-#ifdef WIN32
-  HANDLE
-#else
-  int
-#endif
-[MAX_CLIENTS][2],int,char *));
+extern void create_client PROTO((int *,HANDLE [MAX_CLIENTS][2],int,char *));
 
-extern void packet_handler PROTO((int [],
-#ifdef WIN32
-  HANDLE
-#else
-  int
-#endif
-[MAX_CLIENTS][2],short));
+extern void packet_handler PROTO((int [],HANDLE [MAX_CLIENTS][2],short));
 
 extern int  update_server_relation PROTO((int [],short));
 
 extern int  event_handler PROTO((char *,short,char *));
 
-extern void finish_packets PROTO((
-#ifdef WIN32
- HANDLE
-#else
- int
-#endif
- [MAX_CLIENTS][2],short));
+extern void finish_packets PROTO((HANDLE [MAX_CLIENTS][2],short));
 
 extern int  report_events PROTO((char *,int,short));
 
-extern void parse_client_args PROTO((int,char *[],
-#ifdef WIN32
-   LPHANDLE
-#else
-  int *,
-#endif
-int *,char *));
+extern void parse_client_args PROTO((int,char *[],LPHANDLE,int *,char *));
 
 /* Macros */
 
