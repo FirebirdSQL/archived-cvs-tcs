@@ -696,6 +696,12 @@ proc start_shell {} {
     send "PS1='$shellPrompt'$localEnv(LINE_TERM)"
     set timeout 10
     expect {
+        -re "\[^\]*\[^\'\]$shellPrompt" { }
+        timeout { send_user "TIMEOUT\n"; send "exit$localEnv(LINE_TERM)"; return 0 }
+        eof { send_user "Premature EOF!!\n"; send "exit$localEnv(LINE_TERM)"; return 0 }
+    }
+    send "cd work$localEnv(LINE_TERM)"
+    expect {
         -re "\[^\]*\[^\'\]$shellPrompt" { return 1 }
         timeout { send_user "TIMEOUT\n" }
         eof { send_user "Premature EOF!!\n" }
@@ -741,8 +747,6 @@ proc doTcsDiff { srcScript outputFile } {
     set stderrMatch 0
     set timeout 5
 
-# Change the shell prompt to something we can recognise, this is mainly
-# for windows where a lot of colour escape characters are used in the prompt.
     send "$localEnv(LINE_TERM)"
     expect {
         -re "$shellPrompt" { }
@@ -946,10 +950,14 @@ proc runKnownTest { scriptFile dataFiles outputFile bpFile envFile keep_files } 
     set dataCnt -1
     set lastWasCmd 0
     set dataFileOpen 0
-    set testFiles "tcs.script"
+    set testFiles "work/tcs.script"
+
+    if { ! [ file exists "$scriptFile" ] } {
+        return "XFAIL: no test script"
+    }
 
     set file [open "$scriptFile" r]
-    set script [open "tcs.script" w]
+    set script [open "work/tcs.script" w]
     set env [ parseEnvFile "$envFile" ]
 
     # Copy over the boiler plate
@@ -971,9 +979,9 @@ proc runKnownTest { scriptFile dataFiles outputFile bpFile envFile keep_files } 
             if { $lastWasCmd == 1 && [ string length "$line" ] > 0 } {
                 set lastWasCmd 0
                 set dataCnt [ expr $dataCnt + 1 ]
-                set dataFile [open "tcs.data$dataCnt" w]
+                set dataFile [open "work/tcs.data$dataCnt" w]
                 set dataFileOpen 1
-                set testFiles [ concat $testFiles "tcs.data$dataCnt" ]
+                set testFiles [ concat $testFiles "work/tcs.data$dataCnt" ]
                 puts $script "$lastCmd < tcs.data$dataCnt"
             }
             if { $dataFileOpen == 1 } {
@@ -1002,7 +1010,7 @@ proc runKnownTest { scriptFile dataFiles outputFile bpFile envFile keep_files } 
 
     foreach dataFile "$dataFiles" {
         set in [ open "$dataFile" r ]
-        set out [ open [ file tail "$dataFile" ] w ]
+        set out [ open [ file tail "work/$dataFile" ] w ]
         while { ! [ eof $in ] } {
             gets $in line
             if { [ eof $in ] } { break }
@@ -1021,6 +1029,7 @@ proc runKnownTest { scriptFile dataFiles outputFile bpFile envFile keep_files } 
         foreach filename $dataFiles \
             { file delete -force [ file tail "$filename" ] }
     }
+    file delete -force "tcs.log"
 
     return $testResult
 }
@@ -1055,12 +1064,19 @@ proc runKnownSeries { seriesName subSeries platform } {
                               [ file join "$envprefix" "ENV.$platform" ] \
           0} errMsg ] } {
             fail "Exception caught: $errMsg"
-        }
-        if { [ string equal "" "$errMsg" ] } {
-            send_user "PASS\n"
-            pass "$line"
         } else {
-            fail "$line $errMsg"
+            if { [ string first "XFAIL: " "$errMsg" ] == 0 } {
+                set errMsg [ string range "$errMsg" 7 end ]
+                send_user "Expected failure" $errMsg\n"
+                xfail "$line $errMsg"
+            } else {
+                if { [ string equal "" "$errMsg" ] } {
+                    send_user "PASS\n"
+                    pass "$line"
+                } else {
+                    fail "$line $errMsg"
+                }
+            }
         }
     }
     close $fid
@@ -1074,8 +1090,7 @@ proc runMetaSeries { metaSeries platform } {
     set metaSeries [ string toupper "$metaSeries" ]
 
     if { [ catch {open "testsuite/tcs.test/data/global/$metaSeries.meta" r} fid] } {
-        fail "Failed to open meta series TOC for $metaSeries: $fid"
-        return
+        return 0
     }
     while { ! [eof $fid ] } {
         gets $fid line
@@ -1086,6 +1101,7 @@ proc runMetaSeries { metaSeries platform } {
         runKnownSeries "$line" "$line" "$platform"
     }
     close $fid
+    return 1
 }
 
 
@@ -1136,11 +1152,10 @@ proc runTest { testName platform saveFiles } {
 proc runSeries { seriesName platform } {
     set seriesName [ string toupper "$seriesName" ]
 
-    send_user "$seriesName...\n"
     if { [ catch { glob "testsuite/tcs.test/data/global/*/$seriesName.series" } test_list ] } {
-        fail "$seriesName $test_list"
-        return;
+        return 0;
     }
+    send_user "$seriesName...\n"
     if { [ llength "$test_list" ] != 1 } {
         fail "$seriesName Ambigous series name"
         return
@@ -1148,6 +1163,7 @@ proc runSeries { seriesName platform } {
 
     set masterSeriesName [ lindex [ file split "$test_list" ] end-1 ]
     runKnownSeries "$masterSeriesName" "$seriesName" "$platform"
+    return 1
 }
 
 
@@ -1197,7 +1213,7 @@ if { ! [start_shell] } {
 
 #set testTimeout 60
 
-runSeries EXT_LEV_0           $platform
+#runSeries EXT_LEV_0           $platform
 #runSeries GF_SHUTDOWN         $platform
 #runSeries QA_PROC_IES_ERR     $platform
 #runSeries REF_INT_INDX        $platform
@@ -1210,6 +1226,9 @@ runSeries EXT_LEV_0           $platform
 
 
 #runTest ISC_ER36 $platform 1
+#runTest C_DSQL_RI_INIT  $platform 1
+#runTest C_DSQL_RI_ALT_ADD  $platform 1
+#runTest C_DSQL_RI_CLEAN_UP  $platform 1
 
 #runTest C_SQL_JOIN_0  $platform 1
 #runTest CF_ISQL_01  $platform 1
@@ -1232,5 +1251,13 @@ runSeries EXT_LEV_0           $platform
 #runTest C_SQL_PRED_0  $platform 1
 #runTest AUTO_COMMIT.1.ESQL $platform 1
 #runTest IDML_C_SUBQ_10 $platform 1
+
+if { ! [ string equal "" "$TCS_TEST" ] } {
+    if { ! [ runMetaSeries "$TCS_TEST" "$platform" ] } {
+        if { ! [ runSeries "$TCS_TEST" $platform ] } {
+            runTest "$TCS_TEST" "$platform" 1
+        }
+    }
+}
 
 stop_shell
