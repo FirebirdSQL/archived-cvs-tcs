@@ -1,0 +1,1314 @@
+2003-10-29  eku
+	* tcs/diffs/do_diffs.c:
+		Fixed prototype.
+
+2002-10-07  eku
+	* tcs/mu/driver.c:
+	* tcs/mu/scheduler.c:
+		GCC 3.X fixes.
+
+2002-09-20  eku
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_13.script:
+	* tcs/scripts/.tcs_config:
+	* test-dbs/gtcs.gbk:
+		SQL_EVENT_13 produced a syntax error when using GCC 3.X for
+		compiling.
+
+2002-07-02  eku
+	* buildInstall.sh:
+	* extractScript/runAllExtract.sh:
+	* tcs/diffs/README:
+	* tcs/diffs/do_diffs.c:
+	* tcs/diffs/makefile.sinixz:
+	* tcs/drop_gdb/makefile.sinixz:
+	* tcs/mu/client_lib.c:
+	* tcs/mu/driver.c:
+	* tcs/mu/makefile.sinixz:
+	* tcs/mu/parser.c:
+	* tcs/mu/scheduler.c:
+	* tcs/mu/scheduler.h:
+	* tcs/scripts/reset.tcs:
+	* tcs/scripts/runtcs:
+	* tcs/scripts/runtcs.fb2:
+	* tcs/scripts/runvector:
+	* tcs/scripts/tcs_test.report:
+	* tcs/tcs/README:
+	* tcs/tcs/common.h:
+	* tcs/tcs/display.e:
+	* tcs/tcs/exec.e:
+	* tcs/tcs/makefile.sinixz:
+	* tcs/tcs/tcs.e:
+	* tcs/tcs/tcs.h:
+	* tcs/tcs/trns.c:
+	* tcs/tcs/unix.h:
+	* test-dbs/sz_ltcs.gbk:
+		SINIX-Z port by Erik Kunze <kunze@philosys.de>
+		Return type/value cleanup
+		Removed compiler warnings
+
+2001-11-25  nmcc
+	* test-dbs/gtcs.gbk:
+		C_SQL_JOIN_1  C_SQL_JOIN_41  IDML_C_SUBQ_06  PROC_ISQL_11
+		Updated to remove abiguous field warnings.
+		
+		PROC_CAST11_ISQL
+		CV has changed "conversion error from string" message to have correct
+		contents - changed output expected to reflect this.
+
+2001-09-08  bellardo
+	* deja-testsuite/testsuite/tcs.test/data/global/tcs_setup/BP.darwin:
+	* deja-testsuite/testsuite/tcs.test/data/global/tcs_setup/ENV.darwin:
+		The initial BP and ENV files for Darwin tcs.exp.
+
+2001-08-28  bellardo
+	* deja-testsuite/Makefile.in:
+	* deja-testsuite/config.guess:
+	* deja-testsuite/config.sub:
+	* deja-testsuite/configure:
+	* deja-testsuite/configure.in:
+	* deja-testsuite/install-sh:
+	* deja-testsuite/site.exp:
+	* deja-testsuite/testsuite/tcs.test/tcs.exp:
+		Added files for initial support of ./configure; make style
+		dejagnu testing.
+
+2001-08-27  nmcc
+	* test-dbs/gtcs.gbk:
+		C_SQL_JOIN_4
+		 Fix inconsistency in query sort order and output I introduced in an
+		 earlier version.
+		
+		DSQL_DOMAIN_21 & DSQL_DOMAIN_22
+		 Fix output to match output produced by Beta2 since CVC fixed
+		 [ firebird-Bugs-448062 ] ALTER DOMAIN leaves CONSTRAINT word
+
+2001-08-27  bellardo
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_01.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_02.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_03.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_04.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_05.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_06.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_07.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_08.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_09.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_10.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_11.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_12.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_13.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_14.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_15.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_16.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/CF_ISQL/CF_ISQL_17.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_0.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_1.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_10.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_11.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_12.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_13.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_14.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_15.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_16.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_17.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_18.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_2.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_21.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_22.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_23.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_24.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_25.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_26.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_28.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_29.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_3.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_30.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_31.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_33.config:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_33.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_4.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_5.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_6.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_7.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_8.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_BLOB_9.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_BLOB/C_SQL_CLEANUP.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_0.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_1.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_10.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_11.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_12.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_13.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_14.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_15.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_16.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_17.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_18.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_19.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_2.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_20.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_21.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_22.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_23.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_24.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_25.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_26.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_27.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_28.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_3.config:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_3.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_32.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_33.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_34.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_35.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_36.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_37.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_38.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_39.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_4.config:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_4.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_40.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_41.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_42.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_43.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_44.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_45.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_46.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_47.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_5.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_6.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_7.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_8.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_JOIN/C_SQL_JOIN_9.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_0.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_1.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_10.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_11.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_16.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_17.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_18.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_19.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_2.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_21.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_22.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_23.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_24.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_25.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_27.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_28.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_29.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_3.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_30.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_31.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_34.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_35.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_36.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_37.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_38.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_39.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_4.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_40.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_41.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_42.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_43.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_44.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_45.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_46.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_47.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_48.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_49.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_5.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_50.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_51.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_52.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_53.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_54.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_55.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_56.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_57.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_58.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_59.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_6.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_60.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_61.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_62.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_63.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_64.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_65.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_66.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_67.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_68.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_69.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_7.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_70.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_71.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_72.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_73.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_74.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_8.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/C_SQL_PRED/C_SQL_PRED_9.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAINS.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_01.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_02.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_03.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_04.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_06.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_07.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_08.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_11.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_12.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_13.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_14.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_15.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_16.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_20.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_21.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_22.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_25.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_DOMAINS/DSQL_DOMAIN_26.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_EXCEPTIONS/DSQL_EXCEPTIONS.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_EXCEPTIONS/DSQL_EXCEPT_01.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_EXCEPTIONS/DSQL_EXCEPT_02.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_EXCEPTIONS/DSQL_EXCEPT_03.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_EXCEPTIONS/DSQL_EXCEPT_CLEANUP.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/DSQL_EXCEPTIONS/DSQL_EXCEPT_SETUP.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EVENT_MISC/EVENT_MISC.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/EVENT_MISC/EVENT_MISC_1.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_LEV_0.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_LEV_0_CLEANUP.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_10_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_10_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_11_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_11_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_19_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_19_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_19_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_1_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_1_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_1_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_20_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_20_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_21_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_21_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_21_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_22_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_22_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_23_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_23_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_24_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_24_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_24_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_25_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_25_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_26_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_26_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_26_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_27_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_27_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_27_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_28_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_28_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_29_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_29_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_2_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_2_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_30_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_30_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_31_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_31_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_32_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_32_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_33_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_33_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_33_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_34_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_34_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_35_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_35_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_35_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_36_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_36_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_36_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_3_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_3_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_3_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_40_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_4_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_4_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_4_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_5_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_5_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_5_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_6_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_6_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_6_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_7_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_7_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_8_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_8_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_9_D.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_9_E.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/EXT_LEV_0/EXT_REL_0_9_G.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/GF_SHUTDOWN/GF_SHUTDOWN.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/GF_SHUTDOWN/GF_SHUT_0.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/GF_SHUTDOWN/GF_SHUT_1.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/GF_SHUTDOWN/GF_SHUT_2.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/GF_SHUTDOWN/GF_SHUT_END.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/GF_SHUTDOWN/GF_SHUT_START.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_CHARSET/IDML_C_ASSIGN_01.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_CHARSET/IDML_C_ASSIGN_02.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_CHARSET/IDML_C_CHARSET.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_CHARSET/IDML_C_CHARSET_01.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_CHARSET/IDML_C_CHARSET_02.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_CHARSET/IDML_C_CHARSET_04.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_CHARSET/IDML_C_CHARSET_05.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_CHARSET/IDML_C_CHARSET_06.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_CHARSET/IDML_C_CHARSET_07.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_CHARSET/IDML_C_CHARSET_08.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_CHARSET/IDML_C_CHARSET_09.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_CHARSET/IDML_C_CHARSET_99.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_CHARSET/IDML_C_CHARSET_JOHN.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_SUBQUERYS/IDML_C_SUBQUERYS.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_SUBQUERYS/IDML_C_SUBQ_01.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_SUBQUERYS/IDML_C_SUBQ_02.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_SUBQUERYS/IDML_C_SUBQ_03.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_SUBQUERYS/IDML_C_SUBQ_04.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_SUBQUERYS/IDML_C_SUBQ_05.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_SUBQUERYS/IDML_C_SUBQ_06.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_SUBQUERYS/IDML_C_SUBQ_07.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_SUBQUERYS/IDML_C_SUBQ_08.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_SUBQUERYS/IDML_C_SUBQ_09.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_SUBQUERYS/IDML_C_SUBQ_10.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_SUBQUERYS/IDML_C_SUBQ_11.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/IDML_C_SUBQUERYS/IDML_C_SUBQ_99.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ARRBLOB_CK.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_CLEANEMP.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER01.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER02.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER03.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER04.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER05.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER06.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER07.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER08.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER09.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER10.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER11.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER12.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER13.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER14.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER15.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER16.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER17.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER18.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER19.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER20.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER21.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER22.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER23.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER24.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER25.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER26.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER27.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER28.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER29.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER30.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER31.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER32.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER33.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER34.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER35.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER36.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER37.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER38.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER39.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER40.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER41.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ER42.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/ISC_ARRBLOB_CK/ISC_ERRSET.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROCS_QA_INIT_ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ARRAY1.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ARRAY2.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_BLOB1.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_CAST10_ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_CAST11_ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_CAST1_ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_CAST2_ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_CAST3_ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_CAST4_ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_CAST5_ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_CAST6_ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_CAST7_ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_CAST8_ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_CAST9_ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_EMPTY.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_EXIT1.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_01.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_02.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_03.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_04.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_05.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_06.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_07.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_08.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_10.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_11.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_12.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_13.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_14.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_15.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_16.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_17.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_18.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_19.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_20.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_ISQL_21.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_LEVEL0_TESTS.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_LEVEL0_TESTS_1.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_LEVEL0_TESTS_2.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_LEVEL0_TESTS_3.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/PROC_POWER.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/QA_PROCS_ISQL.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROCS_ISQL/SELECT_DELETE_ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROC_IES_ERR/IE_PROC_ERR_1.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROC_IES_ERR/IE_PROC_ERR_2.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROC_IES_ERR/IS_PROC_ERR_1.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROC_IES_ERR/IS_PROC_ERR_2.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/QA_PROC_IES_ERR/QA_PROC_IES_ERR.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/REF_INT_INDX/REF_INT.1.ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/REF_INT_INDX/REF_INT.2.ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/REF_INT_INDX/REF_INT.3.ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/REF_INT_INDX/REF_INT.4.ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/REF_INT_INDX/REF_INT.5.ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/REF_INT_INDX/REF_INT.6.ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/REF_INT_INDX/REF_INT.7.ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/REF_INT_INDX/REF_INT.8.ISQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/REF_INT_INDX/REF_INT_INDX.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/RICH_FLD_GEN_V40/FLD0_V40_1006.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RICH_FLD_GEN_V40/FLD0_V40_1007.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RICH_FLD_GEN_V40/RICH_FLD_GEN_V40.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_ALT_ADD.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_ALT_DROP.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_CLEAN_UP.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_COL_NNULL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_COL_PRIM.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_COL_REF.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_COL_UNIQ.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_DROP_TAB.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_FIELD_ALT.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_FIELD_DRP1.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_INDEX_ALT.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_INDEX_DROP.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_INIT.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_TAB_CHECK.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_TAB_PRIM.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_TAB_REF.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/C_DSQL_RI_TAB_UNIQ.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/RI_TESTS/RI_TESTS.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENTS.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENTS_CLEANUP.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_01.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_02.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_03.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_04.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_05.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_06.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_07.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_08.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_09.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_10.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_11.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_12.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_13.config:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_13.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/SQL_EVENTS/SQL_EVENT_14.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_AUTO_COMMIT/AUTO_COMMIT.1.ESQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_AUTO_COMMIT/AUTO_COMMIT.2.ESQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_AUTO_COMMIT/AUTO_COMMIT.3.ESQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_AUTO_COMMIT/V4_AUTO_COMMIT.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_AUTO_DDL_DSQL/AUTO_DDL.DMN.DSQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_AUTO_DDL_DSQL/AUTO_DDL.EXCP.DSQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_AUTO_DDL_DSQL/AUTO_DDL.GEN.DSQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_AUTO_DDL_DSQL/AUTO_DDL.IND.DSQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_AUTO_DDL_DSQL/AUTO_DDL.PRC.DSQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_AUTO_DDL_DSQL/AUTO_DDL.TBL.DSQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_AUTO_DDL_DSQL/AUTO_DDL.TRG.DSQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_AUTO_DDL_DSQL/AUTO_DDL.VEW.DSQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_AUTO_DDL_DSQL/V4_AUTO_DDL_DSQL.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_EXCLUSIVE/EXCLUSIVE.1.ESQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_EXCLUSIVE/EXCLUSIVE.2.ESQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_EXCLUSIVE/EXCLUSIVE.3.ESQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_EXCLUSIVE/V4_EXCLUSIVE.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_TRANS_BLOB/BLOB.0.DSQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_TRANS_BLOB/BLOB.0.ESQL.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_TRANS_BLOB/BLOB.0.GDML.script:
+	* deja-testsuite/testsuite/tcs.test/data/global/V4_TRANS_BLOB/V4_TRANS_BLOB.series:
+	* deja-testsuite/testsuite/tcs.test/data/global/VECTOR_12HOUR.meta:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_01.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_02.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_03.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_04.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_05.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_06.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_07.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_08.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_09.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_10.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_11.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_12.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_13.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_14.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_15.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_16.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/CF_ISQL/CF_ISQL_17.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_0.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_1.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_10.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_11.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_12.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_13.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_14.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_15.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_16.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_17.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_18.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_2.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_21.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_22.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_23.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_24.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_25.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_26.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_28.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_29.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_3.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_30.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_31.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_32.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_33.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_4.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_5.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_6.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_7.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_8.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_BLOB_9.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_BLOB/C_SQL_CLEANUP.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_0.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_1.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_10.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_11.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_12.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_13.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_14.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_15.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_16.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_17.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_18.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_19.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_2.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_20.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_21.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_22.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_23.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_24.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_25.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_26.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_27.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_28.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_3.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_32.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_33.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_34.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_35.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_36.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_37.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_38.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_39.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_4.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_40.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_41.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_42.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_43.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_44.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_45.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_46.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_47.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_5.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_6.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_7.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_8.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_JOIN/C_SQL_JOIN_9.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_0.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_1.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_10.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_11.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_16.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_17.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_18.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_19.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_2.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_21.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_22.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_23.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_24.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_25.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_27.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_28.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_29.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_3.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_30.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_31.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_34.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_35.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_36.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_37.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_38.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_39.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_4.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_40.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_41.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_42.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_43.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_44.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_45.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_46.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_47.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_48.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_49.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_5.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_50.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_51.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_52.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_53.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_54.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_55.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_56.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_57.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_58.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_59.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_6.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_60.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_61.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_62.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_63.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_64.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_65.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_66.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_67.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_68.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_69.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_7.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_70.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_71.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_72.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_73.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_74.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_8.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/C_SQL_PRED/C_SQL_PRED_9.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_01.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_02.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_03.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_04.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_06.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_07.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_08.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_11.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_12.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_13.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_14.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_15.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_20.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_21.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_22.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_25.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_DOMAINS/DSQL_DOMAIN_26.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_EXCEPTIONS/DSQL_EXCEPT_01.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_EXCEPTIONS/DSQL_EXCEPT_02.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_EXCEPTIONS/DSQL_EXCEPT_03.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_EXCEPTIONS/DSQL_EXCEPT_CLEANUP.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/DSQL_EXCEPTIONS/DSQL_EXCEPT_SETUP.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EVENT_MISC/EVENT_MISC_0.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EVENT_MISC/EVENT_MISC_1.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_LEV_0_CLEANUP.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_10_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_10_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_11_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_11_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_19_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_19_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_19_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_1_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_1_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_1_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_20_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_20_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_21_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_21_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_21_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_22_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_22_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_23_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_23_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_24_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_24_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_24_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_25_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_25_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_26_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_26_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_26_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_27_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_27_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_27_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_28_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_28_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_29_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_29_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_2_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_2_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_30_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_30_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_31_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_31_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_32_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_32_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_33_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_33_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_33_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_34_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_34_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_35_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_35_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_35_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_36_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_36_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_36_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_3_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_3_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_3_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_40_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_4_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_4_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_4_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_5_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_5_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_5_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_6_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_6_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_6_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_7_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_7_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_8_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_8_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_9_D.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_9_E.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/EXT_LEV_0/EXT_REL_0_9_G.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/FB_SQL/FB_SQL_1.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/GF_SHUTDOWN/GF_SHUT_0.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/GF_SHUTDOWN/GF_SHUT_1.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/GF_SHUTDOWN/GF_SHUT_2.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/GF_SHUTDOWN/GF_SHUT_END.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/GF_SHUTDOWN/GF_SHUT_START.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_CHARSET/IDML_C_ASSIGN_01.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_CHARSET/IDML_C_ASSIGN_02.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_CHARSET/IDML_C_CHARSET_01.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_CHARSET/IDML_C_CHARSET_02.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_CHARSET/IDML_C_CHARSET_03.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_CHARSET/IDML_C_CHARSET_04.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_CHARSET/IDML_C_CHARSET_05.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_CHARSET/IDML_C_CHARSET_06.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_CHARSET/IDML_C_CHARSET_07.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_CHARSET/IDML_C_CHARSET_08.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_CHARSET/IDML_C_CHARSET_09.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_CHARSET/IDML_C_CHARSET_99.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_SUBQUERYS/IDML_C_SUBQ_01.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_SUBQUERYS/IDML_C_SUBQ_02.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_SUBQUERYS/IDML_C_SUBQ_03.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_SUBQUERYS/IDML_C_SUBQ_04.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_SUBQUERYS/IDML_C_SUBQ_05.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_SUBQUERYS/IDML_C_SUBQ_06.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_SUBQUERYS/IDML_C_SUBQ_07.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_SUBQUERYS/IDML_C_SUBQ_08.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_SUBQUERYS/IDML_C_SUBQ_09.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_SUBQUERYS/IDML_C_SUBQ_10.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_SUBQUERYS/IDML_C_SUBQ_11.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/IDML_C_SUBQUERYS/IDML_C_SUBQ_99.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_CLEANEMP.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER01.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER02.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER03.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER04.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER05.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER06.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER07.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER08.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER09.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER10.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER11.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER12.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER13.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER14.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER15.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER16.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER17.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER18.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER19.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER20.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER21.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER22.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER23.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER24.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER25.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER26.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER27.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER28.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER29.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER30.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER31.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER32.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER33.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER34.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER35.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER36.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER37.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER38.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER39.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER40.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER41.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ER42.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/ISC_ARRBLOB_CK/ISC_ERRSET.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROCS_QA_INIT_ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ARRAY1.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ARRAY2.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_BLOB1.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_CAST10_ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_CAST11_ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_CAST1_ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_CAST2_ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_CAST3_ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_CAST4_ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_CAST5_ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_CAST6_ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_CAST7_ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_CAST8_ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_CAST9_ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_DATE3.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_EMPTY.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_EXIT1.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_01.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_02.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_03.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_04.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_05.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_06.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_07.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_08.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_10.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_11.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_12.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_13.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_14.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_15.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_16.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_17.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_18.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_19.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_20.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_ISQL_21.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_LEVEL0_TESTS.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_LEVEL0_TESTS_1.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_LEVEL0_TESTS_2.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_LEVEL0_TESTS_3.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/PROC_POWER.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROCS_ISQL/SELECT_DELETE_ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROC_IES_ERR/IE_PROC_ERR_1.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROC_IES_ERR/IE_PROC_ERR_2.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROC_IES_ERR/IS_PROC_ERR_1.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/QA_PROC_IES_ERR/IS_PROC_ERR_2.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/REF_INT_INDX/REF_INT.1.ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/REF_INT_INDX/REF_INT.2.ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/REF_INT_INDX/REF_INT.3.ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/REF_INT_INDX/REF_INT.4.ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/REF_INT_INDX/REF_INT.5.ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/REF_INT_INDX/REF_INT.6.ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/REF_INT_INDX/REF_INT.7.ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/REF_INT_INDX/REF_INT.8.ISQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RICH_FLD_GEN_V40/FLD0_V40_1006.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RICH_FLD_GEN_V40/FLD0_V40_1007.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RICH_FLD_GEN_V40/FLD0_V40_1008.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_ALT_ADD.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_ALT_DROP.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_CLEAN_UP.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_COL_CHECK.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_COL_NNULL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_COL_PRIM.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_COL_REF.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_COL_UNIQ.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_DROP_TAB.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_FIELD_ALT.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_FIELD_DROP.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_FIELD_DRP1.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_INDEX_ALT.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_INDEX_DROP.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_INIT.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_TAB_CHECK.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_TAB_PRIM.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_TAB_REF.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/RI_TESTS/C_DSQL_RI_TAB_UNIQ.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENTS_CLEANUP.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_01.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_02.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_03.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_04.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_05.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_06.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_07.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_08.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_09.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_10.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_11.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_12.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_13.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/SQL_EVENTS/SQL_EVENT_14.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_AUTO_COMMIT/AUTO_COMMIT.1.ESQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_AUTO_COMMIT/AUTO_COMMIT.2.ESQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_AUTO_COMMIT/AUTO_COMMIT.3.ESQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_AUTO_DDL_DSQL/AUTO_DDL.DMN.DSQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_AUTO_DDL_DSQL/AUTO_DDL.EXCP.DSQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_AUTO_DDL_DSQL/AUTO_DDL.GEN.DSQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_AUTO_DDL_DSQL/AUTO_DDL.IND.DSQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_AUTO_DDL_DSQL/AUTO_DDL.PRC.DSQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_AUTO_DDL_DSQL/AUTO_DDL.TBL.DSQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_AUTO_DDL_DSQL/AUTO_DDL.TRG.DSQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_AUTO_DDL_DSQL/AUTO_DDL.VEW.DSQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_EXCLUSIVE/EXCLUSIVE.1.ESQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_EXCLUSIVE/EXCLUSIVE.2.ESQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_EXCLUSIVE/EXCLUSIVE.3.ESQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_TRANS_BLOB/BLOB.0.DSQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_TRANS_BLOB/BLOB.0.ESQL.output:
+	* deja-testsuite/testsuite/tcs.test/data/output/V4_TRANS_BLOB/BLOB.0.GDML.output:
+	* deja-testsuite/testsuite/tcs.test/tcs.exp:
+		Initial commit of tcs.exp test data.  Includes updated tcp.exp script to
+		correctly read the data.
+
+2001-08-22  bellardo
+	* deja-testsuite/testsuite/tcs.test/tcs.exp:
+		Added support to work out of a different working directory, support for
+		XFAIL when no test input/output files are found, and the ability to run
+		a named test passed in as a Tcl variable.
+
+	* deja-testsuite/dump_gtcs.pl:
+		Fixed bug that caused all INIT blobs to be exported empty.
+
+2001-08-21  bellardo
+	* deja-testsuite/testsuite/tcs.test/tcs.exp:
+		Updated tcs.exp to use new flat file format.
+
+	* deja-testsuite/dump_gtcs.pl:
+		Modified FSG's dump program to output new TCS flatfile format.
+
+2001-08-20  kkuznetsov
+	* test-dbs/s3_ltcs.gbk:
+		Solaris Intel test database s3_ltcs
+
+2001-08-15  bellardo
+	* deja-testsuite/testsuite/tcs.test/tcs.exp:
+		Fixed a few bugs with the persistant shell and "SQL> " propmts preceding
+		Database:  xxxx.gdb statements.
+
+2001-08-14  bellardo
+	* deja-testsuite/testsuite/tcs.test/tcs.exp:
+		Improved pattern matching code (now does whole words only) and cached all
+		DB tables for quicker access.
+
+	* deja-testsuite/testsuite/tcs.test/tcs.exp:
+		Chnaged tcs.exp to refer to table columns by name, not by
+		position.
+
+	* deja-testsuite/testsuite/tcs.test/tcs.exp:
+		Modified tcs.exp to use one shell for the duration of the tests, instead
+		of one shell for each test.
+
+2001-08-14  skywalker
+	* deja-testsuite/Makefile:
+	* deja-testsuite/README:
+	* deja-testsuite/extractTCS.exp:
+	* deja-testsuite/run_one_test.exp:
+	* deja-testsuite/site.exp:
+	* deja-testsuite/testsuite/config/linux/script_prologue.sh:
+	* deja-testsuite/testsuite/config/linux/script_subst.txt:
+	* deja-testsuite/testsuite/config/unix.exp:
+	* deja-testsuite/testsuite/config/win32/script_prologue.sh:
+	* deja-testsuite/testsuite/config/win32/script_subst.txt:
+	* deja-testsuite/testsuite/isql.test/limit/isql_limit.exp:
+	* deja-testsuite/testsuite/tcs.test/tcs.exp:
+		Test kit for dejagnu test suite.
+
+	* deja-testsuite/extractTCS.exp:
+	* deja-testsuite/testsuite/tcs.test/tcs.exp:
+		Further changes to get working on more test cases.
+		The extract now puts scripts into
+		                 testsuite/tcs.test/data/<series>/<test>.script
+		and results into testsuite/tcs.test/results/<series>/<test>.results
+		
+		The changes with tcs.exp are to do with pattern substitution .c and A*
+		type of patterns.  There are still some problems there but it goes further.
+
+	* extractScript/dump_xx_ltcs.pl:
+	* extractScript/howto.txt:
+	* extractScript/runAllExtract.sh:
+		Created a generic export script for local databases
+
+2001-08-04  bellardo
+	* test-dbs/da_ltcs.gbk:
+		Added the Darwin local TCS database.
+
+	* test-dbs/gtcs.gbk:
+		Updated TCS tests to reflect new error messages and the like as a result of
+		bug fixes made.
+
+2001-07-29  skywalker
+	* README.txt:
+	* buildInstall.sh:
+	* extractScript/dump_gtcs.pl:
+	* extractScript/fix_it.sql:
+	* extractScript/gtcs.gdl:
+	* extractScript/howto.txt:
+	* extractScript/import_all:
+	* extractScript/import_gtcs.pl:
+	* extractScript/runExtract.sh:
+	* extractScript/runImport.sh:
+	* tcs/scripts/runtcs.fb2:
+	* tcs/tcs/tcs.h:
+		Added Franks extract utility and put in a README to explain how to set
+		up the TCS thing.
+
+2001-07-01  fsg
+	* test-dbs/gtcs.gbk:
+		Reinitialization of some tests due to Claudio's changes and bugfixes.
+		fsg
+
+2001-05-21  nmcc
+	* test-dbs/gtcs.gbk:
+		Modify C_SQL_JOIN_3 and C_SQL_JOIN_4 to use 'order by' as the default ouput
+		is sorted differently depending on architecture. Expected output updated to
+		match.
+		Added new series FB_SQL containing new test FB_SQL_1 to test group by udf.
+		This database was reconstructed using the export/import scripts by FSG.
+
+2001-04-19  kkuznetsov
+	* tcs/diffs/makefile.solx86:
+	* tcs/drop_gdb/makefile.solx86:
+	* tcs/mu/makefile.solx86:
+	* tcs/tcs/makefile.solx86:
+		*** empty log message ***
+
+2000-12-08  skywalker
+	* dummy:
+		whoops - just another test
+
+	* this_build:
+		inc_build_no
+
+2000-12-08  fsg
+	* this_build:
+	* this_build:
+		inc_build_no
+
+	* dummy:
+	* dummy:
+		test for auto increment
+
+	* dummy:
+		trying to remove this lock on interbase
+
+	* dummy:
+		Added test for auto increment build number on commit
+
+2000-12-08  pcisar
+	* this_build:
+		inc_build_no
+
+	* dummy:
+		Test for autoincrement feature
+
+2000-12-07  fsg
+	* this_build:
+		Added script to increment build number on commit
+
+2000-11-14  fsg
+	* tcs/tcs/common.h:
+	* tcs/tcs/tan.e:
+	* tcs/tcs/time.h:
+		Changes to get tan compiled, not very useful at the moment
+
+	* tcs/tcs/makefile.linux:
+	* tcs/tcs/tan.e:
+		Found a way to reenable list_runs in tan.e without causing gpre
+		to dump core
+
+2000-11-12  fsg
+	* tcs/tcs/exec.e:
+		added some comments and removed unneeded code
+
+	* tcs/tcs/exec.e:
+		changes in exec.e to handle blobs with any seg_size
+
+	* tcs/scripts/.tcs_config:
+	* tcs/scripts/runtcs:
+	* test-dbs/gtcs.gbk:
+	* test-dbs/li_ltcs.gbk:
+	* test-files/intlemp.gbk:
+	* test-files/sov3v4files/example.h:
+		added missing and changed files from my TCS-installation
+
+2000-11-11  fsg
+	* test-files/asyn_evnts.gbk:
+	* test-files/isc_test.h:
+	* test-files/sh_binary.tif:
+	* test-files/sh_blobs.gbk:
+	* test-files/sh_join.gbk:
+	* test-files/sh_test.gbk:
+	* test-files/sh_test.h:
+	* test-files/sov3v4files/atlas.gbak:
+	* test-files/sov3v4files/atlas.gbk:
+	* test-files/sov3v4files/employee.gbk:
+	* test-files/tcs.h:
+		Import of TCS-files from Borland tree
+
+	* test-dbs/gtcs.gbk:
+	* test-dbs/li_ltcs.gbk:
+	* test-dbs/nt_ltcs.gbk:
+	* test-dbs/readme.dbs:
+	* test-dbs/so_ltcs.gbk:
+		Import of TCS-databases from Borland tree
+
+	* tcs/diffs/README:
+	* tcs/diffs/diffs.c:
+	* tcs/diffs/diffs.h:
+	* tcs/diffs/do_diffs.c:
+	* tcs/diffs/link_diffs.com:
+	* tcs/diffs/makefile.aix:
+	* tcs/diffs/makefile.ao:
+	* tcs/diffs/makefile.apollo:
+	* tcs/diffs/makefile.dg:
+	* tcs/diffs/makefile.dg_x86:
+	* tcs/diffs/makefile.hp300:
+	* tcs/diffs/makefile.hp700:
+	* tcs/diffs/makefile.linux:
+	* tcs/diffs/makefile.nt_bcc:
+	* tcs/diffs/makefile.nt_ms:
+	* tcs/diffs/makefile.oa:
+	* tcs/diffs/makefile.pipe:
+	* tcs/diffs/makefile.sco:
+	* tcs/diffs/makefile.sco_ev:
+	* tcs/diffs/makefile.solaris:
+	* tcs/diffs/makefile.sun:
+	* tcs/diffs/makefile.vms:
+	* tcs/doc/PORTABLE_TESTS:
+	* tcs/doc/QA_NON_C_LANGUAGES:
+	* tcs/doc/QA_TCS_QUICK_GUIDE:
+	* tcs/doc/QA_WRITING_TCS_TESTS:
+	* tcs/doc/TCS_Q_AND_A:
+	* tcs/doc/VECTOR_RUN_DOC:
+	* tcs/drop_gdb/drop.c:
+	* tcs/drop_gdb/makefile.linux:
+	* tcs/drop_gdb/makefile.nt_ms:
+	* tcs/drop_gdb/makefile.solaris:
+	* tcs/mu/client.h:
+	* tcs/mu/client_lib.c:
+	* tcs/mu/driver.c:
+	* tcs/mu/makefile.aix:
+	* tcs/mu/makefile.cobalt:
+	* tcs/mu/makefile.dg_x86:
+	* tcs/mu/makefile.linux:
+	* tcs/mu/makefile.osf:
+	* tcs/mu/makefile.sco_ev:
+	* tcs/mu/makefile.solaris:
+	* tcs/mu/makefile.sun4:
+	* tcs/mu/p1.e:
+	* tcs/mu/p2.e:
+	* tcs/mu/parser.c:
+	* tcs/mu/scheduler.c:
+	* tcs/mu/scheduler.h:
+	* tcs/mu/xxx.c:
+	* tcs/mu/yyy.c:
+	* tcs/mu/zzz.c:
+	* tcs/scripts/reset.tcs:
+	* tcs/scripts/runtcs:
+	* tcs/scripts/runvector:
+	* tcs/scripts/tcs_test.report:
+	* tcs/scripts/windows/CHK_ENV.KSH:
+	* tcs/scripts/windows/Etc.MKS/ENVIRON.KSH:
+	* tcs/scripts/windows/Etc.MKS/profile.ksh:
+	* tcs/scripts/windows/README:
+	* tcs/scripts/windows/TCS_CFG_ON_WINDOWS.txt:
+	* tcs/scripts/windows/bcc32.cfg:
+	* tcs/scripts/windows/bcc32.txt:
+	* tcs/scripts/windows/borlibs.rsp:
+	* tcs/scripts/windows/borlibs.txt:
+	* tcs/scripts/windows/compress.sed:
+	* tcs/scripts/windows/expand.sed:
+	* tcs/scripts/windows/fixed.sed:
+	* tcs/scripts/windows/gpre_d1.ksh:
+	* tcs/scripts/windows/ilink32.cfg:
+	* tcs/scripts/windows/ilink32.txt:
+	* tcs/scripts/windows/isql_d1.ksh:
+	* tcs/scripts/windows/profile.ksh:
+	* tcs/scripts/windows/save_config.ksh:
+	* tcs/scripts/windows/setup_config.ksh:
+	* tcs/scripts/windows/setup_profile.ksh:
+	* tcs/scripts/windows/tcs_cmd.ksh:
+	* tcs/scripts/windows/tcs_go.ksh:
+	* tcs/scripts/windows/tcscompress.ksh:
+	* tcs/scripts/windows/tcsexpand.ksh:
+	* tcs/scripts/windows/tcsrun.input:
+	* tcs/scripts/windows/tcsrun.ksh:
+	* tcs/scripts/windows/tlink32.cfg:
+	* tcs/tcs/README:
+	* tcs/tcs/display.e:
+	* tcs/tcs/exec.e:
+	* tcs/tcs/gtcs.gdl:
+	* tcs/tcs/ltcs.gdl:
+	* tcs/tcs/make_tcs.bat:
+	* tcs/tcs/makefile.ao:
+	* tcs/tcs/makefile.apollo:
+	* tcs/tcs/makefile.delta:
+	* tcs/tcs/makefile.dg:
+	* tcs/tcs/makefile.dg_x86:
+	* tcs/tcs/makefile.hp10:
+	* tcs/tcs/makefile.hp300:
+	* tcs/tcs/makefile.hp700:
+	* tcs/tcs/makefile.ia:
+	* tcs/tcs/makefile.imp:
+	* tcs/tcs/makefile.linux:
+	* tcs/tcs/makefile.m88k:
+	* tcs/tcs/makefile.nt_bcc:
+	* tcs/tcs/makefile.nt_ms:
+	* tcs/tcs/makefile.osf:
+	* tcs/tcs/makefile.pipe:
+	* tcs/tcs/makefile.ppc:
+	* tcs/tcs/makefile.sco:
+	* tcs/tcs/makefile.sgi:
+	* tcs/tcs/makefile.solaris:
+	* tcs/tcs/makefile.sun:
+	* tcs/tcs/makefile.vms:
+	* tcs/tcs/mpexl.h:
+	* tcs/tcs/pc.h:
+	* tcs/tcs/rollup.gdl:
+	* tcs/tcs/tan.e:
+	* tcs/tcs/tcs.e:
+	* tcs/tcs/tcs.h:
+	* tcs/tcs/trns.c:
+	* tcs/tcs/unix.h:
+	* tcs/tcs/upd_v38.gdl:
+	* tcs/tcs/vms.h:
+		Import of TCS-source from Borland tree
+
+	* tcs/tcs/display.e:
+	* tcs/tcs/makefile.linux:
+		changes in display.e to handle blobs with any seg_size
+
