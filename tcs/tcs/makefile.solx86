@@ -1,0 +1,54 @@
+# The contents of this file are subject to the InterBase Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License.
+# 
+# You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+# 
+# Software distributed under the License is distributed on an "AS IS"
+# basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+# the License for the specific language governing rights and limitations
+# under the License.  The Original Code was created by Inprise
+# Corporation and its predecessors.
+# 
+# Portions created by Inprise Corporation are Copyright (C) Inprise
+# Corporation. All Rights Reserved.
+# 
+# Contributor(s): ______________________________________.
+.SUFFIXES: .c .e .gdb .gdl
+.e.c :
+	$(INTERBASE)/bin/gpre -n  -manual $<
+.gdl.gdb:
+	$(INTERBASE_BIN)/gdef $<
+
+INTERBASE=/opt/interbase
+INTERBASE_BIN=$(INTERBASE)/bin
+CFLAGS = -w -O -DSOLARIS -DUNIX -fPIC  -I$(INTERBASE)/include
+JRD = -lgdsmt -lthread
+OBJECTS = tcs.o exec.o trns.o display.o ../diffs/do_diffs.o
+DBASES=rollup.gdb gtcs.gdb ltcs.gdb
+
+tcs	: $(DBASES) $(OBJECTS) 
+	$(CC) $(OBJECTS) $(JRD) -o tcs
+
+tan	: tan.o
+	$(CC_LD) tan.o $(JRD) -o tan
+
+tcs.o	: tcs.c tcs.h
+tcs.c	: tcs.e
+exec.o	: exec.c tcs.h
+exec.c	: exec.e
+display.o	: display.c tcs.h
+display.c	: display.e
+trns.o	: trns.c tcs.h unix.h
+rollup.gdb: rollup.gdl
+gtcs.gdb: gtcs.gdl
+ltcs.gdb: ltcs.gdl
+
+tan.c	: tan.e
+tan.o	: tan.c
+
+clean:
+	rm -f display.c exec.c tcs.c tan.c
+	rm -f display.o exec.o tcs.o trns.o tan.o
+	rm -f tcs
+
