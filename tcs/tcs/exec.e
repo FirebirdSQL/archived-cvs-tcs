@@ -19,6 +19,7 @@
  * Corporation. All Rights Reserved.
  *
  * Contributor(s): ______________________________________.
+ * $Id$
  */
 
 #include <signal.h>
@@ -1080,7 +1081,11 @@ static compare (compare_file, output_file, global)
  *      Do a quick compare of two files.
  *      Return identical (TRUE) or difference
  *      (FALSE).
- *
+ *      I have changed this to compare
+ *      two files instead of a blob
+ *      and a file to be able to use 
+ *      blobs with any segment length
+ *      FSG 12.Nov.2000  
  **************************************/
 FILE    *file,*blob_file;
 STATUS  status_vector [20];
@@ -1250,13 +1255,14 @@ test_result = passed;
  *      diff of the expected result with the actual result in the DB    */
 
 
+/* Dump the initialization to file */
 if (!global)
     BLOB_TEXT_DUMP (blob_id, TCS, gds__trans, compare_file);
 else
     BLOB_TEXT_DUMP (blob_id, TCS_GLOBAL, gds__trans, compare_file);
 
 
-
+/* and compare it with the test output */
 if (!compare (compare_file, output_file, global))
 
 {
@@ -1266,10 +1272,13 @@ if (!compare (compare_file, output_file, global))
 
 /*      If not global then dump the initialization to the compare_file  */
 
-	 if (!global)
-	BLOB_TEXT_DUMP (blob_id, TCS, gds__trans, compare_file);
-	 else
-	BLOB_TEXT_DUMP (blob_id, TCS_GLOBAL, gds__trans, compare_file);
+/* 	As we have done this previously, this isn't necessary anymore */
+ 
+/*	 if (!global)
+ *	BLOB_TEXT_DUMP (blob_id, TCS, gds__trans, compare_file);
+ *	 else
+ *	BLOB_TEXT_DUMP (blob_id, TCS_GLOBAL, gds__trans, compare_file);
+*/
 
 /*      Call do_diffs which is linked in at compile time, in order to   *
  *      do the actual diff.  Diff the expected result(compare_file)     *
