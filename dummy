@@ -1,0 +1,12 @@
+/* $Log$ 
+*/
+
+This file is used to test the autoincrement feature.
+Just add a line and commit it.
+Then checkout TCS/this_build, it should have been
+incremented.
+
+I hope this works
+
+Frank
+
