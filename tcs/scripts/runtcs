@@ -30,17 +30,18 @@ rm -f *.lib *.sql *.gdl
 rm -f tcs.*
 rm -f *.tmp
 
+#EDITOR="joe -nobackup"
+#export EDITOR
 
 INTERBASE=/opt/interbase
-export INTERBASE
 
-PATH=$INTERBASE/bin:$PATH
+PATH=./bin:$INTERBASE/bin:$PATH
 export PATH
-LD_LIBRARY_PATH=/usr/lib
+LD_LIBRARY_PATH=/usr/lib:./bin
 export LD_LIBRARY_PATH
-SHLIB_PATH=/usr/lib
+SHLIB_PATH=/usr/lib:./bin
 export SHLIB_PATH
-LD_RUN_PATH=/usr/lib:$TEST_DIR
+LD_RUN_PATH=/usr/lib:$TEST_DIR:./bin
 export LD_RUN_PATH
 
 ISC_USER=sysdba
@@ -52,11 +53,14 @@ $INTERBASE/bin/gsec -delete qa_user2
 $INTERBASE/bin/gsec -delete qa_user3
 $INTERBASE/bin/gsec -delete qa_user4
 $INTERBASE/bin/gsec -delete qa_user5
+
+
 $INTERBASE/bin/gsec -add qa_user1 -pw qa_user1
 $INTERBASE/bin/gsec -add qa_user2 -pw qa_user2
 $INTERBASE/bin/gsec -add qa_user3 -pw qa_user3
 $INTERBASE/bin/gsec -add qa_user4 -pw qa_user4
 $INTERBASE/bin/gsec -add qa_user5 -pw qa_user5
+
 # test v4_api15
 $INTERBASE/bin/gsec -delete guest
 $INTERBASE/bin/gsec -add guest    -pw guest
@@ -120,4 +124,4 @@ export WHERE_UDF
 export WHERE_GDB_EXTERNAL
 export SERVICE_MGR
 
-tcs
+tcs $1
