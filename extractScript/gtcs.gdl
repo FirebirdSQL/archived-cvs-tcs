@@ -1,0 +1,393 @@
+define database "./import/gtcs.gdb"
+	{
+Note: The definition for LTCS.GDB is a subset of the
+      definition for GTCS.GDB.  GTCS has the additional
+      relation "AUDIT".
+
+      1995-January-26 David Schnepper
+	
+}
+	page_size 4096;
+
+
+/*	Global Field Definitions	*/
+
+define field BUG_NO short;
+define field CATEGORY varying [20];
+define field COMMENT blob segment_length 80;
+define field COUNT short;
+define field CREATED_BY char [20];
+define field DATE date;
+define field DIFFERENCES blob segment_length 80;
+define field EDIT_BY char [20];
+define field EDIT_DATE date;
+define field FAIL_COUNT short;
+define field HOST_INFO char [60];
+define field INIT_BY char [20];
+define field INIT_DATE date
+	edit_string "dd-mmm-yy";
+define field META_SERIES_NAME varying [20];
+define field NAME char [20];
+define field NOTE blob segment_length 80;
+define field NO_INIT_FLAG short
+	valid if (no_init_flag = 1 or
+	no_init_flag = 0 or
+	no_init_flag missing)
+	missing_value is 0;
+define field NO_RUN_FLAG short;
+define field OUTPUT blob segment_length 80;
+define field PYXIS$FORM blob segment_length 80;
+define field PYXIS$FORM_NAME char [31];
+define field PYXIS$FORM_TYPE char [16];
+define field QLI$PROCEDURE blob segment_length 80 sub_type text
+	system_flag 2;
+define field QLI$PROCEDURE_NAME char [31]
+	system_flag 2;
+define field RDB$31 varying [10];
+define field RDB$33 varying [10];
+define field RDB$35 varying [10];
+define field RDB$37 varying [10];
+define field RESULT long;
+define field RUN char [20];
+define field RUN_BY char [20];
+define field RUN_DATE date;
+define field RUN_STOP date;
+define field SCRIPT blob segment_length 80;
+define field SEQUENCE short;
+define field SERIES_NAME char [20];
+define field STATUS short;
+define field TEST_NAME varying [20];
+define field TIME long;
+define field TIMESTAMP date;
+define field VERSION varying [8];
+
+
+/*	Relation Definitions	*/
+
+
+define relation AUDIT
+    TESTER based on NAME	position 1,
+    TEST_NAME based on NAME	position 2
+	query_name NAME,
+    RUN_NAME based on RUN	position 3
+	query_name RUN,
+    DATE	position 5,
+    HOST_INFO	position 6,
+    VERSION based on RDB$37	position 8;
+
+define relation BOILER_PLATE
+    BOILER_PLATE_NAME based on NAME	position 1
+	query_name NAME,
+    SCRIPT	position 2,
+    CREATED_BY	position 3,
+    DATE	position 4;
+
+define relation CATEGORIES
+    CATEGORY	position 1;
+
+define relation ENV
+    ENV_NAME based on NAME	position 1
+	query_name NAME,
+    PROLOG based on SCRIPT	position 2,
+    EPILOG based on SCRIPT	position 3,
+    CREATED_BY	position 4,
+    DATE	position 5;
+
+define relation FAILURES
+    TEST_NAME based on NAME	position 1
+	query_name NAME,
+    RUN	position 3,
+    DATE	position 4,
+    OUTPUT	position 5,
+    DIFFERENCES	position 6,
+    ENV_NAME based on NAME	position 7,
+    BOILER_PLATE_NAME based on NAME	position 8,
+    RUN_BY	position 9,
+    VERSION based on RDB$33	position 11;
+
+define relation INIT
+    TEST_NAME based on NAME	position 1
+	query_name NAME,
+    OUTPUT	position 3,
+    INIT_BY	position 4,
+    INIT_DATE	position 5,
+    BOILER_PLATE based on NAME	position 6,
+    ENV_NAME based on NAME	position 7,
+    VERSION based on RDB$35	position 9;
+
+define relation KNOWN_FAILURES
+    TEST_NAME based on NAME	position 1
+	query_name NAME,
+    VERSION	position 2,
+    INIT_BY	position 4,
+    INIT_DATE	position 5,
+    BOILER_PLATE_NAME based on NAME	position 6,
+    ENV_NAME based on NAME	position 7,
+    STATUS	position 8,
+    BUG_NO	position 9,
+    COMMENT	position 10,
+    RUN	position 11;
+
+define relation META_SERIES
+    META_SERIES_NAME based on NAME	position 1
+	query_name NAME,
+    SERIES_NAME based on NAME	position 2,
+    SEQUENCE	position 3;
+
+define relation META_SERIES_COMMENT
+    META_SERIES_NAME based on NAME	position 1
+	query_name NAME,
+    COMMENT	position 2,
+    CREATED_BY	position 3,
+    DATE	position 4,
+    EDIT_BY	position 5,
+    EDIT_DATE	position 6;
+
+define relation NOTES
+    TEST_NAME based on NAME	position 1
+	query_name NAME,
+    NOTE	position 2;
+
+define relation PYXIS$FORMS
+	system_flag 2
+    PYXIS$FORM_NAME	position 1,
+    PYXIS$FORM_TYPE	position 2,
+    PYXIS$FORM	position 3;
+
+define relation QLI$PROCEDURES
+	system_flag 2
+    QLI$PROCEDURE_NAME	position 0
+	system_flag 2,
+    QLI$PROCEDURE	position 1
+	system_flag 2;
+
+define relation SERIES
+    SERIES_NAME based on NAME	position 1
+	query_name NAME,
+    TEST_NAME based on NAME	position 2,
+    CREATED_BY	position 3,
+    SEQUENCE	position 3;
+
+define relation SERIES_COMMENT
+    SERIES_NAME based on NAME	position 1
+	query_name NAME,
+    COMMENT	position 2,
+    CREATED_BY	position 3,
+    DATE	position 4,
+    EDIT_BY	position 5,
+    EDIT_DATE	position 6;
+
+define relation TESTS
+    TEST_NAME based on NAME	position 1
+	query_name NAME,
+    SCRIPT	position 3,
+    CATEGORY	position 4,
+    CREATED_BY	position 5,
+    DATE	position 6,
+    EDIT_BY	position 7,
+    EDIT_DATE	position 8,
+    NO_RUN_FLAG	position 9,
+    COMMENT	position 10,
+    VERSION based on RDB$31	position 12,
+    NO_INIT_FLAG,
+    CREATED_DATE date computed by (date);
+
+define relation TIMES
+    TEST_NAME based on NAME	position 1
+	query_name NAME,
+    DATE	position 2,
+    TIME	position 3;
+
+define relation WORKLIST
+    SERIES_NAME based on NAME	position 1,
+    SEQUENCE	position 2,
+    STATUS	position 3,
+    MACHINE based on NAME	position 4,
+    START_TIME based on TIMESTAMP	position 5,
+    END_TIME based on TIMESTAMP	position 6,
+    PASSED based on RESULT	position 7,
+    FAILED based on RESULT	position 8,
+    NOT_RUN based on RESULT	position 9,
+    KILLED based on RESULT	position 10,
+    BOILER_PLATE_NAME based on NAME	position 11,
+    FAILED_KNOWN based on RESULT	position 12,
+    FAILED_UNINIT based on RESULT	position 13,
+    SKIPPED_FLAGGED based on RESULT	position 14,
+    SKIPPED_NOTFOUND based on RESULT	position 15,
+    CONFIGURATION based on CATEGORY	position 16;
+
+
+/*	Index Definitions	*/
+
+
+define index AUDIT_1 for AUDIT 
+	TESTER,
+	TEST_NAME;
+
+define index BP_1 for BOILER_PLATE unique
+	BOILER_PLATE_NAME;
+
+define index ENV_1 for ENV unique
+	ENV_NAME;
+
+define index FAILURES_1A for FAILURES 
+	TEST_NAME;
+
+define index FAILURES_2 for FAILURES 
+	RUN;
+
+define index INIT_1 for INIT unique
+	TEST_NAME,
+	VERSION;
+
+define index KNOWN_1 for KNOWN_FAILURES 
+	TEST_NAME;
+
+define index META_1 for META_SERIES unique
+	META_SERIES_NAME,
+	SERIES_NAME,
+	SEQUENCE;
+
+define index NOTES_INDEX for NOTES 
+	TEST_NAME;
+
+define index QLI$PROCEDURES_IDX1 for QLI$PROCEDURES unique
+	QLI$PROCEDURE_NAME;
+
+define index SERIES1 for SERIES 
+	SERIES_NAME;
+
+define index SERIES2 for SERIES 
+	TEST_NAME;
+
+define index CATEGORY for TESTS 
+	CATEGORY;
+
+define index TEST_1 for TESTS unique
+	TEST_NAME,
+	VERSION;
+
+define index WORKLIST_SEQUENCE for WORKLIST unique
+	SEQUENCE;
+
+/*	Add Security Classes to Defined Objects	*/
+
+
+
+
+
+define trigger BOILER_PLATE$STORE for BOILER_PLATE
+	pre store 0:
+begin
+        if new.created_by MISSING
+	    new.created_by = rdb$user_name;
+
+	if new.date MISSING
+	    new.date = 'now';
+end;
+
+	
+	end_trigger;
+
+define trigger ENV$MODIFY for TESTS
+	pre modify 0:
+begin
+	    new.edit_by = rdb$user_name;
+	    new.edit_date = 'now';
+end;
+
+	
+	end_trigger;
+
+define trigger ENV$STORE for ENV
+	pre store 0:
+begin
+        if new.created_by MISSING
+	    new.created_by = rdb$user_name;
+
+	if new.date MISSING
+	    new.date = 'now';
+end;
+
+	
+	end_trigger;
+
+define trigger FAILURES$STORE for FAILURES
+	pre store 0:
+new.run_by = rdb$user_name;
+
+	
+	end_trigger;
+
+define trigger INIT$MODIFY for INIT
+	pre modify 0:
+if (new.init_date != old.init_date or
+	    new.init_date not missing and old.init_date missing)
+		new.init_by = rdb$user_name;
+
+	
+	end_trigger;
+
+define trigger INIT$MODIFY2 for INIT
+	pre modify 0:
+begin
+	if (new.init_date MISSING)
+	    new.init_date = "NOW";
+	if (new.init_by missing)
+	    new.init_by = rdb$user_name;
+	end
+	
+	end_trigger;
+
+define trigger INIT$STORE2 for INIT
+	pre store 0:
+begin
+	if (new.init_date MISSING)
+	    new.init_date = "NOW";
+	if (new.init_by missing)
+	    new.init_by = rdb$user_name;
+	end
+	
+	end_trigger;
+
+define trigger KNOWN_FAILURES$MODIFY for KNOWN_FAILURES
+	pre modify 0:
+begin
+	if ((new.init_date != old.init_date) or
+	    (new.init_date not missing and old.init_date missing))
+		new.init_by = rdb$user_name;
+
+	if new.init_date MISSING
+	    new.init_date = 'now';
+	if new.init_by MISSING
+	    new.init_by = rdb$user_name;
+end;
+	
+	
+	end_trigger;
+
+define trigger KNOWN_FAILURES$STORE for KNOWN_FAILURES
+	pre store 0:
+begin
+        if new.init_by MISSING
+	    new.init_by = rdb$user_name;
+
+	if new.init_date MISSING
+	    new.init_date = 'now';
+end;
+	
+	
+	end_trigger;
+
+define trigger TESTS$STORE for TESTS
+	pre store 0:
+begin
+        if new.created_by MISSING
+	    new.created_by = rdb$user_name;
+
+	if new.date MISSING
+	    new.date = 'now';
+end;
+
+	
+	end_trigger;

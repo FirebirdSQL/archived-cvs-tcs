@@ -1,0 +1,13 @@
+#!/bin/sh  
+#$Id$
+# import all tables from ./export/global
+# 
+#
+#
+
+IMPDIR='./export/global/'
+  for TABLE in `ls $IMPDIR*.csv`
+  do
+    echo Importing $TABLE
+    import_gtcs.pl $TABLE
+  done

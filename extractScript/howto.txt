@@ -1,0 +1,32 @@
+$Id$
+These files are meant as a first step to export and import
+test data in plain ascii format to and from the test
+database.
+
+This would make it possible to place a test pool under 
+cvs control.
+
+To use this stuff:
+
+1. Install IBPerl-0.8p3 (from www.karwin.com).
+2. Create a directory named import under your TCS directory. 
+3. Copy dump_gtcs.pl, fix_it.sql, import_all, import_gtcs.pl
+   to your TCS directory.
+   Copy  gtcs.gdl into the import directory.
+3. To export data from an existing gtcs.gdb:
+   run isql ./tests/gtcs.gdb -i fix_it.sql
+   run dump_gtcs.pl
+4. to create a new gtcs.gdb from the exported data:
+   run gdef -r ./import/gtcs.gdl
+   run import_all
+
+5. If you like your newly created gtcs.gdb, copy it to
+   your tests directory. 
+ 
+   Sorry, at the moment the TCS will not work correctly 
+   with this new gtcs.gdb. I'm working on this.
+
+Frank
+
+
+   

@@ -242,7 +242,8 @@ typedef unsigned short  BOOLEAN;
 typedef long            SLONG;
 typedef unsigned long   ULONG;
 typedef char            TEXT;
-typedef signed char     SCHAR;
+/*typedef signed char     SCHAR; */
+typedef char     SCHAR;
 typedef unsigned char   UCHAR;
 typedef long            STATUS;
 
