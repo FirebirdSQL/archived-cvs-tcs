@@ -427,7 +427,8 @@ proc data_sub { str } {
 #   (a tcs.dataX file).
 
 proc runTest { testName filePath platform qaBp qaEnv keep_files } {
-    global saveSeriesDir
+    global saveSeriesDataDir
+    global saveSeriesResultsDir
 
     # Find the correct script file
     send_user "extracting $testName..."
@@ -517,11 +518,11 @@ proc runTest { testName filePath platform qaBp qaEnv keep_files } {
     }
     close $file2
 
-    exec cp $filePath/$scriptFile $saveSeriesDir/$testName.script
+    exec cp $filePath/$scriptFile $saveSeriesDataDir/$testName.script
     if { $outputFile == "x" } {
         send_user " warning no output file, (script was copied)\n"
     } else {
-        exec cp $filePath/$outputFile $saveSeriesDir/$testName.results
+        exec cp $filePath/$outputFile $saveSeriesResultsDir/$testName.results
     }
     send_user "\n"
 }
@@ -531,11 +532,15 @@ proc runTest { testName filePath platform qaBp qaEnv keep_files } {
 # The code to run a series
 
 proc runSeries { seriesName filePath platform qaBp qaEnv } {
-    global saveSeriesDir
-    global saveSeriesRoot
-    set saveSeriesDir $saveSeriesRoot/$seriesName
+    global saveSeriesDataDir
+    global saveSeriesResultsDir
+    global saveSeriesDataRoot
+    global saveSeriesResultsRoot
+    set saveSeriesDataDir $saveSeriesDataRoot/$seriesName
+    set saveSeriesResultsDir $saveSeriesResultsRoot/$seriesName
 
-    exec mkdir -p $saveSeriesDir
+    exec mkdir -p $saveSeriesDataDir
+    exec mkdir -p $saveSeriesResultsDir
 
     foreach tst [ loadSeries "$filePath/global/SERIES.csv" $seriesName ] {
         runTest [ lindex $tst 0 ] "$filePath" "$platform" "$qaBp" "$qaEnv" 0
@@ -569,8 +574,9 @@ set timeout 1000
 set platform linux
 
 #set saveSeriesDir /tmp/fred1
-set saveSeriesRoot testsuite/tcs.test/data
 set exportedData ../test-files/export
+set saveSeriesDataRoot testsuite/tcs.test/data
+set saveSeriesResultsRoot testsuite/tcs.test/results
 
 runMetaSeries VECTOR_12HOUR $exportedData $platform qa_bp qa_shr
 

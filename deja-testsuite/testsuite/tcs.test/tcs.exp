@@ -297,10 +297,16 @@ proc setup_tcsenv {} {
 proc platform_code_ext { fileName } {
     global tcsEnv
 
-    if { [ string last $fileName "." ] == -1 } { return "$tcsEnv(HOST_CODE_EXT_C)" }
-    set curExt [ string range [ string last $fileName "." ] end ]
-    #    if { [ string last "." end ] == -1 } { return "$tcsEnv(HOST_CODE_EXT_C)" }
-    #    set curExt [ string range [ string last "." end ] end ]
+    set posOfDot [string last "." $fileName ]
+
+    if { $posOfDot == -1 } { 
+        return "$tcsEnv(HOST_CODE_EXT_C)"
+    }
+
+    set curExt [ string range $fileName $posOfDot end ]
+
+    if { ! [string compare "$curExt" ".c"] } {
+        return "$tcsEnv(HOST_CODE_EXT_C)" }
     if { ! [string compare "$curExt" ".C"] } {
         return "$tcsEnv(HOST_CODE_EXT_CXX)" }
     if { ! [string compare "$curExt" ".a"] } {
@@ -312,18 +318,29 @@ proc platform_code_ext { fileName } {
     if { ! [string compare "$curExt" ".cbl"] } {
         return "$tcsEnv(HOST_CODE_EXT_COB)" }
 
+    # I wonder if we want to do this, or would it be better to return
+    # the current extention $curExt even though we don't know it.
     return ""
 }
 
 proc platform_code_root { fileName } {
-    if { [string last $fileName "." ] == -1 } { return "$fileName" }
-    return [ string  range $fileName 0 [ expr [string last $fileName "." ] - 1 ] ]
-#    if { [string last "." end ] == -1 } { return "$fileName" }
-#    return [ string range 0 [ expr [string last "." end] - 1 ] ]
+    set posOfDot [string last "." $fileName ]
+
+    if { $posOfDot == -1 } { 
+        return "$fileName" 
+    } else {
+        return [ string range $fileName 0 [ expr $posOfDot - 1 ] ]
+    }
+}
+
+proc debugPrint { line } {
+#    send_user "$line\n"
 }
 
 proc cmd_sub { line } {
     global tcsEnv
+
+    debugPrint "initial: $line"
 
     set cmdList [ split "$line" { } ]
     set line ""
@@ -360,13 +377,21 @@ proc cmd_sub { line } {
             continue
         }
 
-        if { [ string compare "" [ array names tcsEnv "$item" ] ] == 0 } {
-            set line "$line $item"
-        } else {
-            set line "$line $tcsEnv($item)"
+        if { [ string length $item ] != 0 } { 
+            set findNames [ array names tcsEnv "$item" ]        
+            debugPrint "map: X${item}X Y${findNames}Y"
+
+            # Check lookup to see if we have found a match (done this way so that
+            # wildcards such as 'A*' still work ok.
+            if { $findNames != $item  } {
+                set line "$line $item"
+            } else {            
+                set line "$line $tcsEnv($item)"
+            }
         }
     }
     set line [ string range "$line" 1 end ]
+    debugPrint "final: $line"
 
     return [ data_sub "$line" ]
 }
@@ -439,6 +464,7 @@ proc linesAreEquiv { source comp } {
 # streams.
 
 proc doTcsDiff { srcScript outputFile } {
+    global testTimeout 
     send_user "running..."
     set errLine ""
     set splitFile 0
@@ -478,18 +504,7 @@ proc doTcsDiff { srcScript outputFile } {
         eof { set fileOpen 0; set failMsg "Premature EOF!!\n"; break }
     }
 
-    set timeout 60
-
-
-#    expect "$srcScript"
-#    expect "$srcScript"
-
-# Perhaps the above should be a little fancier something like 2x below:
-#    expect {
-#        -re {^[^\r\n]*$srcScript\r\n} { }
-#        timeout { send_user "TIMEOUT\n" }
-#        eof { set fileOpen 0; set failMsg "Premature EOF!!\n"; break }
-#    }
+    set timeout $testTimeout
 
     while { ! [ eof $file ] } {
         if { $stdoutMatch == 1 } {
@@ -634,7 +649,8 @@ proc doTcsDiff { srcScript outputFile } {
 #   (a tcs.dataX file).
 
 proc runTest { testName seriesName filePath platform qaBp qaEnv keep_files } {
-    global saveSeriesRoot
+    global saveSeriesDataRoot
+    global saveSeriesResultsRoot
 
     # Find the correct script file
     send_user "$testName..."
@@ -651,8 +667,8 @@ proc runTest { testName seriesName filePath platform qaBp qaEnv keep_files } {
         }
     }
 
-    set scriptFile $saveSeriesRoot/$seriesName/$testName.script
-    set outputFile $saveSeriesRoot/$seriesName/$testName.results
+    set scriptFile $saveSeriesDataRoot/$seriesName/$testName.script
+    set outputFile $saveSeriesResultsRoot/$seriesName/$testName.results
     set bpFile testsuite/config/$platform/script_prologue.sh
     set envData [ parseEnvFile "testsuite/config/$platform/script_subst.txt" ]
 
@@ -660,7 +676,15 @@ proc runTest { testName seriesName filePath platform qaBp qaEnv keep_files } {
     set lastWasCmd 0
     set dataFileOpen 0
     set testFiles "tcs.script"
+
+    if { [file exists $scriptFile] != 1 } {
+        send_user "FAIL\n"
+        fail "TCS_$testName (file $scriptFile not found)"
+        return
+    }
+
     set file [open "$scriptFile" r]
+
     set script [open "tcs.script" w]
 
     # Copy over the boiler plate
@@ -707,7 +731,7 @@ proc runTest { testName seriesName filePath platform qaBp qaEnv keep_files } {
         close $dataFile
         set dataFileOpen 0
     }
-#    puts $script "exec sh"
+
     close $script
     close $file
 
@@ -766,14 +790,16 @@ set timeout 1000
 #set platform linux
 
 #set saveSeriesDir /tmp/fred1
-set saveSeriesRoot testsuite/tcs.test/data
+set saveSeriesDataRoot testsuite/tcs.test/data
+set saveSeriesResultsRoot testsuite/tcs.test/results
 
 set exportedData ../test-files/export
 
+set testTimeout 60
 
-#runMetaSeries VECTOR_12HOUR $exportedData $platform qa_bp qa_shr
+runMetaSeries VECTOR_12HOUR $exportedData $platform qa_bp qa_shr
 
-runSeries CF_ISQL             $exportedData $platform qa_bp qa_shr
+#runSeries CF_ISQL             $exportedData $platform qa_bp qa_shr
 
 #runSeries C_SQL_PRED          $exportedData $platform qa_bp qa_shr
 #runSeries ISC_ARRBLOB_CK      $exportedData $platform qa_bp qa_shr
@@ -787,7 +813,12 @@ runSeries CF_ISQL             $exportedData $platform qa_bp qa_shr
 #runSeries V4_EXCLUSIVE        $exportedData $platform qa_bp qa_shr
 #runSeries IDML_C_CHARSET      $exportedData $platform qa_bp qa_shr
 #runSeries IDML_C_SUBQUERYS    $exportedData $platform qa_bp qa_shr
+
+#set testTimeout 60000
 #runSeries EVENT_MISC          $exportedData $platform qa_bp qa_shr
+
+#set testTimeout 60
+
 #runSeries EXT_LEV_0           $exportedData $platform qa_bp qa_shr
 #runSeries GF_SHUTDOWN         $exportedData $platform qa_bp qa_shr
 #runSeries QA_PROC_IES_ERR     $exportedData $platform qa_bp qa_shr
@@ -819,3 +850,5 @@ runSeries CF_ISQL             $exportedData $platform qa_bp qa_shr
 
 # just testing 
 #runTest C_SQL_PRED_0 C_SQL_PRED $exportedData $platform qa_bp qa_shr 1
+#runTest AUTO_COMMIT.1.ESQL V4_AUTO_COMMIT $exportedData $platform qa_bp qa_shr 1
+#runTest IDML_C_SUBQ_10 IDML_C_SUBQUERYS $exportedData $platform qa_bp qa_shr 1
