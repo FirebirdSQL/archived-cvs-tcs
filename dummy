@@ -1,4 +1,7 @@
 /* $Log$
+/* Revision 1.2  2000/12/08 08:16:03  fsg
+/* test for auto increment
+/*
 /* Revision 1.1  2000/12/08 08:12:36  fsg
 /* Added test for auto increment build number on commit
 /* 
@@ -12,5 +15,6 @@ incremented.
 I hope this works
 
 Frank
+
 
 this_build should be 2 now
