@@ -19,17 +19,19 @@
  * Corporation. All Rights Reserved.
  * 
  * Contributor(s): ______________________________________.
+ * $Log$
  */
 
 #include <stdio.h>
+#include <ctype.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
 #include <sys/stat.h>
-/*************************
-#include "../jrd/common.h"
-#include "../jrd/time.h"
-*************************/
+/* seems these are needed to compile */
+#include <gds.h>
+#include "common.h"
+#include "time.h"
 
 #ifdef VERSION_33
 /* This causes compile error on Version 4.0 */
@@ -296,9 +298,9 @@ if (argc > 1)
     db_name = argv [1];
 else
 #if (defined apollo || defined WIN_NT || defined OS2_ONLY)
-    db_name = "/gds/corporate/databases/rollup.gdb";
+    db_name = "./tests/rollup.gdb";
 #else
-    db_name = "/usr/gds/corporate/databases/rollup.gdb";
+    db_name = "./tests/rollup.gdb";
 #endif
 
 strcpy (version, DEFAULT_VERSION);
@@ -1554,12 +1556,12 @@ if (global_tcs)
     return;
 
 #ifdef apollo
-gdb_name = "/gds/tests/gtcs.gdb";
+gdb_name = "./tests/gtcs.gdb";
 #else
 #if (defined WIN_NT || defined OS2_ONLY)
-gdb_name = "jedi:/usr/gds/tests/gtcs.gdb";
+gdb_name = "./tests/gtcs.gdb";
 #else
-gdb_name = "/usr/gds/tests/gtcs.gdb";
+gdb_name = "./tests/gtcs.gdb";
 #endif
 #endif
 
@@ -2105,6 +2107,7 @@ UCHAR				*input_pattern;
 USHORT				have_database_parm;
 
 /* Lookup database/test */
+/* WILL DO NOTHING UNTIL gpre IS FIXED
 
 if (args == 0)
     input_pattern = "%";
@@ -2124,6 +2127,8 @@ count = 0;
 fprintf (output, "Runs like %s showing failures: version %s on %s:\n", 
 		input_pattern, version, current_platform->dbb_system);
 
+*/
+
 /* This kind of fetch is easier to do in SQL than in GDML - 
  * so we now have a mixed mode program.  Note that SQL doesn't
  * currently support notions of request handles, so there is
@@ -2131,8 +2136,14 @@ fprintf (output, "Runs like %s showing failures: version %s on %s:\n",
  * We have to do that just in case this request gets used
  * once and then we change databases.
  */
+
+/* gpre doesn't like the aggregate functions, 
+ * so don't do it until gpre is fixed
+ * FSG 14.Nov.2000
+
+
 EXEC SQL DECLARE LR CURSOR FOR 
-   SELECT RUN, COUNT(*), MAX(DATE), MIN(DATE) 
+     SELECT RUN, COUNT(*), MAX(DATE), MIN(DATE)
      FROM LTCS.FAILURES
      WHERE RUN LIKE :input_pattern
      GROUP BY RUN
@@ -2159,18 +2170,18 @@ while (!SQLCODE)
     }
 
 EXEC SQL CLOSE LR;
-
+*/
 /* Close does not drop the request handle, so we drop it here.
  * Note that this depends on this SQL cursor being the only
  * request outstanding for LTCS that doesn't have it's own
  * request handle stashed away in dbb
  */
-RELEASE_REQUESTS FOR LTCS;
+/*RELEASE_REQUESTS FOR LTCS;
 
 if (!count)
     fprintf (output, "No runs showing failures on %s/%s\n", 
 		dbb->dbb_system, dbb->dbb_platform);
-
+*/
 return TRUE;
 }
 
@@ -3338,7 +3349,7 @@ for (dbb = databases; dbb; dbb = dbb->dbb_next)
 	    strcpy (test_name, FAILURE.TEST_NAME);
 	    STORE (TRANSACTION_HANDLE rollup_trans) NEW IN DB.FAILURES
 		NEW.DATE = FAILURE.DATE;
-		(NEW.DATE).gds_quad_low = 0;
+/*		(NEW.DATE).gds_quad_low = 0;*/
 		strcpy (NEW.TEST_NAME, FAILURE.TEST_NAME);
 		strcpy (NEW.SYSTEM, dbb->dbb_system);
 		strcpy (NEW.PLATFORM, dbb->dbb_platform);
