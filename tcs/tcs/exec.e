@@ -32,7 +32,7 @@
 
 extern USHORT   sw_ignore_init,sw_quiet,sw_save,sw_times,quit;
 
-#if (defined WIN_NT || defined OS2_ONLY)
+#if (defined WIN_NT || defined OS2_ONLY || defined(SINIXZ))
 
 /* External declarations */
 extern int do_diffs (TEXT* input_1,
@@ -61,7 +61,11 @@ static int run (ULONG* blob_id,
 			  ULONG* run_time,
 			  USHORT sw_no_system,
 			  int* file_count);
+#ifdef OLD_STYLE_DIFF
 static int compare (SLONG* blob_id, TEXT* output_file, SSHORT global);
+#else
+static int compare (TEXT* compare_file, TEXT* output_file, SSHORT global);
+#endif
 static int compare_initialized (ULONG* blob_id,
 										  TEXT* test_name,
 										  TEXT* run_name,
@@ -355,7 +359,7 @@ if (!sw_save)
  return TRUE;
 }
 
-EXEC_init (string, blob_id, db_handle, sw_no_system, phase, file_count, version,           global)
+USHORT EXEC_init (string, blob_id, db_handle, sw_no_system, phase, file_count, version,           global)
 	TEXT    *string, *version;
 	ULONG    *blob_id, *db_handle;
    USHORT   sw_no_system, phase;
@@ -755,7 +759,7 @@ return TRUE;
 }
 
 #ifdef OLD_STYLE_DIFF
-static compare (blob_id, output_file, global)
+static int compare (blob_id, output_file, global)
     SLONG       *blob_id;
     TEXT        *output_file;
     SSHORT      global;
@@ -945,7 +949,7 @@ gds__close_blob (status_vector, GDS_REF (blob));
 return (eof_blob && eof_file) ? TRUE : FALSE;
 }
 
-static compare_initialized (blob_id, test_name, run_name, global, version)
+static int compare_initialized (blob_id, test_name, run_name, global, version)
     ULONG    *blob_id;
     TEXT     *test_name, *run_name;
     SSHORT   global;
@@ -1066,7 +1070,7 @@ return (test_result);
 }
 #else
 /* !OLD_STYLE_DIFF */
-static compare (compare_file, output_file, global)
+static int compare (compare_file, output_file, global)
     TEXT        *compare_file;
     TEXT        *output_file;
     SSHORT      global;
@@ -1229,7 +1233,7 @@ fclose (blob_file);
 return (eof_blob && eof_file) ? TRUE : FALSE;
 }
 
-static compare_initialized (blob_id, test_name, run_name, global, version)
+static int compare_initialized (blob_id, test_name, run_name, global, version)
     ULONG    *blob_id;
     TEXT     *test_name, *run_name;
     SSHORT   global;
@@ -1363,7 +1367,7 @@ return (test_result);
 
 #endif
 
-static contains (s1, s2)
+static int contains (s1, s2)
     TEXT        *s1, *s2;
 {
 /**************************************
@@ -1396,7 +1400,7 @@ return FALSE;
 }
 
 #ifndef VMS
-static  execute_apollo (script_file, output_file)
+static int execute_apollo (script_file, output_file)
     TEXT    *script_file, *output_file;
 {
 /**************************************
@@ -1503,7 +1507,7 @@ return TRUE;
 }
 #endif          
 
-static fail_uninit (testname, run_name, version)
+static int fail_uninit (testname, run_name, version)
     TEXT    *testname, *run_name, *version;
 {
 /**************************************
@@ -1599,7 +1603,7 @@ return desc;
 }
 #endif
 
-static next_line (file, buffer, buff_len)
+static int next_line (file, buffer, buff_len)
     FILE                *file;
     TEXT                *buffer;
     USHORT              buff_len;
@@ -1639,7 +1643,7 @@ return feof(file);
     
 }
 
-static next_segment (blob, buffer, buff_len)
+static int next_segment (blob, buffer, buff_len)
 	 ULONG               *blob;
 	 TEXT                *buffer;
 	 USHORT              buff_len;
@@ -1709,7 +1713,7 @@ if (!gds__open_blob (GDS_NULL,
 return NULL;
 }
 
-static read_segment (blob, buffer, buff_len)
+static int read_segment (blob, buffer, buff_len)
     ULONG               *blob;
     TEXT                *buffer;
     USHORT              buff_len;
@@ -1753,7 +1757,7 @@ do {
 return FALSE;
 }
 
-static run (blob_id, db_handle, script_file, output_file, run_time, sw_no_system, file_count)
+static int run (blob_id, db_handle, script_file, output_file, run_time, sw_no_system, file_count)
     ULONG       *blob_id, *db_handle, *run_time;
     TEXT        *script_file, *output_file;
     USHORT      sw_no_system;
@@ -2095,7 +2099,7 @@ while ((ch = getb (input)) != EOF)
 		 if (fputs (c, data) == EOF) /* Dump to the data file.               */
 		 {
 			print_error ("IO error on write to \"%s\"\n", data_file,0,0);
-			(void) fclose (data_file);
+			(void) fclose (data);
 			(void) fclose (script);
 			BLOB_close (input);
 			disk_io_error = TRUE;
@@ -2112,7 +2116,7 @@ while ((ch = getb (input)) != EOF)
 	    if (fputs (c, data) == EOF)
 		{
 		print_error ("IO error on write to \"%s\"\n", data_file,0,0);
-		(void) fclose (data_file);
+		(void) fclose (data);
 		(void) fclose (script);
 		BLOB_close (input);
 		disk_io_error = TRUE;
@@ -2244,7 +2248,7 @@ return TRUE;
 }
 #endif
 
-static store_blob (blob_id, db_handle, tr_handle, file_name)
+static int store_blob (blob_id, db_handle, tr_handle, file_name)
     ULONG       *blob_id, *db_handle, *tr_handle;
     TEXT        *file_name;
 {

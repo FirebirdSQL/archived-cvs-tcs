@@ -33,7 +33,7 @@ rm -f *.tmp
 #EDITOR="joe -nobackup"
 #export EDITOR
 
-INTERBASE=/opt/interbase
+INTERBASE=${INTERBASE-/opt/interbase}
 
 PATH=./bin:$INTERBASE/bin:$PATH
 export PATH

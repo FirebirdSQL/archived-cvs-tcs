@@ -18,19 +18,19 @@
 
 
 if [ $# != 2 ]; then
-    echo "Usage: $0 {SOLARIS | LINUX} configuration"
+    echo "Usage: $0 system configuration"
+    echo "Supported systems are: SOLARIS, LINUX, SINIXZ"
     exit 1
 fi
 
 
-if [ $1 = "SOLARIS" ]; then
-    PLATFORM=SO
-elif [ $1 = "LINUX" ]; then
-    PLATFORM=LI
-else
-    echo "ERROR: Unknown platform <$1> specified"
-    exit 1
-fi
+case $1 in
+SOLARIS)    DB=tests/so_ltcs.gdb;;
+LINUX)      DB=tests/hu_ltcs.gdb;;
+SINIXZ)     DB=tests/sz_ltcs.gdb;;
+*)          echo "ERROR: Unknown platform <$1> specified"
+            exit 1;;
+esac
 
 CONFIG=$2
 TEST_DIR=`pwd`
@@ -52,10 +52,10 @@ rm -f tcs.*
 rm -f *.tmp
 
 
-INTERBASE=/opt/interbase
+INTERBASE=${INTERBASE-/opt/interbase}
 export INTERBASE
 
-PATH=$INTERBASE/bin:$PATH
+PATH=./bin:$INTERBASE/bin:$PATH
 export PATH
 LD_LIBRARY_PATH=/usr/lib
 export LD_LIBRARY_PATH
@@ -119,11 +119,11 @@ mv -f $LOCAL_LOGS/$1.log $LOCAL_LOGS/$1.log_1
     REMOTE_DIR=$TEST_DIR
     REMOTE_DIR1=$TEST_DIR
     REMOTE_DIR11=$TEST_DIR
-    WHERE_GSEC_REMOTE=/opt/interbase
-    WHERE_GSEC=/opt/interbase
+    WHERE_GSEC_REMOTE=$INTERBASE
+    WHERE_GSEC=$INTERBASE
     WHERE_REMOTE=$TEST_DIR
     UDF_LIBPATH=$TEST_DIR
-    WHERE_UDF=/opt/interbase/UDF
+    WHERE_UDF=$INTERBASE/UDF
     WHERE_GDB_EXTERNAL=$TEST_DIR
     SERVICE_MGR=service_mgr
     unset ISC_PATH

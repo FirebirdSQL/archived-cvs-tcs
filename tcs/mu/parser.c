@@ -23,8 +23,10 @@
  */
 #include "scheduler.h"
 
+static void print_version();
+
 /******************************* insert_pcb **********************************/
-static insert_pcb()
+static void insert_pcb()
 {
 if (head_pcb_ptr == NULL) 
 	{	/* First program arg */
@@ -56,6 +58,7 @@ for (x = 1; x < *create_instances; x++)
 	current_jib_ptr->total_clients += 1;	/* increment the # of clients */
 	}
 *create_instances = 0;	/* initialize create_instances */
+return TRUE;
 }
 
 
@@ -104,7 +107,7 @@ return TRUE;
 
 
 /*************************** print_description *******************************/
-static print_description(argv)
+static void print_description(argv)
 char *argv[];
 {
 
@@ -215,7 +218,7 @@ for (i = 1; i < argc; i++)
 			char *endptr[20];
 			if (create_instances = strtol(argv[++i], endptr, 10)) 
 				{
-				if (**endptr != NULL)
+				if (**endptr != (char)0)
 					printf("%s: argument for -i: trailing '%s' ignored\n", 
 						argv[0], *endptr);
 				} 
@@ -243,7 +246,7 @@ for (i = 1; i < argc; i++)
 		char *endptr[20];
 		if (current_pcb_ptr->p_sched_freq = strtol(argv[++i], endptr, 10)) 
 			{
-			if (**endptr != NULL)
+			if (**endptr != (char)0)
 				printf("%s: argument for -f: trailing '%s' ignored\n", 
 					argv[0], *endptr);
 			} 
@@ -274,7 +277,7 @@ for (i = 1; i < argc; i++)
 			if (current_pcb_ptr->p_quantum = 
 				strtol(argv[++i], endptr, 10)) 
 				{
-				if (**endptr != NULL)
+				if (**endptr != (char)0)
 					printf("%s: argument for -q: trailing '%s' ignored\n", 
 							argv[0], *endptr);
 				} 
@@ -303,7 +306,7 @@ for (i = 1; i < argc; i++)
 			if (current_pcb_ptr->p_prempted_limit = 
 				strtol(argv[++i], endptr, 10)) 
 				{
-				if (**endptr != NULL)
+				if (**endptr != (char)0)
 					printf("%s: argument for -l: trailing '%s' ignored\n ", 
 						argv[0], *endptr);
 				} 
@@ -463,7 +466,7 @@ init_scheduler()
 	 * client calls
 	 */
 
-	sprintf(fname, "%s%s%ld%s", TEMP_DIR, "/mu_", getpid(), ".tmp");
+	sprintf(fname, "%s%s%ld%s", TEMP_DIR, "/mu_", (long)getpid(), ".tmp");
 	if (!fopen(fname, "w+")) {
 		char            error_message[256];
 		sprintf(error_message, "Failed to create temp file, Error No : %d", errno);
@@ -492,7 +495,7 @@ init_scheduler()
 char            PROGRAM_VER[] = "QA InterBase multi-tasking scheduler, ver 1.1a";
 
 /***************************** get_version **********************************/
-static 
+static void
 print_version()
 {
 	printf("%s\n", PROGRAM_VER);

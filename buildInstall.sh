@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ksh
 
 # Copyright whatever... 
 
@@ -20,21 +20,32 @@
 # allowing it to run via inetd or superserver currently)
 
 
-(cd tcs/tcs; make -f makefile.linux tcs)   
-(cd tcs/diffs; make -f makefile.linux isc_diff)
-(cd tcs/drop_gdb; make -f makefile.linux)
-(cd tcs/mu; make -f makefile.linux)
+case `uname -s` in
+  SINIX-Z) ext=sinixz;;
+  Linux)   ext=linux;;
+  *)       exit 1;;
+esac
+
+MAKE=${MAKE-make}
+IBBin=${INTERBASE-/opt/interbase}/bin
+export MAKE IBBin
+
+(cd tcs/tcs; $MAKE -f makefile.${ext} tcs)   
+(cd tcs/diffs; $MAKE -f makefile.${ext} isc_diff)
+(cd tcs/drop_gdb; $MAKE -f makefile.${ext})
+(cd tcs/mu; $MAKE -f makefile.${ext})
 
 
 # create scripts bin dire and move executables to it
 
 destDir=tcs/scripts/bin
 
+rm -rf $destDir
 mkdir -p $destDir
 
-cp tcs/diffs/isc_diff  $destDir
-cp tcs/tcs/tcs   $destDir
-cp tcs/drop_gdb/drop_gdb  $destDir
+cp tcs/diffs/isc_diff $destDir
+cp tcs/tcs/tcs $destDir
+cp tcs/drop_gdb/drop_gdb $destDir
 
 cp tcs/mu/mu $destDir
 cp tcs/mu/libmu.a $destDir
@@ -42,8 +53,6 @@ cp tcs/mu/client_lib.o $destDir
 
 
 # restore the databases
-
-IBBin=/opt/interbase/bin
 
 cd test-dbs
 

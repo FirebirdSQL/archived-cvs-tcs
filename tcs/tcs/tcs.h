@@ -67,7 +67,7 @@
 #define NULL            0L /* is this a barbarism? */
 #endif
 
-#if (defined UNIX || defined LINUX)
+#if (defined UNIX || defined LINUX || defined SINIXZ)
 #define CMD_STRING      "/bin/sh %s >%s 2>&1"   
 #define DAT_FILE        "tcs.data%d"
 #define SHELL           "/bin/sh"
@@ -210,6 +210,10 @@
 
 #ifdef LINUX
 #define DBB_NAME	"tests/li_ltcs.gdb"
+#endif
+
+#ifdef SINIXZ
+#define DBB_NAME	"tests/sz_ltcs.gdb"
 #endif
 
 #ifndef DBB_NAME

@@ -28,6 +28,15 @@ sigset_t chldset, mset;
 int ext_count = 0;
 #endif
 
+void schedule_async_client();
+void schedule_sync_client();
+void install_signal_handler();
+void install_signal_handler_by_handler();
+void signal_handler_sigabrt_hwfaults();
+void signal_handler_sigurg_execed_child();
+void dump_pcb_node();
+void clean_pcb_node();
+
 BOOL configure_scheduler_type()
 {
 /***********************************************************
@@ -56,9 +65,9 @@ char fname[256];
 */
 
 if (current_jib_ptr->mode == SYNC)
-	sprintf(fname,"%s%s%ld%s",TEMP_DIR,"/mu_",getpid(),".sync");
+	sprintf(fname,"%s%s%ld%s",TEMP_DIR,"/mu_",(long)getpid(),".sync");
 else
-	sprintf(fname,"%s%s%ld%s",TEMP_DIR,"/mu_",getpid(),".async");
+	sprintf(fname,"%s%s%ld%s",TEMP_DIR,"/mu_",(long)getpid(),".async");
 
 if (! fopen(fname,"w+"))
 	{
@@ -190,6 +199,7 @@ do
 
 current_jib_ptr->inactive_clients = current_jib_ptr->total_clients -
 					    current_jib_ptr->active_clients;	
+	return TRUE;
 }
 
 
@@ -293,7 +303,7 @@ if (current_jib_ptr->verbose)
 }
 
 
-schedule_async_client()
+void schedule_async_client()
 {
 /***********************************************************
  * 
@@ -346,7 +356,7 @@ current_pcb_ptr=save_pcb_ptr->next;
 }
 
 
-schedule_sync_client()
+void schedule_sync_client()
 {
 /***************************************************
  *
@@ -561,7 +571,7 @@ printf("Context switching from process %ld (state = %d) --> process %ld (state =
  *
  *****************************************************************************/
 
-signal_handler_sigusr1()
+void signal_handler_sigusr1()
 {
 char pipe_message[PIPE_BUFFER];	
 cpu_t pipe_cpu_value = (cpu_t)0;
@@ -663,7 +673,7 @@ printf("Parent received SIGUSR1 as data notification from %ld\tUnblocking and re
 }
 
 
-signal_handler_sigusr2()
+void signal_handler_sigusr2()
 {
 char pipe_message[PIPE_BUFFER];	
 cpu_t pipe_cpu_value = (cpu_t)0;
@@ -700,7 +710,7 @@ printf("Parent read from pipe value %s\tUnblocking ...\n", pipe_message);fflush(
 
 
 
-signal_handler_sigalrm()
+void signal_handler_sigalrm()
 {
 #ifndef POSIX_SIGNALS
 	
@@ -822,7 +832,7 @@ else
 	
 }	
 
-signal_handler_sigurg_freeze()
+void signal_handler_sigurg_freeze()
 {
 /***************** signal_handler_sigurg_freeze *************************
  *
@@ -880,7 +890,7 @@ if (current_jib_ptr->mode == SYNC)
 }
 
 
-signal_handler_sigtstp()
+void signal_handler_sigtstp()
 {
 /********************** signal_handler_sigtstp **************************
  *  This is a dummy handler to prevent the parent(scheduler) from
@@ -896,7 +906,7 @@ re_install_signal_handler(SIGNAL_SIGTSTP);
 #endif
 }
 
-signal_handler_sigcont()
+void signal_handler_sigcont()
 {
 /********************** signal_handler_sigcont **************************
  *  This is a dummy handler to prevent the parent(scheduler) from
@@ -914,7 +924,7 @@ re_install_signal_handler(SIGNAL_SIGCONT);
 }	
 
 
-signal_handler_sigabrt_hwfaults()
+void signal_handler_sigabrt_hwfaults()
 {
 /********************* signal_handler_sigabrt_hwfaults *****************
  *
@@ -960,7 +970,7 @@ fprintf(fp_logfile,"\n\n****  END ERROR RECORD  ****\n");
 }	
 
 
-signal_handler_sigurg_execed_child()
+void signal_handler_sigurg_execed_child()
 {
 /************* signal_handler_sigurg_execed_child ********************
  *                                                             
@@ -995,7 +1005,7 @@ current_pcb_ptr->pstate = EXT; /*Set this pcb to EXT so it is not scheduled */
 }
 
 #ifdef POSIX_SIGNALS
-signal_handler_sigchld()
+void signal_handler_sigchld()
 {
 /********************** signal_handler_sigchld **************************
  ************************************************************************/
@@ -1127,7 +1137,7 @@ perror(error_message);
 }
 
 
-dump_pcb_node(ptr, type)
+void dump_pcb_node(ptr, type)
 	PCB_NODE_PTR ptr;
 	char type[10];
 {
@@ -1236,10 +1246,10 @@ if (head_pcb_ptr != NULL)
 
 /* Free JIB Node */
 free(current_jib_ptr);
-
+return(TRUE);
 }
 
-clean_pcb_node(node_ptr)
+void clean_pcb_node(node_ptr)
 	PCB_NODE_PTR *node_ptr;
 {
 /**************************************
@@ -1382,7 +1392,7 @@ install_signal_handler(SIGNAL_SIGCHLD);
 }
 
 
-install_signal_handler(array_index)
+void install_signal_handler(array_index)
 	short array_index;
 {
 #ifdef POSIX_SIGNALS
@@ -1400,10 +1410,10 @@ if(sigaction(SIGNAL_ARRAY[array_index].signal_no,&(SIGNAL_ARRAY[array_index].act
 }
 
 
-install_signal_handler_by_handler(array_index,signal_number,handler_func_ptr)
+void install_signal_handler_by_handler(array_index,signal_number,handler_func_ptr)
 	short array_index;
 	int signal_number;
-	int (* handler_func_ptr)();
+	void (* handler_func_ptr)();
 {
 #ifdef POSIX_SIGNALS
 
@@ -1424,7 +1434,7 @@ install_signal_handler(array_index);
 }
 
 
-re_install_signal_handler(array_index)
+void re_install_signal_handler(array_index)
 	short	array_index;
 {
 	/* Re-installs handler for System V style signal handling */

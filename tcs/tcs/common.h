@@ -24,6 +24,11 @@
 This is a copy of ?/jrd/common.h
 you may use a symbolic link instead
 $Log$
+Revision 1.2  2002/07/02 06:45:43  eku
+SINIX-Z port by Erik Kunze <kunze@philosys.de>
+Return type/value cleanup
+Removed compiler warnings
+
 Revision 1.1  2000/11/14 13:22:04  fsg
 Changes to get tan compiled, not very useful at the moment
 
@@ -87,6 +92,44 @@ Changes to get tan compiled, not very useful at the moment
 
 #define VOLATILE        volatile
 #endif /* LINUX */
+
+/* SINIX-Z 5.42 */
+#ifdef SINIXZ
+#ifdef SUPERSERVER
+#error SINIX-Z does not support the SS architecture
+#endif
+
+#define QUADFORMAT	"ll"
+#define QUADCONST(n)	(n##LL)
+/* Alignment for i386 is defined later in this file. */
+#define UNIX		1
+#define VAX		1 /* Little endian */
+#define IEEE		1 /* Otherwhise compilation fails at btr.c:2237 */
+#define I386		1
+#define CURSES_KEYPAD   1
+
+#define INTL
+#define SUPPORT_RAW_DEVICES /* Turn on support for raw devices. */
+#define KILLER_SIGNALS
+#define SIGACTION_SUPPORTED
+#define MMAP_SUPPORTED
+#define NO_FLOCK
+#define NO_PYXIS
+
+/* Change version string into SINIXZ */
+#define IMPLEMENTATION  isc_info_db_impl_sinixz  /* 64 */
+
+#define VOLATILE			volatile
+#define VA_START(list,parmN)		va_start (list, parmN)
+#define MEMMOVE(from,to,length)		memmove ((void *)to, (void *)from, (size_t) length)
+#define MOVE_FAST(from,to,length)	memcpy (to, from, (int) (length))
+#define MOVE_FASTER(from,to,length)	memcpy (to, from, (int) (length))
+#define MOVE_CLEAR(to,length)		memset (to, 0, (int) (length))
+#define setreuid(ruid,euid)		setuid(euid)
+#define setregid(rgid,egid)		setgid(egid)
+#define SETPGRP				setpgrp ()
+#define ATEXIT(c)			atexit (c)
+#endif /* SINIXZ */
 
 /* FreeBSD for Intel platforms */
 #ifdef FREEBSD

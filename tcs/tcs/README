@@ -19,3 +19,8 @@ How to build tcs on Windows NT (MS VC++)
    INTERBASE=d:\InterBase
 
 2. make -f makefile.nt_ms tcs.exe
+
+How to build tcs on SINIX-Z
+---------------------------
+
+make -f makefile.sinixz tcs

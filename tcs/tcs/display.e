@@ -26,7 +26,7 @@
 #include <string.h>
 #include "tcs.h"
 #include <gds.h>
-#if (defined WIN_NT || defined OS2_ONLY)
+#if (defined WIN_NT || defined OS2_ONLY || defined(SINIXZ))
 static ULONG *open_blob (SLONG* blob_id, SLONG* db_handle);
 static int response (SCHAR* response_string, int length);
 int disp_upcase (TEXT* string, TEXT* name);
@@ -42,7 +42,7 @@ DATABASE TCS_GLOBAL = EXTERN COMPILETIME FILENAME "gtcs.gdb";
 
 
 
-DISP_add_series (db_flag, meta, series, sequence)
+int DISP_add_series (db_flag, meta, series, sequence)
     TEXT   db_flag, *meta, *series;
     SSHORT  sequence;
 {
@@ -263,7 +263,7 @@ if (!strcmp (response_string, "QUIT"))
 return TRUE;
 }      
 
-disp_print_blob (blob_id, db_handle)
+int disp_print_blob (blob_id, db_handle)
     SLONG	*blob_id;
     SLONG	*db_handle;
 {

@@ -188,9 +188,9 @@ extern BOOL cleanup_scheduler();
 extern void  print_sys_error();
 extern void update_aborted_pcb_jib();
 extern void update_died_pcb_jib();
-extern int signal_handler_sigabrt_hwfaults();
-extern int signal_handler_sigurg_execed_child();
-extern int signal_handler_sigurg_freeze();
+extern void signal_handler_sigabrt_hwfaults();
+extern void signal_handler_sigurg_execed_child();
+extern void signal_handler_sigurg_freeze();
 extern int killpg();
 
 /*************************************************************************/

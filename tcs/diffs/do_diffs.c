@@ -53,7 +53,7 @@ extern unsigned short	disk_io_error;
 static USHORT	check_match();
 static ULONG	hash();
 static LINE		*read_file();
-static print_lines(), do_diff();
+static void print_lines(), do_diff();
 
 
 
@@ -159,7 +159,7 @@ for (i = 0; i < min;)
 return TRUE;
 }
 
-static check_lines( line1, line2, end1, end2, count1, count2,linesleft)
+static int check_lines( line1, line2, end1, end2, count1, count2,linesleft)
     LINE     **line1, **line2;		
     SLONG     *end1, *end2, count1, count2, linesleft;
     
@@ -215,7 +215,7 @@ return (FALSE);
 }
 
 
-static do_diff (outfile, line1, line2, linecount1, linecount2)
+static void do_diff (outfile, line1, line2, linecount1, linecount2)
     FILE     *outfile;		
     LINE     *line1, *line2;
     SLONG     linecount1, linecount2;    
@@ -301,7 +301,7 @@ return ((chksum & MASK) | ((s - str) << 8) ) ;
 }
 
 
-static print_lines (outfile, lines1, lines2, end1, end2 )
+static void print_lines (outfile, lines1, lines2, end1, end2 )
     FILE    *outfile;
     LINE    *lines1, *lines2;
     SLONG    end1, end2;

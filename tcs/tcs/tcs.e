@@ -75,7 +75,12 @@ DATABASE
 DATABASE
     TCS_GLOBAL = COMPILETIME FILENAME "gtcs.gdb";
 
-#if (defined WIN_NT || defined OS2_ONLY)
+static struct tr_test_results {
+	int	tr_test_count;
+	int	tr_test_results [NUM_RESULTS];
+} series_results;
+
+#if (defined WIN_NT || defined OS2_ONLY || defined SINIXZ)
 
 /* External declarations for NT */
 extern int  PTSL_set_table(void);
@@ -270,11 +275,6 @@ extern int		keyword_search();
 static int		ms_count,ms_sequence,s_count,s_sequence,init_run,
 			phase,file_count;
 
-static struct tr_test_results {
-	int	tr_test_count;
-	int	tr_test_results [NUM_RESULTS];
-} series_results;
-
 static BASED_ON TCS.META_SERIES.META_SERIES_NAME ms_name;
 static BASED_ON TCS.SERIES.SERIES_NAME s_name;
 static BASED_ON TCS.TESTS.TEST_NAME t_name;
@@ -432,7 +432,7 @@ static struct cmd {
   {   NULL, NULL, NULL, 0 }
 };
 
-CLIB_ROUTINE main (argc, argv, envp)
+int CLIB_ROUTINE main (argc, argv, envp)
 	 int		argc;
 	 char	*argv[];
 	 char	*envp[];

@@ -18,19 +18,19 @@
 
 
 if [ $# != 2 ]; then
-    echo "Usage: $0 {SOLARIS | LINUX} configuration"
+    echo "Usage: $0 system configuration"
+    echo "Supported systems are: SOLARIS, LINUX, SINIXZ"
     exit 1
 fi
 
 
-if [ $1 = "SOLARIS" ]; then
-    DB=tests/so_ltcs.gdb
-elif [ $1 = "LINUX" ]; then
-    DB=tests/hu_ltcs.gdb
-else
-    echo "ERROR: Unknown platform <$1> specified"
-    exit 1
-fi
+case $1 in
+SOLARIS)    DB=tests/so_ltcs.gdb;;
+LINUX)      DB=tests/hu_ltcs.gdb;;
+SINIXZ)     DB=tests/sz_ltcs.gdb;;
+*)          echo "ERROR: Unknown platform <$1> specified"
+            exit 1;;
+esac
 CONFIG=$2
 cat > /tmp/qreport <<EOF
 connect "$DB";

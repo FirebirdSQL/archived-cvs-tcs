@@ -88,15 +88,17 @@ extern jmp_buf  JumpBuffer;
 
   /* forward declarations */
 
-struct defn *lookup_defn();
+static struct defn *lookup_defn();
 
-static 	fix_ada_compile(), fix_ada_link(), fix_ada_mkfam(), fix_ada_mklib(),
+static int fix_ada_compile(), fix_ada_link(), fix_ada_mkfam(), fix_ada_mklib(),
 		  fix_ada_rmfam(), fix_ada_rmlib(), fix_ada_search(), fix_ada_setlib(),
 		  fix_cc(), fix_cxx(), fix_cob(), fix_ftn(), fix_isc(), fix_qli(),
 		  fix_link(), fix_run(), fix_del(), fix_sys(), fix_java(), fix_javac(),
-		  fix_pas(), lang_compile();
+		  fix_pas(), lang_compile(), fix_compile(), handle_filename(),
+		  handle_path(), process_command(), process_defn(), process_noxcmd(),
+		  process_regtxt(), handle_options(), zap_hp_dollarsign();
 
-		  TEXT *mytokget();
+static		  TEXT *mytokget();
 		  void list_keywords();
 		  int  keyword_search();
 #endif
@@ -513,7 +515,7 @@ if ((SSHORT)delim && !nl)
  return 0;
 }
 
-static fix_ada_compile (line, bufr)
+static int fix_ada_compile (line, bufr)
 	 TEXT  *line, *bufr;
 {
 /**************************************
@@ -547,7 +549,7 @@ lang_compile(line,bufr);
  return 0;
 }
 
-static fix_ada_link (line, bufr)
+static int fix_ada_link (line, bufr)
 	 TEXT  *line, *bufr;
 {
 /**************************************
@@ -579,7 +581,7 @@ static fix_ada_link (line, bufr)
   return 0;
 }
 
-static fix_ada_mkfam (line, bufr)
+static int fix_ada_mkfam (line, bufr)
 	 TEXT  *line, *bufr;
 {
 /**************************************
@@ -608,7 +610,7 @@ static fix_ada_mkfam (line, bufr)
   return 0;
 }
 
-static fix_ada_mklib (line, bufr)
+static int fix_ada_mklib (line, bufr)
 	 TEXT  *line, *bufr;
 {
 /**************************************
@@ -638,7 +640,7 @@ static fix_ada_mklib (line, bufr)
   return 0;
 }
 
-static fix_ada_rmfam (line, bufr)
+static int fix_ada_rmfam (line, bufr)
 	 TEXT  *line, *bufr;
 {
 /**************************************
@@ -668,7 +670,7 @@ static fix_ada_rmfam (line, bufr)
  return 0;
 }
 
-static fix_ada_rmlib (line, bufr)
+static int fix_ada_rmlib (line, bufr)
 	 TEXT  *line, *bufr;
 {
 /**************************************
@@ -699,7 +701,7 @@ static fix_ada_rmlib (line, bufr)
   return 0;
 }
 
-static fix_ada_search (line, bufr)
+static int fix_ada_search (line, bufr)
     TEXT  *line, *bufr;
 {
 /**************************************
@@ -733,7 +735,7 @@ static fix_ada_search (line, bufr)
   return 0;
 }
 
-static fix_ada_setlib (line, bufr)
+static int fix_ada_setlib (line, bufr)
     TEXT  *line, *bufr;
 {
 /**************************************
@@ -767,7 +769,7 @@ static fix_ada_setlib (line, bufr)
   return 0;
 }
 
-static fix_cc (line, result)
+static int fix_cc (line, result)
 	 TEXT  *line, *result;
 {
 /**************************************
@@ -875,7 +877,7 @@ language = CC;
 return 0;
 }
 
-static fix_cxx (line, result)
+static int fix_cxx (line, result)
     TEXT  *line, *result;
 {
 /**************************************
@@ -896,7 +898,7 @@ fix_compile (line, result);
 return 0;
 }
 
-static fix_cob (line, bufr)
+static int fix_cob (line, bufr)
     TEXT *line, *bufr;
 {
 /**************************************
@@ -918,7 +920,7 @@ lang_compile (line, bufr);
 return 0;
 }
 
-static fix_compile (line, result)
+static int fix_compile (line, result)
     TEXT *line, *result;
 {
 /**************************************
@@ -1016,7 +1018,7 @@ else
  return 0;
 }
 
-static fix_del (line,  bufr)
+static int fix_del (line,  bufr)
     TEXT *line,  *bufr;
 {
 /**************************************
@@ -1136,7 +1138,7 @@ while ((tok = (SCHAR *)mytokget(&posn, " \t\n")))
  return 0;
 }
 
-static fix_ftn (line, bufr)
+static int fix_ftn (line, bufr)
 	 TEXT *line, *bufr;
 {
 /**************************************
@@ -1158,7 +1160,7 @@ lang_compile (line, bufr);
 return 0;
 }
 
-static fix_isc (line, bufr)
+static int fix_isc (line, bufr)
     TEXT  *line, *bufr;
 {
 /**************************************
@@ -1235,7 +1237,7 @@ while ((tok = (TEXT *)mytokget(&posn, " \t\n")))
  return 0;
 }
 
-static fix_java (line, bufr)
+static int fix_java (line, bufr)
     TEXT  *line, *bufr;
 {
 /**************************************
@@ -1258,7 +1260,7 @@ static fix_java (line, bufr)
  return 0;
 }
 
-static fix_javac (line, bufr)
+static int fix_javac (line, bufr)
     TEXT  *line, *bufr;
 {
 /**************************************
@@ -1280,7 +1282,7 @@ lang_compile (line, bufr);
 return 0;
 }
 
-static fix_link (line, bufr)
+static int fix_link (line, bufr)
     TEXT *line, *bufr;
 {
     
@@ -1472,7 +1474,7 @@ for (lookup = ptl_lookup; replace->ptsl_cmds && lookup->ptsl_cmds; lookup++)
 }
 #endif
 
-static fix_pas (line, bufr)
+static int fix_pas (line, bufr)
     TEXT  *line, *bufr;
 {
 /**************************************
@@ -1494,7 +1496,7 @@ lang_compile (line, bufr);
 return 0;
 }
 
-static fix_qli (line, bufr)
+static int fix_qli (line, bufr)
     TEXT  *line, *bufr;
 {
 /**************************************
@@ -1569,7 +1571,7 @@ while ((tok = (TEXT *)mytokget(&posn, " \t\n")))
 return 0;
 }
 
-static  fix_run (line, bufr)
+static int fix_run (line, bufr)
 	 TEXT *line, *bufr;
 {
 /**************************************
@@ -1615,7 +1617,7 @@ while ((tok = (SCHAR *)mytokget(&posn, " \t\n")))
 return 0;
 }
 
-static  fix_sys (line, bufr)
+static int fix_sys (line, bufr)
     TEXT *line, *bufr;
 {
 /**************************************
@@ -1816,7 +1818,7 @@ if (dot = (TEXT*) strchr(name, '.'))
 #endif /* ADA_GPRE_EXT */
 
 /*** Handle Fortran extensions...					***
-/*** We don't do complicated ada calculations here because extension	***
+ *** We don't do complicated ada calculations here because extension	***
  *** length for fortran stays the same or gets smaller that the		***
  *** extension in the TCS test--It does not get longer.			***/
 
@@ -2497,7 +2499,7 @@ if (lookup->fixup)
 return TRUE;
 }
 
-static process_defn (in_line, result)
+static int process_defn (in_line, result)
 	 TEXT  *in_line, *result;
 {
 /**************************************

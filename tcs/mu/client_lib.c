@@ -23,6 +23,10 @@
 
 #include "client.h"
 
+static void print_sys_error();
+static void init_signal_handlers();
+static void install_signal_handler();
+
 #ifdef POSIX_SIGNALS
 static sigset_t zeromask;
 #endif
@@ -83,7 +87,7 @@ FILE *fp_temp;
 
 char fname[256];
 	
-sprintf(fname,"%s%s%ld%s",TEMP_DIR,"/mu_",getppid(),".tmp");
+sprintf(fname,"%s%s%ld%s",TEMP_DIR,"/mu_",(long)getppid(),".tmp");
 	
 if (!(fp_temp = fopen(fname,"r")))
 	{
@@ -132,7 +136,7 @@ char pipe_message[PIPE_BUFFER];
 FILE *fp_temp;
 char fname[256];
 	
-sprintf(fname,"%s%s%ld%s",TEMP_DIR,"/mu_",getppid(),".async");
+sprintf(fname,"%s%s%ld%s",TEMP_DIR,"/mu_",(long)getppid(),".async");
 	
 if (!(fp_temp = fopen(fname,"r")))
 	return FALSE; /* The file does not exist */
@@ -334,6 +338,7 @@ printf("%ld:%d> Got semaphore\n", client_stat_ptr->pid, client_stat_ptr->main_th
 #endif /* SOLARIS_MT */
 		return(TRUE);
 	}
+	return(TRUE);
 }
 
 /******************************************************************************/
@@ -375,7 +380,7 @@ BOOL qa_mu_pause()
 	client_stat_ptr->consumed_cpu = clock() - client_stat_ptr->start_cpu;
 	
 	/* Writes the clock ticks data into a buffer */
-	sprintf(pipe_message,"%ld",client_stat_ptr->consumed_cpu);
+	sprintf(pipe_message,"%ld",(long)client_stat_ptr->consumed_cpu);
 
 	/* Writes the clock ticks data from the buffer to the pipe */
 	if((BOOL)write(client_stat_ptr->pipe_fd,pipe_message,sizeof(pipe_message)) == ERROR)
@@ -442,6 +447,7 @@ printf("%ld:%d> Got semaphore\n", client_stat_ptr->pid, client_stat_ptr->main_th
 #endif /* SOLARIS_MT */
 		return(TRUE);
 	}
+	return(TRUE);
 }
 
 /******************************************************************************/
@@ -473,7 +479,7 @@ BOOL qa_mu_cleanup ()
 	client_stat_ptr->consumed_cpu = STOP_CPU;
 
 	/* Writes the clock ticks data into a buffer */
-	sprintf(pipe_message,"%ld",client_stat_ptr->consumed_cpu);
+	sprintf(pipe_message,"%ld",(long)client_stat_ptr->consumed_cpu);
 
 	if((BOOL)write(client_stat_ptr->pipe_fd,pipe_message,sizeof(pipe_message)) == ERROR)
 	{	
@@ -534,6 +540,7 @@ printf("%ld:%d> Got semaphore\n", client_stat_ptr->pid, client_stat_ptr->main_th
 		free(client_stat_ptr);
 		return(TRUE);
 	}
+	return(TRUE);
 }
 
 
@@ -574,7 +581,7 @@ printf("%ld:%d> Got semaphore\n", client_stat_ptr->pid, client_stat_ptr->main_th
 
 /************************ signal_handler_sigusr2 *****************************/
 
-static signal_handler_sigusr2()
+static void signal_handler_sigusr2()
 {
 	char pipe_message[PIPE_BUFFER];
 #ifndef POSIX_SIGNALS
@@ -587,7 +594,7 @@ static signal_handler_sigusr2()
 	client_stat_ptr->consumed_cpu = clock() - client_stat_ptr->start_cpu;
 	
 	/* Writes the clock ticks data into a buffer */
-	sprintf(pipe_message,"%ld",client_stat_ptr->consumed_cpu);
+	sprintf(pipe_message,"%ld",(long)client_stat_ptr->consumed_cpu);
 
 	/* Writes the clock ticks data from the buffer to the pipe */
 	if((BOOL)write(client_stat_ptr->pipe_fd,pipe_message,sizeof(pipe_message)) == ERROR)
@@ -614,7 +621,7 @@ static signal_handler_sigusr2()
 /******************************************************************************/
 
 /******************** signal_handler_sigtstp_cleanup    **********************/
-static signal_handler_sigtstp_cleanup()
+static void signal_handler_sigtstp_cleanup()
 {
 	/* dummy handler - does nothing */
 #ifdef DEBUG_INFO 
@@ -629,7 +636,7 @@ static signal_handler_sigtstp_cleanup()
 /******************************************************************************/
 
 /********************** signal_handler_sigtstp *******************************/
-static signal_handler_sigtstp()
+static void signal_handler_sigtstp()
 {
 #ifndef POSIX_SIGNALS
 	re_install_signal_handler(SIGNAL_SIGTSTP);
@@ -671,7 +678,7 @@ static signal_handler_sigtstp()
 /******************************************************************************/
 
 /********************** signal_handler_sigcont *******************************/
-static signal_handler_sigcont() 
+static void signal_handler_sigcont() 
 { 
 #ifndef POSIX_SIGNALS
 	re_install_signal_handler(SIGNAL_SIGCONT);
@@ -685,7 +692,7 @@ static signal_handler_sigcont()
 
 
 /***************** signal_handler_sighwfaults_sigbus **************************/
-static signal_handler_sighwfaults_sigbus() 
+static void signal_handler_sighwfaults_sigbus() 
 { 
 #ifndef POSIX_SIGNALS
 	re_install_signal_handler(SIGNAL_SIGBUS);
@@ -697,7 +704,7 @@ static signal_handler_sighwfaults_sigbus()
 }
 
 /***************** signal_handler_sighwfaults_sigsegv *************************/
-static signal_handler_sighwfaults_sigsegv() 
+static void signal_handler_sighwfaults_sigsegv() 
 { 
 #ifndef POSIX_SIGNALS
 	re_install_signal_handler(SIGNAL_SIGSEGV);
@@ -709,7 +716,7 @@ static signal_handler_sighwfaults_sigsegv()
 }
 /**********************  END SIGNAL HANDLERS  *********************************/
 
-static init_signal_handlers()
+static void init_signal_handlers()
 {
 /*******************************************************************
  *
@@ -795,7 +802,7 @@ static init_signal_handlers()
 }
 
 
-static install_signal_handler(signal_index)
+static void install_signal_handler(signal_index)
 		int	signal_index;
 {
 /***********************************************************
@@ -823,7 +830,7 @@ signal(SIGNAL_ARRAY[signal_index].signal_no,
 }
 
 
-static re_install_signal_handler(signal_index)
+static void re_install_signal_handler(signal_index)
 int signal_index;
 {
 /***********************************************************
@@ -842,7 +849,7 @@ install_signal_handler(signal_index);
 }	
 
 
-static print_sys_error(p_name,error_string)
+static void print_sys_error(p_name,error_string)
 char * p_name;
 char * error_string;
 {

@@ -13,3 +13,7 @@ How to build isc_diff on Windows NT (MS VC++)
 
 make -f makefile.nt_ms isc_diff.exe
 
+How to build isc_diff on SINIX-Z
+--------------------------------
+
+make -f makefile.sinixz isc_diff

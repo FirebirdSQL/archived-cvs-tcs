@@ -33,7 +33,7 @@ rm -f *.tmp
 #EDITOR="joe -nobackup"
 #export EDITOR
 
-INTERBASE=/opt/interbase
+INTERBASE=${INTERBASE-/opt/interbase}
 
 PATH=./bin:$INTERBASE/bin:$PATH
 export PATH
@@ -64,7 +64,7 @@ $INTERBASE/bin/gsec -add qa_user5 -pw qa_user5
 # test v4_api15
 $INTERBASE/bin/gsec -delete guest
 $INTERBASE/bin/gsec -add guest    -pw guest
-# series gf_shutdown &  gf_shut_l1
+# series gf_shutdown & gf_shut_l1
 $INTERBASE/bin/gsec -delete shut1
 $INTERBASE/bin/gsec -add shut1    -pw shut1
 # series gf_shut_l1
@@ -73,7 +73,7 @@ $INTERBASE/bin/gsec -add shut2    -pw shut2
 # series nist3
 # series procs_qa_bugs, test bug_6015
 $INTERBASE/bin/gsec -delete qatest
-$INTERBASE/bin/gsec -add qatest             -pw qatest
+$INTERBASE/bin/gsec -add qatest   -pw qatest
 
 if [ $? != 0 ]; then
     echo "ERROR: Failure adding users"
@@ -100,15 +100,18 @@ export ISC_PASSWORD
     REMOTE_DIR=$TEST_DIR
     REMOTE_DIR1=$TEST_DIR
     REMOTE_DIR11=$TEST_DIR
-    WHERE_GSEC_REMOTE=/opt/interbase
-    WHERE_GSEC=/opt/interbase
+    WHERE_GSEC_REMOTE=$INTERBASE
+    WHERE_GSEC=$INTERBASE
     WHERE_REMOTE=$TEST_DIR
     UDF_LIBPATH=$TEST_DIR
-    WHERE_UDF=/opt/interbase/UDF
+    WHERE_UDF=$INTERBASE/UDF
     WHERE_GDB_EXTERNAL=$TEST_DIR
     SERVICE_MGR=service_mgr
     unset ISC_PATH
 
+export RUN_TYPE
+export RUN_TAG
+export KNOWN_FAILURES_TAG
 export WHERE_GDB
 export WHERE_GDB1
 export WHERE_GDB2

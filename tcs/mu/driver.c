@@ -62,4 +62,5 @@ if (parse_scheduler_args(argc,argv))
 		}
 	}
 cleanup_scheduler();
+return 0;
 }

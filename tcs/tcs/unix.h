@@ -85,12 +85,15 @@ static struct  ptl_cmd {
 	"\tNecessary for ada test to run on VMS",
         "API",			"api",			fix_isc,
 	"\t\tapi",
-#ifndef CRAY
-        "CC",			"cc",			fix_cc,    
-	"\t\tcc",
-#else
+#ifdef CRAY
         "CC",			"scc",			fix_cc,    
 	"\t\tscc",
+#elif SINIXZ
+        "CC",			"gcc",			fix_cc,    
+	"\t\tgcc",
+#else
+        "CC",			"cc",			fix_cc,    
+	"\t\tcc",
 #endif
         "CXX",			"CC",			fix_cxx,    
 	"\t\tInvokes c++ compiler",
@@ -177,6 +180,9 @@ static struct  ptl_cmd {
 #ifdef APOLLO
         "LINK",			"ld",			fix_link,
 	"\t\tInvokes unix linker(ld)",
+#elif SINIXZ
+        "LINK",			"gcc",			fix_link,
+	"\t\tInvokes unix linker(gcc)",
 #else
         "LINK",			"cc",			fix_link,
 	"\t\tInvokes unix linker(cc)",
