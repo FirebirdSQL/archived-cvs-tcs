@@ -1,0 +1,45 @@
+
+FB_GBAK=@GBAK@
+FB_GDEF=@GDEF@
+FB_GFIX=@GFIX@
+FB_GPRE=@GPRE@
+FB_GSEC=@GSEC@
+FB_ISQL=@ISQL@
+FB_QLI=@QLI@
+FB_CC=@CC@
+FB_CXX=@CXX@
+FIREBIRD=@FIREBIRD@
+PLATFORM=@PLATFORM@
+
+export FB_GBAK
+export FB_GDEF
+export FB_GFIX
+export FB_GPRE
+export FB_GSEC
+export FB_ISQL
+export FB_QLI
+export FB_CC
+export FB_CXX
+export FIREBIRD
+export PLATFORM
+
+CC=@CC@
+CXX=@CXX@
+
+@FB_LIB_PATH@
+@FB_INCLUDE_PATH@
+
+@FB_LIB_PATH_EXPORT@
+@FB_INCLUDE_PATH_EXPORT@
+
+
+.PHONY: check check-DEJAGNU
+
+
+check:
+	mkdir -p work
+	runtest
+
+clean:
+	-rm -rf work config.log config.status Makefile
+	

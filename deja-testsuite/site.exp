@@ -5,13 +5,66 @@
 set tool tcs
 set srcdir ./testsuite
 set objdir /home/odonohue/src/TCS/test1
-set firebird /opt/interbase
 set firebirdTCS /home/odonohue/src/interbase/TCS/tcs/scripts/bin
 #set verbose 1
-#set ISQL /opt/interbase/bin/isql
-set ISQL isql
 #set srcdir /home/odonohue/src/TCS/test1/testsuite
-set platform linux
 
-#set firebird "/c/Program\\ Files/InterBase"
-#set platform win32
+
+
+# extract all the needed paths from the environment
+if { ![ string equal "" [array get env "FIREBIRD"] ] } {
+    set firebird "$env(FIREBIRD)"
+} else {
+    set firebird "."
+}
+if { ![ string equal "" [array get env "PLATFORM"] ] } {
+    set platform [ string tolower "$env(PLATFORM)" ]
+} else {
+    send_user "ERROR: No platform specified.  Tests aborted.\n"
+    exit
+}
+if { ![ string equal "" [array get env "FB_GBAK"] ] } {
+    set GBAK "$env(FB_GBAK)"
+} else {
+    set GBAK "gbak"
+}
+if { ![ string equal "" [array get env "FB_GDEF"] ] } {
+    set GDEF "$env(FB_GDEF)"
+} else {
+    set GDEF "gdef"
+}
+if { ![ string equal "" [array get env "FB_GFIX"] ] } {
+    set GFIX "$env(FB_GFIX)"
+} else {
+    set GFIX "gfix"
+}
+if { ![ string equal "" [array get env "FB_GPRE"] ] } {
+    set GPRE "$env(FB_GPRE)"
+} else {
+    set GPRE "gpre"
+}
+if { ![ string equal "" [array get env "FB_GSEC"] ] } {
+    set GSEC "$env(FB_GSEC)"
+} else {
+    set GSEC "gsec"
+}
+if { ![ string equal "" [array get env "FB_ISQL"] ] } {
+    set ISQL "$env(FB_ISQL)"
+} else {
+    set ISQL "isql"
+}
+if { ![ string equal "" [array get env "FB_QLI"] ] } {
+    set QLI "$env(FB_QLI)"
+} else {
+    set QLI "qli"
+}
+if { ![ string equal "" [array get env "FB_CC"] ] } {
+    set CC "$env(FB_CC)"
+} else {
+    set CC "cc"
+}
+if { ![ string equal "" [array get env "FB_CXX"] ] } {
+    set CXX "$env(FB_CXX)"
+} else {
+    set CXX "CC"
+}

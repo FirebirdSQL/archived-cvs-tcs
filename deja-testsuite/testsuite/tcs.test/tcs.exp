@@ -396,6 +396,15 @@ proc setup_tcsenv {} {
     global localEnv
     global firebird
     global firebirdTCS
+    global ISQL
+    global QLI
+    global GBAK
+    global GDEF
+    global GFIX
+    global GSEC
+    global GPRE
+    global CC
+    global CXX
 
     set localEnv(PATH_SEP) "/"
     set localEnv(gds_\$print_status) "gds__print_status"
@@ -492,7 +501,7 @@ proc setup_tcsenv {} {
     set tcsEnv(WHERE_GDB) ""
     set localEnv(WHERE_GDB1:) ""
     set tcsEnv(WHERE_GDB1) ""
-    set localEnv(WHERE_FILES:) "" 
+    set localEnv(WHERE_FILES:) "../testsuite/tcs.test/data/tests" 
     set tcsEnv(WHERE_FILES) "" 
     set localEnv(WHERE_GDB_EXTERNAL:) ""
     set tcsEnv(WHERE_GDB_EXTERNAL) ""
@@ -511,8 +520,8 @@ proc setup_tcsenv {} {
     set tcsEnv(ADA_SETLIB) ""
     set tcsEnv(ADA) ""
     set tcsEnv(API) "api"
-    set tcsEnv(CC) "cc"
-    set tcsEnv(CXX) "CC"
+    set tcsEnv(CC) ${CC}
+    set tcsEnv(CXX) ${CXX}
     set tcsEnv(COBOL) "cob"
     set tcsEnv(COB_LINK) "cob"
     set tcsEnv(COB) "cob"
@@ -527,24 +536,24 @@ proc setup_tcsenv {} {
     set tcsEnv(FORTRAN_LINK) "f77"
     set tcsEnv(FORTRAN) "f77"
     set tcsEnv(FOR) "f77"
-    set tcsEnv(GBAK) [ file join "$firebird" [ file join "bin" "gbak" ] ]
+    set tcsEnv(GBAK) ${GBAK}
     set tcsEnv(GCON) [ file join "$firebird" [ file join "bin" "gcon" ] ]
     set tcsEnv(GCSU) [ file join "$firebird" [ file join "bin" "gcsu" ] ]
-    set tcsEnv(GDEF) [ file join "$firebird" [ file join "bin" "gdef" ] ]
+    set tcsEnv(GDEF) ${GDEF}
     set tcsEnv(GDS_CACHE_MANAGER) [ file join "$firebird" [ file join "bin" "gds_cache_manager" ] ]
-    set tcsEnv(GFIX) [ file join "$firebird" [ file join "bin" "gfix" ] ]
+    set tcsEnv(GFIX) ${GFIX}
     set tcsEnv(GJRN) [ file join "$firebird" [ file join "bin" "gjrn" ] ]
     set tcsEnv(GLTJ) [ file join "$firebird" [ file join "bin" "gltj" ] ]
-    set tcsEnv(GPRE) [ file join "$firebird" [ file join "bin" "gpre" ] ]
+    set tcsEnv(GPRE) ${GPRE}
     set tcsEnv(GRST) [ file join "$firebird" [ file join "bin" "grst" ] ]
-    set tcsEnv(GSEC) [ file join "$firebird" [ file join "bin" "gsec" ] ]
-    set tcsEnv(ISQL) [ file join "$firebird" [ file join "bin" "isql" ] ]
+    set tcsEnv(GSEC) ${GSEC}
+    set tcsEnv(ISQL) ${ISQL}
     set tcsEnv(JAVA) "java"
     set tcsEnv(JAVAC) "javac"
     set tcsEnv(MAKE) "make"
     set tcsEnv(PASCAL) "pas"
     set tcsEnv(PAS) "pas"
-    set tcsEnv(QLI) [ file join "$firebird" [ file join "bin" "qli" ] ]
+    set tcsEnv(QLI) ${QLI}
     set tcsEnv(RSH) "rsh"
     set tcsEnv(RUN) ""
     set tcsEnv(SH) "sh"
@@ -1389,17 +1398,14 @@ proc runSeries { seriesName platform } {
 set moduleName TCS
 set databaseName "work/limits.gdb"
 setup_tcsenv
-#load_test_data "testsuite/tcs.test/data" "darwin"
+#load_test_data "testsuite/tcs.test/data" ${platform}
 
-#send_user "$argv0\n"
-
-set platform darwin
-
-#set saveSeriesDir /tmp/fred1
 set saveSeriesDataRoot testsuite/tcs.test/data
 set saveSeriesResultsRoot testsuite/tcs.test/results
 
 set exportedData ../test-files/export
+
+send_user "Testing platform: $platform\n"
 
 set testTimeout 180
 

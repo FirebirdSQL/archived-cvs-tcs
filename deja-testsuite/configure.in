@@ -1,0 +1,89 @@
+AC_INIT(testsuite)
+AC_CONFIG_AUX_DIR(.)
+AC_CACHE_VAL(ac_cv_prog_make_set, [AC_PROG_MAKE_SET])
+
+AC_CANONICAL_SYSTEM
+
+AC_PROG_AWK
+AC_PROG_CC
+AC_PROG_CXX
+
+
+FB_LIB_PATH=
+FB_INCLUDE_PATH=
+FB_LIB_PATH_EXPORT=
+FB_INCLUDE_PATH_EXPORT=
+
+AC_PATH_PROG(security_db, isc4.gdb, NOT_FOUND, $search_path:/Library/Frameworks/Firebird.framework/Resources/English.lproj/var)
+if test "$security_db" = 'NOT_FOUND'; then
+    AC_MSG_ERROR(Failed to locate your firebird directory.  Your install is not complete and can't be tested)
+fi
+firebird_path=`echo "$security_db" | $ac_cv_prog_AWK 'sub("isc4.gdb", "")'`
+FIREBIRD=`echo "$security_db" | $ac_cv_prog_AWK 'sub("/isc4.gdb", "")'`
+
+search_path=$PATH:${firebird_path}bin
+
+case "$target_cpu" in
+powerpc) AC_DEFINE(PowerPC) ;;
+esac
+
+case "$target" in
+*-*-darwin*) MAKEFILE_PREFIX=darwin ; PLATFORM=DARWIN ; AC_DEFINE(DARWIN) ; FB_LIB_PATH="DYLD_FRAMEWORK_PATH=$FIREBIRD"; FB_LIB_PATH_EXPORT="export DYLD_FRAMEWORK_PATH";;
+*-*-freebsd*) MAKEFILE_PREFIX=freebsd ; PLATFORM=FREEBSD ; AC_DEFINE(FREEBSD);;
+*-*-linux*) MAKEFILE_PREFIX=linux ; PLATFORM=LINUX ; AC_DEFINE(LINUX) ;;
+*-*-netbsd*) MAKEFILE_PREFIX=netbsd ; PLATFORM=NETBSD ; AC_DEFINE(NETBSD) ;;
+*-*-hpux*) MAKEFILE_PREFIX=hpux ; PLATFORM=hpux ; AC_DEFINE(hpux) ;;
+esac
+
+if test "$program_suffix" = 'NONE' ; then
+    fbexe_sfx=""
+else
+    fbexe_sfx=".$program_suffix"
+fi
+
+AC_SUBST(PLATFORM)
+AC_SUBST(FIREBIRD)
+AC_SUBST(FB_LIB_PATH)
+AC_SUBST(FB_LIB_PATH_EXPORT)
+AC_SUBST(FB_INCLUDE_PATH)
+AC_SUBST(FB_INCLUDE_PATH_EXPORT)
+
+AC_PATH_PROG(ISQL, isql$fbexe_sfx, NOT_FOUND, $search_path)
+if test "$ISQL" = 'NOT_FOUND'; then
+    AC_MSG_ERROR(Failed to locate isql.  Your install is not complete and can't be tested)
+fi
+
+AC_PATH_PROG(GPRE, gpre$fbexe_sfx, NOT_FOUND, $search_path)
+if test "$GPRE" = 'NOT_FOUND'; then
+    AC_MSG_ERROR(Failed to locate gpre.  Your install is not complete and can't be tested)
+fi
+
+AC_PATH_PROG(QLI, qli$fbexe_sfx, NOT_FOUND, $search_path)
+if test "$QLI" = 'NOT_FOUND'; then
+    AC_MSG_ERROR(Failed to locate qli.  Your install is not complete and can't be tested)
+fi
+
+AC_PATH_PROG(GBAK, gbak$fbexe_sfx, NOT_FOUND, $search_path)
+if test "$GBAK" = 'NOT_FOUND'; then
+    AC_MSG_ERROR(Failed to locate gbak.  Your install is not complete and can't be tested)
+fi
+
+AC_PATH_PROG(GDEF, gdef$fbexe_sfx, NOT_FOUND, $search_path)
+if test "$GDEF" = 'NOT_FOUND'; then
+    AC_MSG_ERROR(Failed to locate gdef.  Your install is not complete and can't be tested)
+fi
+
+AC_PATH_PROG(GFIX, gfix$fbexe_sfx, NOT_FOUND, $search_path)
+if test "$GFIX" = 'NOT_FOUND'; then
+    AC_MSG_ERROR(Failed to locate gfix.  Your install is not complete and can't be tested)
+fi
+
+AC_PATH_PROG(GSEC, gsec$fbexe_sfx, NOT_FOUND, $search_path)
+if test "$GSEC" = 'NOT_FOUND'; then
+    AC_MSG_ERROR(Failed to locate gsec.  Your install is not complete and can't be tested)
+fi
+
+AC_OUTPUT_COMMANDS([mkdir -p work])
+
+
+AC_OUTPUT(Makefile:Makefile.in)
