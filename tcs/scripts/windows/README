@@ -1,0 +1,71 @@
+
+# The contents of this file are subject to the InterBase Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License.
+#
+# You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+#
+# Software distributed under the License is distributed on an "AS IS"
+# basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+# the License for the specific language governing rights and limitations
+# under the License.  The Original Code was created by Inprise
+# Corporation and its predecessors.
+#
+# Portions created by Inprise Corporation are Copyright (C) Inprise
+# Corporation. All Rights Reserved.
+#
+# Contributor(s): ______________________________________.
+
+Title: Outline of steps required to configure and run tests (single tests,
+       series or metaseries) using TCS with input file tcsrun.input 
+      
+1. Read TCS_CFG_ON_WINDOWS.txt file to understand about how to configure
+   a windows system to run TCS
+
+2. Copy all the files in this directory to your test directory.
+   For eg: d:/testbed
+
+3. Run setup_config in your local client testbed directory.
+   You will be prompted to enter the name of your server machine,
+   server machine OS, server machine testbed directory and protocol
+   you wish to use in your test configuration.  
+
+4. Exit current shell.
+
+5. Open a new shell (so new /testbed/profile.ksh variables can take
+   effect).
+
+6. Run tcsexpand if your current configuration uses a server machine
+   different from the server machine used in the previous configuration.
+
+7. Uncomment (or edit) the metaseries, series, or tests that you wish 
+   to run in tcsrun.input.  Remember to separate all non-metaseries groups
+   of tests and/or series with a terminal '*'. You may designate a name 
+   for a non-metaseries group of tests on the '*' line.  See first example 
+   below.  Remember also to check the TCS environment and boilerplate   
+   settings, svr version, and isql and gpre dialects if needed.
+   
+   ***See NOTE below
+
+8. Copy tcsrun.input to /testbed/keep
+
+9. Run chk_env.ksh to review your configuration setup.
+
+***NOTE tcsrun.input examples:
+
+   Example:  rms QA_V60_KIT1  or  r iexample_02   or  r iexample_02
+             r iexample_02        r iexample_03       r iexample_03
+             r iexample_03        *                   *    
+             * partial_series     rms QA_V60_KIT1     rms QA_V60_KIT1
+             quit                 quit                rms QA_V60_LANG
+                                                      rs QA_V55_PERM_GBAK
+                                                      *
+                                                      quit
+                                                  
+   Example: rms QA_V60_KIT1
+            rms QA_V60_LANG
+            rms QA_V4NOMU_KIT1
+            quit
+
+10. If you just want to run a single test using TCS, use the script tcs_go.ksh
+

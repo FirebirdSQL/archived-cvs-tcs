@@ -1,0 +1,48 @@
+# The contents of this file are subject to the InterBase Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License.
+# 
+# You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+# 
+# Software distributed under the License is distributed on an "AS IS"
+# basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+# the License for the specific language governing rights and limitations
+# under the License.  The Original Code was created by Inprise
+# Corporation and its predecessors.
+# 
+# Portions created by Inprise Corporation are Copyright (C) Inprise
+# Corporation. All Rights Reserved.
+# 
+# Contributor(s): ______________________________________.
+# Makefile for Digital UNIX Alpha
+.SUFFIXES: .c .e .gdl .gdb
+.e.c :
+	gpre -n  -manual $<
+.gdl.gdb:
+	gdef $<
+
+CFLAGS = -w -O -c -DOA
+JRD = -lgds
+OBJECTS = tcs.o display.o exec.o trns.o source/diffs/do_diffs.o
+DBASES=rollup.gdb gtcs.gdb ltcs.gdb
+
+tcs	: $(DBASES) $(OBJECTS) 
+	cc $(OBJECTS)  $(JRD) -o tcs
+
+tcs.o	: tcs.c tcs.h
+tcs.c	: tcs.e
+exec.o	: exec.c tcs.h
+exec.c	: exec.e
+display.o: display.c tcs.h
+display.c: display.e
+trns.o	: trns.c tcs.h unix.h
+            
+tan	: tan.o
+	cc tan.o $(JRD) -o tan
+
+tan.c	: tan.e
+tan.o	: tan.c
+
+rollup.gdb: rollup.gdl
+gtcs.gdb: gtcs.gdl
+ltcs.gdb: ltcs.gdl

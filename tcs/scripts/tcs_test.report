@@ -1,0 +1,95 @@
+#!/bin/sh
+# The contents of this file are subject to the InterBase Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License.
+#
+# You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+#
+# Software distributed under the License is distributed on an "AS IS"
+# basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+# the License for the specific language governing rights and limitations
+# under the License.  The Original Code was created by Inprise
+# Corporation and its predecessors.
+#
+# Portions created by Inprise Corporation are Copyright (C) Inprise
+# Corporation. All Rights Reserved.
+#
+# Contributor(s): ______________________________________.
+
+
+if [ $# != 2 ]; then
+    echo "Usage: $0 {SOLARIS | LINUX} configuration"
+    exit 1
+fi
+
+
+if [ $1 = "SOLARIS" ]; then
+    DB=tests/so_ltcs.gdb
+elif [ $1 = "LINUX" ]; then
+    DB=tests/hu_ltcs.gdb
+else
+    echo "ERROR: Unknown platform <$1> specified"
+    exit 1
+fi
+CONFIG=$2
+cat > /tmp/qreport <<EOF
+connect "$DB";
+set list on;
+set time on;
+select "Configuration", configuration,
+       "Series Ran", count(*), 
+       "Tests Ran", sum(passed+failed+failed_known+failed_uninit),
+       "Tests Passed", sum(passed), 
+       "Tests Failed", sum (failed), 
+       "Tests Failed-known", sum(failed_known), 
+       "Tests Failed-uninit", sum(failed_uninit), 
+       "Pass percentage", sum(passed)/(sum(passed+failed+failed_known+failed_uninit)),
+       "Tests Run-only", sum(skipped_flagged), 
+       "Tests Not found", sum(skipped_notfound), 
+       "Tests Not supported", sum(not_run),
+       "Started", min(start_time),
+       "Finished", max(end_time)
+    from worklist where status = 2 and configuration = "$CONFIG"
+ 	group by configuration;
+
+set list off;
+set time off;
+set time on;
+select configuration, series_name, machine, start_time from worklist where status = 1 and configuration = "$CONFIG" order by machine, start_time;
+set time off;
+
+/* How many tests not run per configuration */
+select configuration, count(*) 
+from worklist 
+where status = 0 and configuration = "$CONFIG"
+group by configuration 
+order by configuration;
+
+/* Tests in $CONFIG not yet run */
+select series_name 
+from worklist 
+where status = 0 and configuration = "$CONFIG" 
+order by series_name;
+
+commit;
+quit;
+EOF
+isql -sql_dialect 1 -m -i /tmp/qreport | more
+/bin/rm /tmp/qreport
+###########
+cat > /tmp/check.sql <<EOF
+set time on;
+set width configuration 5;
+set width passed 3;
+set width failed 3;
+select series_name, start_time, passed, failed, machine, configuration
+	from worklist where
+	configuration = "$CONFIG"
+	and failed > 0
+ 	order by failed descending;
+
+commit;
+quit;
+EOF
+isql -sql_dialect 1 -m $DB -i /tmp/check.sql -page 200
+/bin/rm /tmp/check.sql

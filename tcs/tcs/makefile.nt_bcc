@@ -1,0 +1,106 @@
+# The contents of this file are subject to the InterBase Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License.
+# 
+# You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+# 
+# Software distributed under the License is distributed on an "AS IS"
+# basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+# the License for the specific language governing rights and limitations
+# under the License.  The Original Code was created by Inprise
+# Corporation and its predecessors.
+# 
+# Portions created by Inprise Corporation are Copyright (C) Inprise
+# Corporation. All Rights Reserved.
+# 
+# Contributor(s): ______________________________________.
+# TCS Makefile for NT (BCC32)
+
+.AUTODEPEND
+.SUFFIXES: .obj .c .gdl .gdb .e
+.gdl.gdb:
+	gdef $<
+.c.obj:
+	$(CC) $(CC_FLAGS) $<
+.e.c:
+	gpre -z -m -n $<
+
+# Tools definitions
+CFG_FILE = CC_options.cfg
+CC   = Bcc32 +$(CFG_FILE)
+# CC  = Bcc32i +$(CFG_FILE)
+LINK = TLink32
+# LINK = Ilink32
+
+#
+# Options
+#
+CC_FLAGS = -P- -c
+SYSLIBS= import32.lib cw32.lib
+GDS32 = \InterBase\Lib\gds32.lib
+
+# Object files
+OBJ= tcs.obj display.obj exec.obj trns.obj ..\diffs\do_diffs.obj
+RT_OBJ = \bc5\LIB\c0x32.obj
+DBASES=rollup.gdb gtcs.gdb ltcs.gdb
+
+tcs.exe:  $(DBASES) $(CFG_FILE) $(LD_FILE) $(OBJ)
+	  $(LINK) /v @&&|
+-Tpe -ap -c -n -Gm -V3.10 -L\BC5\LIB+
+$(OBJ) $(RT_OBJ), $@, , $(GDS32) $(SYSLIBS)
+
+|
+
+tan.exe: $(DBASES) $(CFG_FILE) $(LD_FILE) tan.obj
+	$(LINK) /v $(OBJ) $(RT_OBJ), $@, , $(GDS32) $(SYSLIBS)
+
+# Databases
+rollup.gdb:     rollup.gdl
+gtcs.gdb:       gtcs.gdl
+ltcs.gdb:       ltcs.gdl
+
+# Support files
+# exec.obj:       exec.c
+exec.c:         exec.e
+# display.obj:    display.c
+display.c:      display.e
+# trns.obj:       trns.c
+
+# TCS and TAN
+tcs.obj:        tcs.c
+tcs.c:          tcs.e
+tan.c:          tan.e
+tan.obj:        tan.c
+
+clobber:
+	del /Q *.obj tcs.c display.c exec.c *.gdb
+
+# Compiler configuration file
+$(CFG_FILE) : 
+   Copy &&|
+-I\bc5\include
+-DWIN32;WIN_NT;NOMSG;i386=1;_X86_=1;OLDWAY;NOGDI;_MT;_DLL;
+-I\BC5\INCLUDE;\interbase\include
+-w
+-d
+-R-
+-WM-
+-w-sig
+-w-sus
+-w-use
+-w-ucp
+-w-pia
+-w-pin
+-wcln
+-vi
+-H-
+-X
+-WC
+-AT
+-v-
+-4
+-a
+-Og
+-Ov
+| $@
+

@@ -1,0 +1,40 @@
+
+# The contents of this file are subject to the InterBase Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License.
+#
+# You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+#
+# Software distributed under the License is distributed on an "AS IS"
+# basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+# the License for the specific language governing rights and limitations
+# under the License.  The Original Code was created by Inprise
+# Corporation and its predecessors.
+#
+# Portions created by Inprise Corporation are Copyright (C) Inprise
+# Corporation. All Rights Reserved.
+#
+# Contributor(s): ______________________________________.
+
+############################# CONFIG #################################
+# This is tcsrun.input file for NT testing
+# 
+$CONFIG1: FILE ClientOStoServerOSbuildnoProtocol.metaseries
+# example: Win95toNT738TPC.v4-kit1
+$CONFIG1: sb qa_v60_sdk_cb4_Cdriv
+$CONFIG1: svr 6.0
+$CONFIG1: se qa_v60_sdk_cb4_Cdriv
+$CONFIG1: sdv run=
+$CONFIG1: sdv cc=bcc32
+$CONFIG1: sdv link=ilink32
+$CONFIG1: sdv make=make
+#$CONFIG1: sdv isql=isql_d1
+#$CONFIG1: sdv gpre=gpre_d1
+$CONFIG1: srn QATEST
+############################# BODY ###################################
+
+daf
+c
+r iexample_02
+quit
+

@@ -1,0 +1,321 @@
+* The contents of this file are subject to the Interbase Public
+* License Version 1.0 (the "License"); you may not use this file
+* except in compliance with the License. You may obtain a copy
+* of the License at http://www.Inprise.com/IPL.html
+*
+* Software distributed under the License is distributed on an
+* "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express
+* or implied. See the License for the specific language governing
+* rights and limitations under the License.
+*
+* The Original Code was created by Inprise Corporation
+* and its predecessors. Portions created by Inprise Corporation are
+*
+* Copyright (C) 2000 Inprise Corporation
+* All Rights Reserved.
+* Contributor(s): ______________________________________.
+
+Purpose:   Provide a brief guide to the TCS system and setup.
+
+Overview of the TCS components, setup requirements and commands to get
+a general understanding of TCS w/o learning anything about
+test development.  Use with other documents: 
+PORTABLE_TESTS, QA_WRITING_TCS_TESTS
+
+NOTE: Please see scripts/windows/README file for setup on Windows
+      platforms.
+
+
+
+                           TCS QUICK SETUP GUIDE
+                               and TCS NOTES
+                           (Test Control System)
+                           =====================
+     
+     
+     SETUP:
+     ------
+     Create a directory which will become your permanent working
+     directory for QA test development.  Within that directory
+     create a link to the generic test directory which contains
+     database backup files, the databases used for the TCS system
+     and other files needed to run the tests:
+
+     1. restore all the databases found in test-dbs 
+     2. create the generic test directory (eg: generic_test)
+     3. copy restored databases from test-dbs into generic_test
+     4. copy all the files from both test-files and test-files/sov3v4files
+        into generic_test
+     5. create your personal working directory and cd into that
+        directory
+     6. create the link by typing the following command:
+
+        ln -s /some_path/generic_test tests
+     
+     where /some_path/generic_test is the generic test directory
+     
+     Verify that the link is set by doing an ls -l command from
+     your working directory.  Verify several databases exist by
+     using the command:
+
+          ls -l tests/*.gdb
+
+     The link MUST BE CALLED tests.  DO NOT cd to tests.  DO NOT WORK 
+     IN TESTS!!!  The tests link MUST exist, but it exists in your 
+     working directory.  We NEVER work in the tests directory.  The
+     list of databases that should appear as a result of the above
+     command are some of the databases used by the TCS test system.
+     Among the database names that appeared, you should have seen:
+     gtcs.gdb and other database names of the form 
+     xx_ltcs.gdb (where xx means a platform name, eg: li for LINUX).
+     These are the "global" and "local" TCS databases.
+     
+     =================================================================
+     Environment setup (set when you log in or add to a setup script
+     or .cshrc file):
+    
+     You must set the environment to find the TCS executable files by
+     adding the path where you did install the tcs, mu, isc_diff and other
+     test tools to your environment's PATH setting.
+     =================================================================
+
+
+     1. TCS startup
+        % tcs      from unix prompt, this starts the TCS system.
+          tcs -s   will start the system, run and save the created scripts.
+          tcs -n   will start the system and create the scripts without
+                   actually running the test.
+
+     2. TCS configuration after startup 
+        Each time TCS is started it will need to be told which
+        environment and which boiler plate to use.  Other settings like
+        the version and the "run name" will also need to be set so that
+        the proper tests will be found.  One way to change or set these
+        requirements is by manually typing in the commands shown below
+        after TCS starts.  The other was is to automate the process by
+        storing the commands used for setup in a file called the 
+        ".tcs_config" file.  This file is created in your working directory.
+
+        Example of the contents of .tcs_config:
+        ----------------------------------------
+        svr 6.0                 (set version run)
+        sb qa_bp                (set boiler plate)
+        se qa_shr               (set environment)
+        srn LI_TST              (set run name)      
+
+     NOTE: In order to run the tests, you have to customize the
+           environment 'qa_shr' as follows:
+
+           set WHERE_EXAMPLES_40 to ./tests
+           set WHERE_EXAMPLES_50 to ./tests
+           set WHERE_FILES to ./tests
+
+           Use command 'ee qa_shr' to customize environment qa_shr.
+
+
+     3. Commands to try in TCS:
+
+         ?                                HELP show a complete list of TCS 
+                                          commands and verbs.
+         ls                               LIST SERIES  Lists series: all are
+                                            global, no local series possible
+         ps <series_name>                 PRINT SERIES
+         e  <test_name>                   EDIT TEST
+                                            (:q! exits vi without change)
+                (If an error message tells you it doesn't exist in this version,
+                 type <n> (no) to clone one, and then reset version, eg:
+                         tcs> svr 5.5
+         r  <test_name>                   RUN TEST 
+         rs <series_name>                 RUN SERIES        
+
+         To see the files created when tcs runs do the following:
+
+         % tcs -n               Invoke tcs -n: leave files & don't run tests
+         tcs> r iexample_01     Run a sample test
+         tcs> pt iexample_01    View contents of the test
+         tcs> quit              Quit tcs
+         % vi tcs.script        Edit something
+         % sh -x tcs.script     Run test
+
+     4. Commands you will need to initialize and create tests and series:
+     
+         ct <test_name>                    CREATE TEST 
+         cl <test_name>                    CREATE LOCAL TEST (not usually used)
+         gi <test_name>                    INITIALIZE TEST GLOBALLY
+         i  <test_name>                    INITIALIZE TEST LOCALLY (DO NOT USE)
+         cs <series_name>                  CREATE SERIES It may prompt for 
+                                           the series name if you do not type
+                                           it in. <Ctrl+D> to exit.
+         at <series_name> <test_name> X    ADD TEST TO SERIES AT RUN
+                                           LEVEL X. X is an integer and
+                                           controls the order of execution.
+         cms <meta_series_name>            CREATE META SERIES.  A meta
+                                           series is a collection of related
+                                           series. <Ctrl+D> to exit.
+
+         as <series_name> <meta_series_name> ADD SERIES TO META SERIES.
+
+         Do NOT USE unless a global series init command has been added to TCS:
+
+         More complex example:
+         New product is released and an older test fails due to an error
+         message change.  You must create a new global init record using
+         the old test:
+  
+         svr 6.1                (new product version)
+         ig <test_name> 6.0     (6.0 is the old test version)
+         show <test_name>       show test to check your work.
+         ---------------------------------------------------------------------
+         is series_name                   INITIALIZE SERIES initializes all 
+                                          tests in series and does LOCAL INITS.
+                                          DO NOT USE THIS UNLESS YOU OWN
+                                          THE SERIES AND WANT LOCAL INITS!!
+
+     
+     5. Organizational logic for the TCS components:
+        
+        The major Test Control System (TCS) components are:  the test,
+        the series and the meta_series.  Other TCS components, which I
+        will call "compatibility" components, are used to allow all
+        global tests to run on all platforms.  These compatibility
+        components are:  the environment, the boiler plate and the TCS
+        verbs used to code a TCS test.  With the exception of the TCS
+        verbs, each component has an associated table in the TCS global
+        and in the TCS local databases.  Tests are usually in the global
+        database.  Environments and boiler plates are stored in the
+        local databases.  The section below describes the test components
+        in more detail.
+
+        Tests are the smallest part of the system and contain code.
+        Each test contains statements preceded by a $ symbol.
+        Statements preceded by the dollar symbol are translated by TCS
+        into statements that are environment specific (VMS or Unix).  We
+        call the TCS statements "TCS verbs" and a complete list of them
+        may be found by using the "?"  symbol and typing return while in
+        the TCS system.  You may NOT use a statement in a test that is
+        specific to one platform.  This means no hard-coded CC commands,
+        paths, and no platform specific scripts.
+
+        Series run groups of tests and a series is really just a list of
+        test names.  There is no substance--no code--in a series.  A
+        series simply contains the test name, series name, a sequence
+        number and the name of the person who created the series.  The
+        purpose of a series is to group TCS tests by function so that
+        all tests for a given area of the product may be found in just a
+        few series.  Series should be setup in such a way that the first
+        test creates the database and all header files and the last test
+        removes the database.  A test may also be self contained and the
+        database may be created and deleted within a single test.  Some
+        series were created with "setup" tests which initialize all
+        files and databases required by the series and other series have
+        self-contained tests.  A few series combine both methods and run
+        setup and cleanup tests as well as self-contained tests within
+        one series.
+
+        A meta-series contains a list of series names.  A meta series is
+        intended to be a way of tracking and grouping series according
+        to some function.
+
+     6. Sample session to add a new tests which was created outside 
+        TCS.  The vi editor is used to read it in.
+
+        tcs 
+        svr 6.0
+        sb qa_bp 
+        pms qa_v4_cleanrun1
+        ps idml_c_charset
+        ct new_clare1   (puts you in vi)
+
+        in vi hit ':' to go to the end of the screen an then read in
+        an external file:
+                 r NEWTESTS/inew_clare1
+                wq quit and save the file
+     
+        ig new_clare1                     initialize the test. 
+        r new_clare1                      run the test
+        at new_clare1 test_series 2       add the test to the series 
+                                          at execution level 1.  
+     
+        If several tests have been created, repeat the above steps
+        until all tests are created and added to the series.
+        Then test the entire series.
+     
+        rs test_series                    run the series.  
+
+     
+     7. Unix Environment variables (V4.0 and below)
+
+        WHERE_GDB and WHERE_GDB1-3
+        WHERE_GDB is an environment variable that TCS will read and use
+        to access databases.  If it is not set in your environment, TCS will
+        default to ".", or the current directory, and expect to create and
+        access all databases by looking in the current directory.
+
+        If WHERE_GDB is set to a remote machine, then TCS will find a remote
+        database and access that as the test database. In this way TCS can
+        do remote or local testing.  We perform remote database testing by
+        using a "loopback" and by doing an actual remote database access.
+
+        A "loopback" setup is one where the WHERE_GDB environment variable
+        is set to point to the name of the machine on which you are running.
+        This forces InterBase to use the remote access method without actually
+        accessing a remote machine.  
+
+        setenv WHERE_GDB hostfoo:/usr/gds.hostfoo/clare
+
+        REMOTE_DIR11 and REMOTE_DIR
+        These two environments are used for Shadowing tests. 
+        They should NOT be set to a remote directory or to a loopback setting.
+        For the shadowing tests to work they must be set to a local directory.
+
+        WHERE_UDF
+        This environment variable is used for UDF (user defined functions)
+        testing.
+
+     7A. V5.0 and above
+         Generic, new 5.0 environment variables:
+         $INTERBASE
+
+         InterClient environment variable required for TCS executation:
+         WHERE_URL
+         $PATH must include: $CLASSPATH
+
+
+     8. QA_USER account names      
+
+        Several of the QA TCS tests run multi-user tests.  Other tests
+        attempt to check the ISC4.gdb database and user permissions.  To
+        do this type of testing QA created the idea of using standard
+        names which would need to exist in the isc4.gdb database.
+        Although some tests use non-standard names, the ones that should
+        be used are QA_USER1-5.  You will find tests that also use:
+        SHUT1, SHUT2, BUILDER, SHAKIM, GUEST, QATEST and others.  Please
+        do not use your own name when testing permission issues with
+        InterBase.
+
+    9.  Restarting TCS
+
+        To clean up an aborted tcs run: 
+
+            a.  kill process for runtcs.sh
+                    ps -eaf |grep runtcs
+                    kill <pid>
+
+            b.  drop the database, should clean up semaphores, 
+                shared memory, and the gds lock manager
+                    gds_drop -a
+
+            c.  clear semaphores and shared memory (LINUX platform)
+                    ipcs | grep <user_name>
+                    ipcrm -shm <id #>             remove shared memory
+                    ipcrm -sem <id #>             remove semaphores
+
+            d.  clear lock manager process (IB Classic Server only)
+                    ps -eaf | grep gds
+                    kill <pid for gds_lock_mgr>
+
+            e.  clean up working directory
+                    rm *gdb     <copies of the test database>
+                    rm tcs.*    <temp files, retain tcsrun.input>
+
+

@@ -1,0 +1,1 @@
+-L$TCSDRIVE\borland\cbuilder4\LIB;$TCSDRIVE\interbase\Sdk\lib

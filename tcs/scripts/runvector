@@ -1,0 +1,157 @@
+#!/bin/sh
+# The contents of this file are subject to the InterBase Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License.
+#
+# You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+#
+# Software distributed under the License is distributed on an "AS IS"
+# basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+# the License for the specific language governing rights and limitations
+# under the License.  The Original Code was created by Inprise
+# Corporation and its predecessors.
+#
+# Portions created by Inprise Corporation are Copyright (C) Inprise
+# Corporation. All Rights Reserved.
+#
+# Contributor(s): ______________________________________.
+
+
+if [ $# != 2 ]; then
+    echo "Usage: $0 {SOLARIS | LINUX} configuration"
+    exit 1
+fi
+
+
+if [ $1 = "SOLARIS" ]; then
+    PLATFORM=SO
+elif [ $1 = "LINUX" ]; then
+    PLATFORM=LI
+else
+    echo "ERROR: Unknown platform <$1> specified"
+    exit 1
+fi
+
+CONFIG=$2
+TEST_DIR=`pwd`
+LOCAL_LOGS="$TEST_DIR/LOGS"
+
+if [ ! -d "$LOCAL_LOGS" ]; then
+    mkdir $LOCAL_LOGS
+fi
+date
+
+# Try to clean up after the last test run
+# Do this after killing processes just in case they are still
+# trying to write.
+rm -f core
+rm -f *.gdb *.gbk
+rm -f *.e *.o *.c *.h
+rm -f *.lib *.sql *.gdl
+rm -f tcs.*
+rm -f *.tmp
+
+
+INTERBASE=/opt/interbase
+export INTERBASE
+
+PATH=$INTERBASE/bin:$PATH
+export PATH
+LD_LIBRARY_PATH=/usr/lib
+export LD_LIBRARY_PATH
+SHLIB_PATH=/usr/lib
+export SHLIB_PATH
+LD_RUN_PATH=$TEST_DIR
+export LD_RUN_PATH
+
+ISC_USER=SYSDBA
+ISC_PASSWORD=masterkey
+export ISC_USER
+export ISC_PASSWORD
+$INTERBASE/bin/gsec -delete qa_user1
+$INTERBASE/bin/gsec -delete qa_user2
+$INTERBASE/bin/gsec -delete qa_user3
+$INTERBASE/bin/gsec -delete qa_user4
+$INTERBASE/bin/gsec -delete qa_user5
+$INTERBASE/bin/gsec -add qa_user1 -pw qa_user1
+$INTERBASE/bin/gsec -add qa_user2 -pw qa_user2
+$INTERBASE/bin/gsec -add qa_user3 -pw qa_user3
+$INTERBASE/bin/gsec -add qa_user4 -pw qa_user4
+$INTERBASE/bin/gsec -add qa_user5 -pw qa_user5
+# test V4_API15
+$INTERBASE/bin/gsec -delete guest
+$INTERBASE/bin/gsec -add guest    -pw guest
+# series GF_SHUTDOWN &  GF_SHUT_L1
+$INTERBASE/bin/gsec -delete shut1
+$INTERBASE/bin/gsec -add shut1    -pw shut1
+# series GF_SHUT_L1
+$INTERBASE/bin/gsec -delete shut2
+$INTERBASE/bin/gsec -add shut2    -pw shut2
+# series PROCS_QA_BUGS, test BUG_6015
+$INTERBASE/bin/gsec -delete qatest
+$INTERBASE/bin/gsec -add qatest             -pw qatest
+
+if [ $? != 0 ]; then
+    echo "ERROR: Failure adding users"
+    exit 1		# Failure adding users
+fi
+
+unset ISC_USER
+unset ISC_PASSWORD
+export ISC_USER
+export ISC_PASSWORD
+
+# Preparing log files
+mv -f $LOCAL_LOGS/$1.log $LOCAL_LOGS/$1.log_1
+
+#
+# Environment settings for test run
+#
+
+# "Setting up LOCAL environment"
+    RUN_TYPE=LOCAL
+    RUN_TAG=VECTOR
+    KNOWN_FAILURES_TAG=$PLATFORM.KNOWN_FAILURES
+    WHERE_GDB=$TEST_DIR
+    WHERE_GDB1=$TEST_DIR
+    WHERE_GDB2=$TEST_DIR
+    WHERE_GDB3=$TEST_DIR
+    REMOTE_DIR=$TEST_DIR
+    REMOTE_DIR1=$TEST_DIR
+    REMOTE_DIR11=$TEST_DIR
+    WHERE_GSEC_REMOTE=/opt/interbase
+    WHERE_GSEC=/opt/interbase
+    WHERE_REMOTE=$TEST_DIR
+    UDF_LIBPATH=$TEST_DIR
+    WHERE_UDF=/opt/interbase/UDF
+    WHERE_GDB_EXTERNAL=$TEST_DIR
+    SERVICE_MGR=service_mgr
+    unset ISC_PATH
+
+export WHERE_GDB
+export WHERE_GDB1
+export WHERE_GDB2
+export WHERE_GDB3
+export REMOTE_DIR
+export REMOTE_DIR1
+export REMOTE_DIR11
+export WHERE_GSEC_REMOTE
+export WHERE_GSEC
+export WHERE_REMOTE
+export UDF_LIBPATH
+export WHERE_UDF
+export WHERE_GDB_EXTERNAL
+export SERVICE_MGR
+
+tcs  >>$LOCAL_LOGS/$1.log 2>&1 <<EOF
+srn $RUN_TAG
+skf $KNOWN_FAILURES_TAG
+prn
+svr 6.0
+pvr
+pb
+pe
+vector $CONFIG
+c
+quit
+EOF

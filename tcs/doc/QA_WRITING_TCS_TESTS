@@ -1,0 +1,422 @@
+* The contents of this file are subject to the Interbase Public
+* License Version 1.0 (the "License"); you may not use this file
+* except in compliance with the License. You may obtain a copy
+* of the License at http://www.Inprise.com/IPL.html
+*
+* Software distributed under the License is distributed on an
+* "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express
+* or implied. See the License for the specific language governing
+* rights and limitations under the License.
+*
+* The Original Code was created by Inprise Corporation
+* and its predecessors. Portions created by Inprise Corporation are
+*
+* Copyright (C) 2000 Inprise Corporation
+* All Rights Reserved.
+* Contributor(s): ______________________________________.
+
+Purpose:   Conventions for test writing.
+
+Written as a way to prevent some of the test cleanup and
+modification that must be done when tests are not written
+to some standard.  This document attempts to define a few
+rules for QA TCS test writing so that we are all following
+the same conventions.
+
+I.    Comments in the Series and in the Test
+      Every series should have a brief comment to indicate the purpose
+      of the tests in the series.  If possible, document the general
+      test design.
+
+      Test Comments:
+      Every test should have a test comment in a standard format.
+      If the tests seem too short to contain a comment, then
+      the first test in the series should contain a comment.  The 
+      information is as follows.  The format may be slightly different.
+
+      By:          Engineer's name
+      Date:        date created
+      Test name:   full name in tcs:  gf_shut_l1.at.03        
+      Series:      full series name:  gf_shut_l1
+      Results:     general short description of the expected results, some
+                   people put in the full expected results.  This is not
+                   necessary and is captured in the global init record.
+      Dependency:  If no dependency, use "NONE" or, if a dependency
+                   exists, please note what the test requires
+                   to run:  "Requires first test in series to build the
+                   test.gdb database." or "Requires WHERE_GDB4 and WHERE_GDB5
+                   to be set to two different remote machines."
+      Description:
+      Short description of what the test was designed to test.
+
+      History:
+      date         name: notes on what was changed or problems encountered.
+
+      13June95     clare:  changing all non-standard users to QA_USER*.
+      01Aug95      clare:  failing again on SCO kit. logged bug xxxx.
+
+
+II.   User name and Password
+      (Also see the section on using GSEC in TCS.)
+      User names and passwords that are used in tests must also be
+      entered in the isc4.gdb database.
+
+      All tests that must specify a user name and password should
+      use:  QA_USER1, QA_USER2, ..., QA_USER5.
+
+      Do NOT use other names because you happen to like them or because
+      it is your name.  This causes problems when series of tests are
+      given to another person and the tests are run on a newly installed
+      product.  All user names and passwords must be added to the isc4.gdb
+      database in /opt/interbase.
+
+      Do NOT add and delete QA_USER1-5!  Other tests use these names
+      and changing them means that other tests running at the same time
+      could fail due to a run of your test.
+
+      Do not use tests that require a 'root' permissions. If the only
+      way to code a test seems to be to use 'root' permission, then
+      discuss it with the group.  It may be better to restore an 
+      isc4.gbk which has your new users set up than it would be to
+      run as root and add users using gsec.  Tests which require
+      special setup are added to a series, and then that series is
+      stored in the QA_VXX_SPECIAL metaseries.  Many of the reasons
+      that a test uses 'root' may be coded to use GSEC running as
+      SYSDBA instead.
+
+III.  The default user name/password
+      TCS on Unix considers the "default" user name to be one of two user
+      names:
+           1.  When ISC_USER and ISC_PASSWORD are set in the environment
+               all ISQL programs will use these settings as the default.
+           2.  If neither of the above environment variables is set,
+               then the Unix user account will be used as the default
+               user when creating, dropping and gfix'ing databases.  In
+               the Unix environment these variables do not need to be
+               set. 
+    
+      If the tests are running from a Unix machine to NT or NLM servers
+      then ISC_USER and ISC_PASSWORD must be set.  If tests are running
+      from an NT machine remote to another NT machine, or from PC-client
+      to NLM (or NT to NLM when this works) or from PC-IB16, then the
+      ISC_USER and ISC_PASSWORD must be set or all tests will fail.  If
+      this is the case, you may set the ISC_USER and PASSWORD to your
+      own name, if your own name exists on the "server" side in the
+      remote machine's isc4.gdb database.  You may also use the
+      QA_USER* names/passwords.
+
+IV.   Use of WHERE_GDB* to specify the database directory.
+      The current standard is to use WHERE_GDB or WHERE_GDB1 before
+      every database name in every test to indicate the directory
+      in which the database should be built.  This convention is used
+      to allow remote testing.  WHERE_GDB may specify a path to a
+      remote machine or it may be set to "loopback" to the local 
+      machine to force testing of the InterBase remote access method.
+
+      Other numbers may be used (WHERE_GDB2, WHERE_GDB3), but this
+      should be noted as a requirement for the test (in the test
+      comments).
+
+V.   Use of WHERE_GDB_EXTERNAL to specify the path for external
+     data files.
+
+     In the EXT_LEV_0 series (and possibly other series which use
+     external tables) databases are created using WHERE_GDB
+     and external tables are created with a path to the ".dat" or
+     data file.  If WHERE_GDB is used for the path to the ".dat"
+     file, then InterBase returns an error which tells us that
+     a node name may not be used as part of the path.  However,
+     because we are already connected to the remote database, using
+     the path to the remote directory WITHOUT the node name will
+     cause the data file to be created on the remote machine.
+
+     Example:
+     WHERE_GDB is set to:           perform:/array.7/QA  
+     WHERE_GDB_EXTERNAL is set to:  /array.7/QA
+     Current directory is:          on gryphon, /usr/gds.gryphon/QA
+     The ISQL script:
+     CREATE DATABASE "WHERE_GDB:ext_rel.gdb";
+     CREATE TABLE  ext_table EXTERNAL "WHERE_GDB_EXTERNAL:external.dat"
+            (field1 CHAR(10)) ;
+
+     On Gryphon, nothing is created.
+     On Perform we see the ext_rel.gdb AND the external.dat files.
+
+VI.  Use of Setup and Cleanup scripts and "sequence" number.
+
+     TCS series were intended to contain a list of tests which
+     would be executed in a given sequence.  All tests of
+     sequence "0", for example, would be executed before tests
+     of sequence "1".
+
+     Improper use of sequence numbers makes it difficult to check
+     failures in a series:  It is difficult to know if the creater of
+     the series really intended that all tests must be run before
+     running a specific test (which is currently failing).  If a test
+     does not require any test before it to be run, then its sequence
+     should be '0'.  If it requires one test to run before it runs,
+     then its sequence should be '1'.  If test number 5 depends on
+     the first 4 tests for a sequence of data inserts or deletes,
+     then we should see something like the following:
+
+     TEST_1     0
+     TEST_2     1
+     TEST_3     1
+     TEST_4     2
+     TEST_5     3--> will always run after the other 4.
+
+     Often the first test in a series is the setup test for that
+     series and it should have a sequence of '0'.  All tests that
+     come after the setup test but that require no other test to
+     run before them should be the same sequence, sequence '1'.
+     At the end of a series a cleanup test would then be run to
+     delete anything created in the setup test.  This cleanup
+     test could be sequence '2' or it could be a higher sequence
+     number to allow for additional tests to be added to the
+     series.  QA used sequence of '99' to indicate a test that
+     must run last in a series (unless there are more than 99 tests
+     to the series--not many series have this many tests).
+
+VII. Versions in TCS
+
+      There is no need to create new initializations or test version
+      when the product version changes.  As a general rule, we do not
+      want to create local tests or multiple versions of the same test
+      without a very good reason to do so.  TCS can run either a version
+      0.0 test or a version 4.0 test.  If the results and product have
+      not changed in the area being tested, the test would use the old
+      init record from 0.0, and the test should pass without adding a new
+      init record.
+
+      Each test and initialization record is tagged with the TCS version
+      in which it was created.  The version is taken from the "set
+      version run" (svr) command.  If this command is not used to set the 
+      TCS version when TCS is started, the TCS version will be the default:
+      version 0.0 for older versions of TCS and version 6.0 for new versions
+      Tests written for version 6 of the InterBase product
+      should have a version number of 6.0.  If the test was initialized
+      while the default setting for TCS, 0.0, was in effect, then the
+      initialization record will have a 0.0 version.  All version 6.0
+      tests should have version 6.0 initialization records.
+
+      How it works:
+      The initialization record used while running a test is determined
+      by two things:  
+
+      1) whether or not a local initialization exists 
+      2) whether or not an initialization record exists that matches the
+         current TCS run version number.
+
+      If we enter TCS and "svr 6.0", then the active run version for TCS
+      is 6.0.  If we then run a test which has a version of 0.0, and the
+      test has both a 0.0 init record and a 6.0 init record, TCS will
+      pick the 6.0 init record to use as the proper result--it will match
+      the current TCS run version to the init record, if possible.  If there
+      is no matching version then it attempts to find an older init record.
+
+      Behavior can be confusing if we also consider what happens when
+      there are local and global tests and local and global init records
+      in more than one version.  Here is an example:
+
+      CXX_GPRE_21,  local test, version 0.0  has local init 0.0 
+
+      CXX_GPRE_21,  global test, version 0.0 has global init 0.0
+                                             has global init 4.0
+
+      Start TCS and set run version: 
+      svr 4.0
+      r CXX_GPRE_21
+      
+      The local test runs, but tcs will try to match the VERSION 
+      for TCS, set to 4.0, to an init record.  It does not care
+      if the match is a global init or a local init.  The logic is 
+      as follows:
+
+           1. check for a local init w/a version of 4.0. If found,
+              use it. If not found:
+           2. check for a global init with version 4.0. If found,
+              use it.  If not found:
+           3. check for a local init w/the next lowest version, in
+              this case it would find the 0.0 local init. use it.
+           4. if no local init, find the next lowest global init 
+              (0.0 in this case) and use that.
+
+      In this example, we stop at step 1 and use the global 4.0
+      init record.
+
+VIII. Coding "gotchas"
+
+      When coding an error routine in which a ROLLBACK is used
+      one must be careful to use WHENEVER ERROR CONTINUE or the
+      engine may get caught in an infinite loop.  This is not
+      a bug.  If the engine gets a ROLLBACK statement which 
+      produces an error for some reason (ROLLBACK gets a bad
+      SQLCODE), then the program will jump back into the ERROR
+      routine.  When it hits the error routine again the first
+      thing that it sees is the rollback which, of course, still
+      has a bad SQLCODE and the program loops back to ERROR again.
+      This coding in a test program will hang TCS forever in an
+      infinite loop.
+  
+      Code Example: Improper use:
+         
+         EXEC SQL
+            WHENEVER SQLERROR GOTO ERR;
+
+         ERR:  printf ("Data base error, SQLCODE = %d\n", SQLCODE);
+               isc_print_status (gds__status);
+ 
+               EXEC SQL
+                  ROLLBACK RELEASE;  /* bad SQLCODE here causes 
+                                        program to loop forever */
+         return;
+
+      Code Example 1: Proper use:
+        { /* All code in one module and program exits on error */
+      main()
+      {...
+         EXEC SQL
+            WHENEVER SQLERROR GOTO ERR;
+
+            ...program code
+
+         exit(0);
+
+         ERR:  printf ("Data base error, SQLCODE = %d\n", SQLCODE);
+               isc_print_status (gds__status);
+ 
+               EXEC SQL
+                  WHENEVER SQLERROR CONTINUE;
+               EXEC SQL
+                  ROLLBACK RELEASE;
+         exit(1);
+        } 
+
+      Code Example 2: Proper use:
+      In the case where you are setting and unsetting the automatic
+      error checking, you will need to reset SQLERROR after you do
+      an SQLERROR CONTINUE.  I see this done when a specific SQLCODE
+      needs to be trapped, but in general the programmer wants error
+      checking to be automatic.
+
+      main()
+      {
+      EXEC SQL
+          WHENEVER SQLERROR GOTO ERR;
+
+      ...code statements which may or may not produce errors.
+         if errs are produced, we want to handle it using print_error()
+         and then exit.  No need to reset SQLERROR GOTO ERR;
+
+      /* now you want to trap a specific error */
+
+      ..do some select statement which errors--it will jump to ERR.
+        if no error we reset err handling to trap the next error.
+
+      EXEC SQL
+          WHENEVER SQLERROR CONTINUE;
+      
+      ...do some select statement and the program will keep going
+         to the following 'if' statement:
+
+      if (SQLCODE == 802)
+        {
+         ...do some special checking/processing/handling before
+            calling the print_error function.  Also, don't exit
+            on this error, just print the message.
+
+         print_error();
+
+         /* reset automatic error handling */
+
+         EXEC SQL WHENEVER SQLERROR GOTO ERR;
+         }
+      
+      ...more coding--all errors jump to ERR again.
+
+      exit(0);
+
+      ERR:
+        print_error;
+        exit(1);
+      }
+
+      print_error()
+      {
+               EXEC SQL
+                  WHENEVER SQLERROR CONTINUE;
+
+               ...error handling/printing...but continue in the
+                  even of an error.
+
+               EXEC SQL
+                  ROLLBACK RELEASE;
+      return;
+      }
+
+IX.   Portable Test Writing
+
+      See PORTABLE_TESTS document
+
+X.    Using GSEC (to avoid running as root)
+
+      If your test must manipulate the users in the isc4.gdb 
+      database, then the proper way to do this manipulation
+      is to use GSEC.  Most of us assume that we must run
+      as root to use this utility.  However, InterBase has
+      a built-in "InterBase superuser" called SYSDBA.  You
+      may add and delete users from isc4.gdb by running GSEC
+      as SYSDBA.  In TCS this is done in a portable way by
+      using the GSEC verb with the -user and -password options.
+
+      Here is an example of the method:
+
+      $GSEC -user SYSDBA -password masterkey
+      add clare5 -pw clare5
+      ...
+      quit
+
+      $GSEC -display
+      $GSEC -user SYSDBA -password masterkey
+      delete clare5
+      ...
+      quit
+      $GSEC -display
+
+XI.   Please DON'T    
+
+      1.  Don't change the users in isc4.gdb unless you are 
+          adding and deleting unique names that no other test
+          users.  Even then, you can't add names unless you 
+          run as root and you should not do this in TCS.
+      2.  Don't use UNIX specific commands.  In some very rare
+          cases this might be necessary, but such tests should
+          be in their own series and stored in the QA_VX_SPECIAL
+          series so that they are not run on non-unix platforms.
+          Non-unix platforms are becoming more rare, but we do
+          still have a VMS port.
+      3.  Don't use operating system commands with the $RUN
+          command when the command you need exists as a TCS
+          verb.  To check for TCS verbs, type '?' at the 'tcs>'
+          prompt and scroll down to the end.  If you don't see
+          what you need, submit a bug report with ib-tools as the
+          project.  The feature will be considered.
+
+          An example of this was a test which used $RUN cat newline
+          to put a line between the outputs in a test.  This
+          failed on VMS and also on the HPUX 10.x machines.
+          Apparently 'newline' is a unix feature on some systems
+          and not others.  The proper TCS way of coding this
+          would have been:
+          $CREATE newline
+
+          ----------------------------
+
+          $TYPE newline  (displays the newline file created above)
+      4.  Don't write long tests that test several things in
+          one test case.  It is very difficult to debug these
+          when they fail.  The output of each statement must be
+          checked against the init record because the diff
+          produced by the failure is so long.  Short tests with
+          one or two pages of output are the easiest to maintain.
+

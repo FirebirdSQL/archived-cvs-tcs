@@ -1,0 +1,75 @@
+# The contents of this file are subject to the InterBase Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License.
+#       
+# You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+#  
+# Software distributed under the License is distributed on an "AS IS"
+# basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+# the License for the specific language governing rights and limitations
+# under the License.  The Original Code was created by Inprise
+# Corporation and its predecessors.
+#  
+# Portions created by Inprise Corporation are Copyright (C) Inprise
+# Corporation. All Rights Reserved.
+#  
+# Contributor(s): ______________________________________.
+.SUFFIXES: .c .e
+.e.c :
+	gpre -c -e -n $<
+.c.o :
+	$(CC) $(OPTIONS) $(NO_LINK) $(DEFINES) $(INCLUDES) $<  
+
+LIB_FLAGS	= -lgds -ldl -lcrypt
+LIB_MU		= -lmu 
+DEFINES		= -DPOSIX_SIGNALS -DPID_T -fPIC
+OPTIONS		= -g -w
+NO_LINK		= -c 
+CFLAGS		= $(OPTIONS) $(INCLUDES) $(DEFINES)
+LFLAGS		= $(CFLAGS) -L./ $(LIB_MU) $(LIB_FLAGS) 
+
+TARGETS	: all 
+
+all : mu libmu.a client_lib.o
+
+libmu.a	  : client_lib.o
+	    -rm -f libmu.a
+	    ar r libmu.a client_lib.o
+	
+client_lib.o:	client.h
+
+scheduler : 
+	    touch driver.c 
+	    touch scheduler.c 
+	    touch parser.c 
+	    make mu	
+client    : 
+	    touch client_lib.c 
+	    make libmu.a
+clean:
+	touch *.c 
+	touch *.e 
+	make all
+
+mu: 	driver.o scheduler.o parser.o
+	$(CC) $(CFLAGS) driver.o scheduler.o parser.o -o mu
+
+scheduler.o:	scheduler.h
+driver.o:	scheduler.h
+parser.o:	scheduler.h
+
+p1	: p1.c libmu.a
+	$(CC) p1.c $(LFLAGS) -o p1
+
+p2 	: p2.c libmu.a 
+	  $(CC) p2.c $(LFLAGS) -o p2
+
+y1	: yyy.c libmu.a
+	$(CC) yyy.c $(LFLAGS) -o y1	  
+
+y2	: yyy.c libmu.a 
+	$(CC) yyy.c $(LFLAGS) -o y2	  
+
+x1	: xxx.c libmu.a 
+	  $(CC) -g xxx.c $(LFLAGS) -o x1 
+	  cp x1 x2

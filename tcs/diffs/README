@@ -1,0 +1,15 @@
+How to build isc_diff on Linux
+------------------------------
+
+make -f makefile.linux isc_diff
+
+How to build isc_diff on Solaris
+--------------------------------
+
+make -f makefile.solaris isc_diff
+
+How to build isc_diff on Windows NT (MS VC++)
+---------------------------------------------
+
+make -f makefile.nt_ms isc_diff.exe
+

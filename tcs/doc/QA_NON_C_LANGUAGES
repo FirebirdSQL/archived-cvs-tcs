@@ -1,0 +1,164 @@
+* The contents of this file are subject to the Interbase Public
+* License Version 1.0 (the "License"); you may not use this file
+* except in compliance with the License. You may obtain a copy
+* of the License at http://www.Inprise.com/IPL.html
+*
+* Software distributed under the License is distributed on an
+* "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express
+* or implied. See the License for the specific language governing
+* rights and limitations under the License.
+*
+* The Original Code was created by Inprise Corporation
+* and its predecessors. Portions created by Inprise Corporation are
+*
+* Copyright (C) 2000 Inprise Corporation
+* All Rights Reserved.
+* Contributor(s): ______________________________________.
+
+                Guidelines for Writing Portable TCS Language Tests
+                --------------------------------------------------
+
+
+Introduction
+------------
+
+The Test Control System (TCS) is used to store and translate test scripts that 
+need to run on several different platforms.  TCS accomplishes this by using
+predefined keywords or '$' verbs in the syntax of test scripts.  When a test
+is run, these '$' verbs are translated to different text strings depending on 
+the current platform.  
+
+In order for TCS to correctly translate these verbs at run time, each test
+script must be written according to a certain format.  This is especially
+true when writing different language tests.  Each language has its own
+TCS verb corresponding to its particular compiler, as well as its own TCS
+'environment variable'.  The following explains how to write TCS test scripts
+for different languages so they will be translated correctly.
+
+
+Intended Audience
+-----------------
+
+This document is intended for anyone writing a portable language test that 
+will be run from TCS.  The discussion here focuses on the syntax of TCS tests
+written in the different languages supported by TCS. 
+
+
+                                                Compile TCS     Link TCS
+                Filename        GPRE Filename   Environment     Environement
+   Language     Extension       Extension       Variable        Variable
+   --------     ---------       ---------       -----------     ------------
+1) C            none            .e              FLAG_CC         FLAG_LINK
+2) C++          .C              .E              FLAG_CXX        FLAG_LINK
+3) Ada          .a              .ea             FLAG_ADA        FLAG_ADA_LINK
+4) Fortran      .ftn            .eftn           FLAG_FOR        FLAG_LINK
+5) Pascal       none            .epas           FLAG_PAS        FLAG_LINK
+6) Cobol        .cbl            .ecbl           FLAG_COB        FLAG_COB_LINK
+
+
+        Example                                     Example
+  of correct syntax ( C ):                 of incorrect syntax ( C ):
+  ------------------------                 --------------------------
+
+$ GPRE -e foo.e                         $ GPRE -e foo.e
+$ CC FLAG_CC foo                        $ CC FLAG_CC foo
+$ LINK FLAG_LINK foo LIBRARIES          $ LINK FLAG_CC foo LIBRARIES
+                                               ^^^^^^^
+
+The second example is incorrect because the environment variable used on
+the $LINK line is incorrect.  "FLAG_LINK" should have been used instead 
+of "FLAG_CC".
+
+
+
+Filename Extensions
+-------------------
+
+It is important to use the proper filename extensions when writing a 
+language test.  Compilers on different platforms require different 
+filename extensions.  In order for TCS to translate the extensions used
+in your test, you MUST use the extensions given in the table above.  TCS
+will only look for the above extensions when it is translating the test.  
+Once TCS recognizes an extension it will modify it appropriately for the 
+platform the test is running on.
+
+NOTE:   You should never need to put an extension on a filename when you are
+        writing the $LINK line.
+
+
+          Example                                   Example
+    of correct syntax (C++):                of incorrect syntax (C++):
+    ------------------------                --------------------------
+$ GPRE -e -n dsql.E -d atlas.gdb        $ GPRE -e -n dsql.E -d atlas.gdb
+$ CXX FLAG_CXX dsql.C                   $ CXX FLAG_CXX dsql.C
+$ CXX_LINK FLAG_LINK dsql LIBRARIES     $ CXX_LINK FLAG_LINK dsql.o LIBRARIES
+                                                             ^^^^^^
+The second example is incorrect because a filename extension has been used 
+on the $LINK line.
+
+           Example                                 Example
+   of correct syntax (Cobol):             of incorrect syntax (Cobol):
+   --------------------------             ----------------------------
+$ GPRE -ansi sql.ecbl -d atlas.gdb      $ GPRE -ansi sql.ECBL -d atlas.gdb
+$ COBOL FLAG_COB sql.cbl                $ COBOL FLAG_COB sql.cob
+$ COB_LINK FLAG_COB_LINK sql            $ COB_LINK FLAG_COB_LINK sql
+
+The second example is incorrect because the filename extensions used are
+not ones that TCS will recognize.  TCS will not recognize the upper case
+".ECBL" and it will also not recognize ".cob".  Therefore, this test will not 
+be portable and will not be translated correctly for each platform.
+
+
+A few words about ADA
+---------------------
+
+The Ada compiler requires an Ada library in order for the binder/linker to
+succeed.  In order to ensure the library is created properly, the following
+TCS dollar ('$') verbs must be included at the top each Ada test or in a 
+'setup' test at the beginning of an Ada series.
+
+        $ ADA_MKFAM
+        $ ADA_MKLIB
+        $ ADA_SETLIB
+        $ ADA_SEARCH
+
+To move the necessary Interbase functions into the Ada library, the following
+verbs must be included in the script.
+
+        $ COPY WHERE_EXAMPLES_40:interbase.a
+        $ ADA FLAG_ADA interbase.a
+
+To clean up the library following an Ada test or Ada series the following
+verbs must be included.
+
+
+        $ ADA_RMFAM
+        $ ADA_RMLIB
+
+It is important to note that the ordering of these verbs is critical.  Not
+just the ordering of the three groupings mentioned here, but also
+the order within the groups.  For example, "$ ADA_SETLIB" cannot precede
+"$ ADA_MKFAM".
+
+
+                   Example
+          of correct syntax (Ada):
+          ------------------------
+        $ ADA_MKFAM
+        $ ADA_MKLIB
+        $ ADA_SETLIB
+        $ ADA_SEARCH
+        $ COPY WHERE_INCLUDE:interbase.a interbase.a
+        $ ADA FLAG_ADA interbase.a
+
+                . . .
+
+        $ GPRE sql.ea -d atlas.gdb
+        $ ADA FLAG_ADA sql.e
+        $ ADA_LINK sql FLAG_ADA_LINK
+
+                . . . 
+
+        $ ADA_RMFAM
+        $ ADA_RMLIB
+

@@ -1,0 +1,70 @@
+/*
+ * The contents of this file are subject to the InterBase Public License
+ * Version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License.
+ *
+ * You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+ *      
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and limitations
+ * under the License.  The Original Code was created by Inprise
+ * Corporation and its predecessors.
+ * 
+ * Portions created by Inprise Corporation are Copyright (C) Inprise
+ * Corporation. All Rights Reserved.
+ * 
+ * Contributor(s): ______________________________________.
+ */
+define database "rollup.gdb"
+	page_size 1024;
+
+
+/*	Global Field Definitions	*/
+
+define field ACTIVE short;
+define field DATE date;
+define field INACTIVE short;
+define field PATHNAME varying [64];
+define field PLATFORM varying [10];
+define field QLI$PROCEDURE blob segment_length 80 sub_type text
+	system_flag 2;
+define field QLI$PROCEDURE_NAME char [31]
+	system_flag 2;
+define field SYSTEM varying [10];
+define field TEST_NAME char [20]
+	query_name TEST;
+
+
+/*	Relation Definitions	*/
+
+
+define relation FAILURES
+    DATE	position 0,
+    TEST_NAME	position 1,
+    SYSTEM	position 2,
+    PLATFORM	position 3;
+
+define relation PLATFORMS
+    PLATFORM	position 0,
+    SYSTEM	position 1,
+    PATHNAME	position 2,
+    ACTIVE	position 3;
+
+define relation QLI$PROCEDURES
+	system_flag 2
+    QLI$PROCEDURE_NAME	position 0
+	system_flag 2,
+    QLI$PROCEDURE	position 1
+	system_flag 2;
+
+
+/*	Index Definitions	*/
+
+
+define index F_1 for FAILURES 
+	TEST_NAME;
+
+define index QLI$PROCEDURES_IDX1 for QLI$PROCEDURES unique
+	QLI$PROCEDURE_NAME;
+

@@ -1,0 +1,58 @@
+# The contents of this file are subject to the InterBase Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License.
+#
+# You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+#
+# Software distributed under the License is distributed on an "AS IS"
+# basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+# the License for the specific language governing rights and limitations
+# under the License.  The Original Code was created by Inprise
+# Corporation and its predecessors.
+#
+# Portions created by Inprise Corporation are Copyright (C) Inprise
+# Corporation. All Rights Reserved.
+#
+# Contributor(s): ______________________________________.
+
+CC=             cl
+LINK=           link
+IMPLIB=         lib
+DLLENTRY=       @12
+DEBUGFLAGS=     -debug:full -debugtype:cv
+CONLFLAGS=      -subsystem:console -entry:mainCRTStartup
+GUILFLAGS=      -subsystem:windows -entry:WinMainCRTStartup
+BASELIBS=       kernel32.lib wsock32.lib
+WINLIBS=        kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib
+CONLIBS=        libc.lib $(BASELIBS)
+CONLIBSMT=      libcmt.lib $(BASELIBS)
+CONLIBSDLL=     msvcrt.lib $(BASELIBS)
+GUILIBS=        libc.lib $(WINLIBS)
+GUILIBSMT=      libcmt.lib $(WINLIBS)
+GUILIBSDLL=     crtdll.lib $(WINLIBS)
+
+
+.SUFFIXES: .c .e
+.e.c:
+	gpre -z -m -n $<
+
+.SUFFIXES: .obj .c
+.c.obj:
+	$(CC) -c $(CFLAGS) -I$(INTERBASE)\include $<
+
+INTERBASE=	d:\CVSBuild\InterBase\interbase
+GDS32=		$(INTERBASE)\lib\gds32_ms.lib
+
+CFLAGS_NODEBUG= -Od -w -G4 -DWIN_NT -DNOMSG -Di386=1 -D_X86_=1 -DWIN32 -D_MT -D_DLL -DOLDWAY -DNOGDI
+
+CFLAGS= -Zi -Od -w -G4 -DWIN_NT -DNOMSG -Di386=1 -D_X86=1 -DWIN32 -D_MT -D_DLL -DOLDWAY -DNOGDI -DDEBUG
+
+drop_gdb.exe: drop.obj
+	      $(CC) drop.obj -o drop_gdb.exe -link -ENTRY:mainCRTStartup -MACHINE:i386 -SUBSYSTEM:console $(GDS32) $(CONLIBSDLL)
+
+clean: 
+   del *.obj
+   del *.pdb
+   del *.ilk
+
+drop.obj:   drop.c

@@ -1,0 +1,79 @@
+# The contents of this file are subject to the InterBase Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License.
+# 
+# You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+# 
+# Software distributed under the License is distributed on an "AS IS"
+# basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+# the License for the specific language governing rights and limitations
+# under the License.  The Original Code was created by Inprise
+# Corporation and its predecessors.
+# 
+# Portions created by Inprise Corporation are Copyright (C) Inprise
+# Corporation. All Rights Reserved.
+# 
+# Contributor(s): ______________________________________.
+.SUFFIXES: .c .e .gdb .gdl
+.e.c :
+	gpre -n  -manual $<
+.gdl.gdb:
+	gdef $<
+
+TARGETS= tcs tan
+
+# Purify related flags
+#PFLAGS   = 
+# -messages=first -leaks-at-exit=yes 
+# -cache-dir=<where you would like a cache stored, optional>
+#PDIR     = `purify -print-home-dir`
+#PSTUBS   = $(PDIR)/purify_stubs.a
+#PURIFY   = purify $(PFLAGS)
+
+#QFLAGS	 =
+#QDIR     = `quantify -print-home-dir`
+#QSTUBS   = $(QDIR)/quantify_stubs.a
+#QUANTIFY = quantify $(QFLAGS)
+
+#PLFLAGS  = 
+#PURELINK = purelink $(PLFLAGS)
+
+# Tool builds should run as owner of directory containing the gds library
+#RUNAS	 = runas builder
+
+CC_LD    = $(RUNAS) $(PURELINK) $(PURIFY) $(QUANTIFY) $(CC)
+
+CFLAGS = -g -w -O -c +DA1.0 +DS1.0 -DHP10
+# JRD = -Lsource/jrd -lgds_b -ldld # /usr/lib/end.o
+JRD = -L/usr/interbase/lib -lgds -ldld # /usr/lib/end.o
+OBJECTS =   tcs.o display.o exec.o trns.o source/diffs/do_diffs.o
+DBS = ltcs.gdb gtcs.gdb rollup.gdb
+
+targets: $(TARGETS)
+
+tcs	: $(DBS) $(OBJECTS)
+	$(CC_LD) $(OBJECTS)  $(JRD) $(QSTUBS) $(PSTUBS) -o tcs
+	strip tcs
+
+ltcs.gdb: ltcs.gdl
+gtcs.gdb: gtcs.gdl
+rollup.gdb: rollup.gdl
+
+tcs.o	: tcs.c tcs.h
+tcs.c	: tcs.e
+exec.o	: exec.c tcs.h
+exec.c	: exec.e
+display.o	: display.c tcs.h
+display.c	: display.e
+trns.o	: trns.c tcs.h unix.h
+            
+tan	: tan.o
+	cc tan.o $(JRD) -o tan
+
+tan.c	: tan.e
+tan.o	: tan.c
+
+clobber:
+	rm -f display.c exec.c tcs.c tan.c
+	rm -f display.o exec.o tcs.o tan.o trns.o
+	rm -f tcs

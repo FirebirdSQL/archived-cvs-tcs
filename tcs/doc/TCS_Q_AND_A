@@ -1,0 +1,60 @@
+* The contents of this file are subject to the Interbase Public
+* License Version 1.0 (the "License"); you may not use this file
+* except in compliance with the License. You may obtain a copy
+* of the License at http://www.Inprise.com/IPL.html
+*
+* Software distributed under the License is distributed on an
+* "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express
+* or implied. See the License for the specific language governing
+* rights and limitations under the License.
+*
+* The Original Code was created by Inprise Corporation
+* and its predecessors. Portions created by Inprise Corporation are
+*
+* Copyright (C) 2000 Inprise Corporation
+* All Rights Reserved.
+* Contributor(s): ______________________________________.
+
+Purpose:   Answer TCS questions
+===============================
+
+Q: How does "Test Versioning" in TCS work?
+------------------------------------------
+
+The lookup for test version is independant of the lookup for result
+version.  So, if our test version is "6.0" we would find
+tests in the following priority order:
+   Local 6.0
+   Global 6.0
+   Local 5.5
+   Global 5.5
+   ...
+   Local 0.0
+   Global 0.0
+
+The "best matching" test is the one that is run.
+
+Similarly a lookup is done on the output for deciding pass/fail.  We
+with the version number closest to the one we are testing.  Local
+tests results will have priority over global test results.
+
+So, just because a test has new output (eg: new working on error
+message or something) we just reinit the output, and don't have
+to change the test version.
+
+Q: So, which init record version do we use for a given TCS test?
+----------------------------------------------------------------
+
+The lookup for the initialization is first based on the current
+version being used in TCS.  Use the "pvr", print version run, to
+determine the current version.  If we use "svr 6.0", then the
+current test version is 6.0.  TCS will try to find local and global
+init records that match 6.0.
+
+In this case, with run version = 6.0, TCS will look first for a local TCS
+init with a version of 6.0.  If it cannot find one, it will look for a
+global init of version 6.0.  If it still cannot find an init record, it
+will look for a local init record with a version of less than 6.0, say
+5.0.  If it cannot find one, then it checks for a global version that is
+less than 6.0.  This will continue until an acceptable init record is
+found.

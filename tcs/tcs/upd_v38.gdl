@@ -1,0 +1,142 @@
+/*
+ * The contents of this file are subject to the InterBase Public License
+ * Version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License.
+ *
+ * You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+ *      
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and limitations
+ * under the License.  The Original Code was created by Inprise
+ * Corporation and its predecessors.
+ * 
+ * Portions created by Inprise Corporation are Copyright (C) Inprise
+ * Corporation. All Rights Reserved.
+ * 
+ * Contributor(s): ______________________________________.
+ */
+
+/* Script to modify an existing ltcs.gdb to new relations
+   & indexes for version 3.8 of tcs.
+
+  27 January 1995 - David Schnepper
+*/
+modify database "jedi:/usr/gds/tests/ltcs.gdb"
+{
+Note: The definition for LTCS.GDB is a subset of the
+      definition for GTCS.GDB.  GTCS has the additional
+      relation "AUDIT".
+
+      1995-January-26 David Schnepper
+	
+}
+;
+
+
+/*	Global Field Definitions	*/
+
+define field BUG_NO short;
+define field RESULT long;
+define field STATUS short;
+define field TIMESTAMP date;
+
+
+/*	Relation Definitions	*/
+
+
+define relation KNOWN_FAILURES
+    TEST_NAME based on NAME	position 1
+	query_name NAME,
+    VERSION	position 2,
+    INIT_BY	position 4,
+    INIT_DATE	position 5,
+    BOILER_PLATE_NAME based on NAME	position 6,
+    ENV_NAME based on NAME	position 7,
+    STATUS	position 8,
+    BUG_NO	position 9,
+    COMMENT	position 10,
+    RUN;
+
+modify relation META_SERIES_COMMENT
+    add CREATED_BY	position 3,
+    add DATE	position 4,
+    add EDIT_BY	position 5,
+    add EDIT_DATE	position 6;
+
+modify relation SERIES_COMMENT
+    add CREATED_BY	position 3,
+    add DATE	position 4,
+    add EDIT_BY	position 5,
+    add EDIT_DATE	position 6;
+
+define relation WORKLIST
+    SERIES_NAME based on NAME	position 1,
+    SEQUENCE	position 2,
+    STATUS	position 3,
+    MACHINE based on NAME	position 4,
+    START_TIME based on TIMESTAMP	position 5,
+    END_TIME based on TIMESTAMP	position 6,
+    PASSED based on RESULT	position 7,
+    FAILED based on RESULT	position 8,
+    NOT_RUN based on RESULT	position 9,
+    KILLED based on RESULT	position 10,
+    BOILER_PLATE_NAME based on NAME,
+    FAILED_KNOWN based on RESULT,
+    FAILED_UNINIT based on RESULT,
+    SKIPPED_FLAGGED based on RESULT,
+    SKIPPED_NOTFOUND based on RESULT,
+    CONFIGURATION based on CATEGORY;
+
+
+/*	Index Definitions	*/
+
+
+/*
+delete index FAILURES_1;
+
+define index FAILURES_1 for FAILURES 
+	TEST_NAME;
+*/
+
+define index FAILURES_2 for FAILURES 
+	RUN;
+
+define index KNOWN_1 for KNOWN_FAILURES 
+	TEST_NAME;
+
+define index WORKLIST_SEQUENCE for WORKLIST unique
+	SEQUENCE;
+
+
+/*	Trigger Definitions	*/
+
+
+define trigger KNOWN_FAILURES$MODIFY for KNOWN_FAILURES
+	pre modify 0:
+begin
+	if ((new.init_date != old.init_date) or
+	    (new.init_date not missing and old.init_date missing))
+		new.init_by = rdb$user_name;
+
+	if new.init_date MISSING
+	    new.init_date = 'now';
+	if new.init_by MISSING
+	    new.init_by = rdb$user_name;
+end;
+	
+	end_trigger;
+
+define trigger KNOWN_FAILURES$STORE for KNOWN_FAILURES
+	pre store 0:
+begin
+        if new.init_by MISSING
+	    new.init_by = rdb$user_name;
+
+	if new.init_date MISSING
+	    new.init_date = 'now';
+end;
+	
+	end_trigger;
+
+

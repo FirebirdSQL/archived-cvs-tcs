@@ -1,0 +1,82 @@
+# The contents of this file are subject to the InterBase Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License.
+#
+# You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+#
+# Software distributed under the License is distributed on an "AS IS"
+# basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+# the License for the specific language governing rights and limitations
+# under the License.  The Original Code was created by Inprise
+# Corporation and its predecessors.
+#
+# Portions created by Inprise Corporation are Copyright (C) Inprise
+# Corporation. All Rights Reserved.
+#
+# Contributor(s): ______________________________________.
+.AUTODEPEND
+
+.SUFFIXES: .obj.c
+.c.obj:
+	$(CC) $(CC_FLAGS) $<
+
+# Tools definitions
+CFG_FILE = CC_options.cfg
+LD_FILE  = LD_options.cfg
+CC   = Bcc32 +$(CFG_FILE)
+CCI  = Bcc32i +$(CFG_FILE)
+# LINK = TLink32 $(LD_FILE)
+LINK = Ilink32 @$(LD_FILE)
+
+#
+# Options
+#
+CC_FLAGS = -P- -c $(INCLUDE)
+SYSLIBS= import32.lib cw32.lib
+GDS32 = gds32.lib
+LD_FLAGS =
+INCLUDE = -I\BC5\INCLUDE -DWIN_NT
+# LD_FLAGS2 = -x
+
+#
+# Objects
+#
+OBJ = do_diffs.obj diffs.obj
+RT_OBJ = \bc5\LIB\c0x32.obj
+
+isc_diff.exe : $(CFG_FILE) $(LD_FILE) $(OBJ)
+	$(LINK) /v $(OBJ) $(RT_OBJ), \
+	$@, , $(GDS32) $(SYSLIBS) 
+
+do_diffs.obj :  do_diffs.c
+diffs.obj :     diffs.c
+clobber:
+	del /q $(OBJ) isc_diff.exe *.cfg
+
+# Linker configuration file
+$(LD_FILE) :
+	Copy &&|
+-Tpe -ap -c -n -L\BC5\LIB;\Interbase\lib
+| $@
+
+# Compiler configuration file
+$(CFG_FILE) : 
+   Copy &&|
+-w
+-d
+-R
+-v
+-WM-
+-vi
+-H-
+-H=diffs.csm
+-WC
+-AT
+-v-
+-4
+-a
+-Og
+-Oi
+-Ov
+-H-
+| $@

@@ -1,0 +1,66 @@
+#!/bin/sh
+# The contents of this file are subject to the InterBase Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License.
+#
+# You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+#
+# Software distributed under the License is distributed on an "AS IS"
+# basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+# the License for the specific language governing rights and limitations
+# under the License.  The Original Code was created by Inprise
+# Corporation and its predecessors.
+#
+# Portions created by Inprise Corporation are Copyright (C) Inprise
+# Corporation. All Rights Reserved.
+#
+# Contributor(s): ______________________________________.
+
+
+if [ $# != 2 ]; then
+    echo "Usage: $0 {SOLARIS | LINUX} configuration"
+    exit 1
+fi
+
+if [ $1 = "SOLARIS" ]; then
+    DB=tests/so_ltcs.gdb
+elif [ $1 = "LINUX" ]; then
+    DB=tests/hu_ltcs.gdb
+else
+    echo "ERROR: Unknown platform <$1> specified"
+    exit 1
+fi
+CONFIG=$2
+
+INTERBASE=/opt/interbase
+export INTERBASE
+
+PATH=$PATH:$INTERBASE/bin
+export PATH
+
+cat > /tmp/reset.sql <<EOF
+
+select configuration, status, count(*) from worklist where configuration = "$CONFIG"
+    and status = 2 group by status, configuration;
+
+update worklist set STATUS = 0 
+where 
+
+(((status = 1)
+
+or (status = 2))
+
+and (configuration = "$CONFIG" ));
+
+select status, configuration, count(*) from worklist 
+ where status <= 2 
+   and configuration = "$CONFIG"
+   group by status, configuration
+   order by status, configuration;
+
+commit;
+quit;
+EOF
+
+isql -m $DB -sql_dialect 1 -i /tmp/reset.sql
+rm -f /tmp/reset.sql

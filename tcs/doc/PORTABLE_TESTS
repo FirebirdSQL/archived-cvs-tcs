@@ -1,0 +1,67 @@
+* The contents of this file are subject to the Interbase Public
+* License Version 1.0 (the "License"); you may not use this file
+* except in compliance with the License. You may obtain a copy
+* of the License at http://www.Inprise.com/IPL.html
+*
+* Software distributed under the License is distributed on an
+* "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express
+* or implied. See the License for the specific language governing
+* rights and limitations under the License.
+*
+* The Original Code was created by Inprise Corporation
+* and its predecessors. Portions created by Inprise Corporation are
+*
+* Copyright (C) 2000 Inprise Corporation
+* All Rights Reserved.
+* Contributor(s): ______________________________________.
+
+Purpose :  Portable test writing in TCS--things to avoid
+========================================================
+
+Filenames:
+
+Use 8.3 format filenames, eg:
+   foo.gbk   Not foo.gbak
+
+Avoid the use of filenames containing other than [A-Za-z0-9_]
+(MPE/XL doesn't like <underbar> _)
+
+Avoid the use of filenames that need to be distiguised by
+case.  eg: ABC.TXT and abc.txt are the same file on some
+platforms.
+
+Avoid the use of filenames that are the same as OS commands.  If
+the TCS boiler-plate does not have the current directory first in
+the path, the OS will attempt to execute the OS executable and your
+test will get bogus errors.
+
+Stderr/Stdout:
+
+Use the "-m" switch on ISQL tests that expect to report errors.
+NT will merge stderr and stdout, other platforms will not unless
+"-m" is used.
+
+When using
+   isc_print_status()
+Put a fflush(stdout) after the call, if needed.
+
+Avoid tests that display the following:
+
+- Process ID
+- Transaction ID
+- CPU time used
+- Machine name
+- File pathnames
+- Database page count
+
+Modularize tests that display the following:
+
+- current Time or Date information
+
+Initializing tests:
+
+Assume WHERE_GDB is set to "./" for local tests.
+
+Assume tests are run initially as user "tester". (eg: not SYSDBA).
+Change user when needed for a specific test.
+

@@ -1,0 +1,2 @@
+-I$TCSDRIVE\Borland\CBuilder4\INCLUDE;$TCSDRIVE\interbase\Sdk\include;$TCSDRIVE\gds\files
+-L$TCSDRIVE\Borland\CBuilder4\LIB;$TCSDRIVE\interbase\Sdk\lib 

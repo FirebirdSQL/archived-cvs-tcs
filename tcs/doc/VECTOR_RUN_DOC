@@ -1,0 +1,140 @@
+* The contents of this file are subject to the Interbase Public
+* License Version 1.0 (the "License"); you may not use this file
+* except in compliance with the License. You may obtain a copy
+* of the License at http://www.Inprise.com/IPL.html
+*
+* Software distributed under the License is distributed on an
+* "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express
+* or implied. See the License for the specific language governing
+* rights and limitations under the License.
+*
+* The Original Code was created by Inprise Corporation
+* and its predecessors. Portions created by Inprise Corporation are
+*
+* Copyright (C) 2000 Inprise Corporation
+* All Rights Reserved.
+* Contributor(s): ______________________________________.
+
+                          VECTORED TCS RUN METHOD
+                          -----------------------
+
+1..Tables and general method
+
+   The WORKLIST table in the "ltcs.gdb" database along with new TCS
+   logic is used to control the vectored run.  Some columns in this
+   table are updated each time a series is run.  Other columns are used
+   to control the vectored run and feed information to the scripts which
+   execute a given series.
+
+   Scripts controlling the vectored run expect to read a row from
+   the WORKLIST table to determine the next series to be run.  The
+   selection of a series name from the WORKLIST table is controlled
+   primarily by two columns in the WORKLIST table:  STATUS and 
+   CONFIGURATION.  
+
+   The STATUS field indicates the current state of the series being run.
+   If the status field is zero, then the series needs to be run.  A
+   status of 1 indicates that the series run is in progress and a status
+   of 2 indicates that the series run is complete.  As the Vectored test
+   run executes, the status field is updated to indicate a state change.
+   This prevents a series from being run while a current run in in
+   progress or from being run more than once.  In some cases, the value
+   of the STATUS field prevents the series from being run at all.
+
+   The CONFIGURATION field is used as a parameter to the new TCS
+   command "vector."  The script that executes the vectored run sets
+   the environment variables, the TCS environment, boiler plate and
+   run name and then executes "vector <param>."  The parameter controls
+   which WORKLIST rows (Series names) will be selected for execution.
+
+   Other fields in the WORKLIST table support either the run or the
+   results of the vectored run.  A boiler plate name is stored for each
+   series listed and this boiler plate is used when the series is run.
+   To aid in failure analysis the following information is stored in
+   WORKLIST:  the name of the machine on which the series was run, the
+   start and end times for the series and the number of failures and
+   known failures for that series.
+
+   Example WORKLIST data:
+   A typical set of rows in the worklist table show the following
+   configurations.  A configuration "QA" will be added to run a subset
+   of the series listed in WORKLIST.
+
+    (static)           (dynamic) (static)
+   SERIES_NAME          STATUS CONFIGURATION        ( meaning )
+   ===================  ====== ============= 
+   V4_LOCK_GDML              2 SHR           Series Run complete, ran SHR env 
+   C_GPRE_SQL                2 RMT           Series Run complete, ran REMOTE
+
+2..Results produced and know failures
+   As the vectored run executes raw counts are kept for the following
+   test conditions:  pass, fail, known failures, uninitialized tests,
+   tests not run.  The pass/fail count does not include the count for
+   known failures, uninitialized tests and tests not run.  The results
+   of each series is committed after the series completes. 
+
+   A table exists called KNOWN_FAILURES.  As the vectored run executes,
+   if a failure occurs and the failure has been previously marked as a
+   known failure (MKF command), then the run name for this specific
+   failed test is changed.  This prevents the test from appearing as a
+   true failure when the "list failures" TCS command is used.
+   
+   A list of known failures is maintained and used for future runs  [by
+   updating the known failures table]  If a test fails and the failure
+   is investigated and found to me a minor difference which cannot be
+   prevented and will always fail, then the MKS (mark known failures)
+   TCS command should be used to group this test into a 'known-failures'
+   catagory.  
+
+3..Special tests used by the vectored vun procedure.
+   AUDIT_START and AUDIT_FINISH are used before and after a series
+   is run.  AUDIT_START cleans up any database files in the test
+   directory, and AUDIT_FINISH creates a list of files that are not
+   cleaned up by the tests in the series.  This list may be checked
+   and used to create a cleanup test for the series.
+
+   tcs> pf audit_finish
+   Test AUDIT_FINISH failed on 28-FEB-1995:
+   -------------------
+   Checking './' directory...
+   ./meta.log
+   ./tcs.script
+   ./tcs.output
+   ./ddl1.sql
+   ./v3create.qli
+   ./cmts
+
+4..Example
+   To check the results of a vectored run the following is necessary:
+
+   1.  Connect to the local test database, eg:
+
+       isql hostfoo:/home/tests/li_ltcs.gdb
+
+       and view the data in the WORKLIST table using a query similar
+       to the one shown below.
+
+       select SERIES_NAME, MACHINE, STATUS from WORKLIST 
+              where CONFIGURATION = "QA"
+
+   2.  Connect to the machine on which the series was run;
+       set the run name (<Platform>.<Series name >);
+       list the failures:  
+
+       Generic:
+       tcs -d machine_name:/home/tests/ltcs.gdb
+       srn LI.series name
+       lf
+
+       Specific example:
+       tcs -d hostfoo:/home/tests/li_ltcs.gdb
+       srn LI.IBUGS
+       lf
+        27-FEB-1995 S4.IBUGS             BUG_4455
+        28-FEB-1995 S4.IBUGS             BUG_6561
+        28-FEB-1995 S4.IBUGS             BUG_5999
+        28-FEB-1995 S4.IBUGS             BUG_6858
+        28-FEB-1995 S4.IBUGS             BUG_7299
+        28-FEB-1995 S4.IBUGS             BUG_7727
+        28-FEB-1995 S4.IBUGS             AUDIT_FINISH
+

@@ -1,0 +1,21 @@
+How to build tcs on Linux
+-------------------------
+
+make -f makefile.linux tcs
+
+How to build tcs on Solaris
+---------------------------
+
+make -f makefile.solaris tcs
+
+How to build tcs on Windows NT (MS VC++)
+----------------------------------------
+
+1. Edit makefile.nt_ms as follows:
+
+   INTERBASE variable should point to a directory where
+   InterBase kit is installed, e.g.:
+
+   INTERBASE=d:\InterBase
+
+2. make -f makefile.nt_ms tcs.exe

@@ -1,0 +1,280 @@
+
+# The contents of this file are subject to the InterBase Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License.
+#
+# You may obtain a copy of the License at http://www.Inprise.com/IPL.html.
+#
+# Software distributed under the License is distributed on an "AS IS"
+# basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+# the License for the specific language governing rights and limitations
+# under the License.  The Original Code was created by Inprise
+# Corporation and its predecessors.
+#
+# Portions created by Inprise Corporation are Copyright (C) Inprise
+# Corporation. All Rights Reserved.
+#
+# Contributor(s): ______________________________________.
+
+
+Subject: Configuring a PC system to run TCS tests.
+
+PURPOSE: The purpose of this document is to explain how to 
+    configure a PC running Windows NT operating system with 
+    the needed software to run TCS.
+
+Required steps:
+
+  1.Install Borland C++ 5.02 to d:\bc5. 
+
+    Install the complete Borland C++ package (C++ 5.02) to d:\bc5.
+
+  2.Install MKS Toolkit 5.2 to d:\mks. 
+
+    create the 'tmp' directory under the /mks directory if it does 
+    not already exist because this is where temporary files are 
+    created when you run tests from TCS. The location of temporary 
+    files is defined by $TMP system environment variable. 
+    This variable is normally setup upon the system startup by
+    means of autoexec.bat or Control Panel on NT. It, however, 
+    gets changed every time you run a test. This happens because 
+    the contents of your current boilerplate is placed at the 
+    beginning of the test script and it contains commands that 
+    redefine $TMP. These changes affect only the test you
+    run and not other processes at the system. After installing 
+    the software you must copy the modified profile.ksh and 
+    environ.ksh files from 'Etc.MKS' directory to the 'etc'
+    subdirectory on your system before attempting to use the Korn shell.
+
+  3.Install latest version of TCS files if needed. 
+
+    The TCS and some other necessary scripts and executables can be
+    found on 'tcs'. In this directory you will find the TCS program 
+    and in the 'test-files' directory you will find backed databases 
+    and other files used by the tests when they are executed.
+
+  4.Install an InterBase build to be used for testing
+
+    Preferably install the InterBase version to be tested in d:\interbase
+    Some of the scripts make use of this directory structure in order to
+    look for libraries and binaries
+
+    You will also need to copy other needed files as follows:
+
+      A. make sure the following utilities are available in the $INTERBASE/bin directory
+
+	GDEF.EXE <A data definition compiler which creates databases file>
+
+      NOTE: The source code for GDEF.EXE can be found at the InterBase
+            project on SourceForge:
+
+            InterBase\dudley
+
+	QLI.EXE <Interbase’s query language interpreter>
+
+      B. some tests may need the include file gds.h
+
+	GDS.H <File contains GDS & ISC function prototypes>
+
+  After installing Interbase,
+
+  1.If you used the installshield installation software make sure you move 
+    C:\WINNT\system32\gds32.dll to d:\interbase\bin\gds32.dll. This will prevent
+    confusion when working with several InterBase versions on the same machine. 
+
+  2.Copy the contents of 'tcs/scripts/windows' to d:\testbed 
+    (create this directory if needed). This will copy the shell scripts, 
+    compiler & linker config files needed to run the test series. 
+
+  3.Create a desktop shortcut to point to d:\mks\mksnt\sh.exe make sure the 
+    command line using the '-L' switch to instruct the Shell to process profile.ksh. 
+
+  4.Setup the needed environment variable as follows:
+
+      A.CLIENT_TESTBED = d:/testbed or the path to the testbed on the selected server. 
+
+      B.WHERE_GSEC = shoud point to a directory on a server machine where isc4.gdb is resided. 
+	 
+      C.ISC_USER = qatest or your own user name if setting up your workstation. 
+
+      D.ISC_PASSWORD = qatest or your own password if setting up your workstation. 
+
+      E.HOME = d:/testbed or the selected working directory for the shell. 
+
+      F.PATH = d:\mks\mksnt;d:\bc5\bin;d:\interbase\bin;d:\gds\files; 
+	or any path needed by the shell. If you set up PATH in your profile.ksh 
+	use unix forward slash in path information. 
+
+      G.SETTING = Client or Server (depending on which component is being tested). 
+
+      H.EDITOR = VIW or selected editor that will be used by TCS.
+
+
+    You can set the values of these environment variables in the following ways:
+
+      A.Enter them in the profile.ksh file. 
+
+      B.Enter them in the autoexec.bat file for Windows 95 system only. 
+
+      C.Enter them using the control panel system environment variables listbox 
+	found on NT systems only.
+
+  5.Replace the hard coded string in the example files on the client machine 
+    by running the tcsexpand.ksh file in the d:/testbed directory. This script will
+    expand the hard coded connect string in the example files to reflect the setting 
+    of the CLIENT_TESTBED environment variable. 
+     
+  6.If you wish to run several test series or even metaseries at once you will 
+    need to use tcsrun.ksh script. To use this script you must modify the
+    tcsrun.input file to uncomment the test series you wish to run because the 
+    tcsrun.ksh script parses the tcrsun.input file and creates temporary files
+    containing environment configuration information and commands that TCS uses 
+    while excuting the tests. Below is an example of the tscrun.input file: 
+ 
+
+    -------tcsrun.input file starts ------------------------------------------
+    ################### CONFIG #######################
+
+    $CONFIG1: SHELL WHERE_GDB=d:/testbed
+
+    $CONFIG1: SHELL export WHERE_GDB
+
+    $CONFIG1: SHELL WHERE_GDB1=d:/testbed
+
+    $CONFIG1: SHELL export WHERE_GDB1
+
+    $CONFIG1: SHELL WHERE_GDB2=d:/testbed
+
+    $CONFIG1: SHELL export WHERE_GDB2
+
+    $CONFIG1: SHELL WHERE_GDB3=d:/testbed
+
+    $CONFIG1: SHELL export WHERE_GDB3
+
+    $CONFIG1: SHELL REMOTE_DIR11=d:/testbed
+
+    $CONFIG1: SHELL export REMOTE_DIR11 
+
+    $CONFIG1: SHELL WHERE_GDB_EXTERNAL=d:/testbed
+
+    $CONFIG1: SHELL export WHERE_GDB_EXTERNAL
+
+    $CONFIG1: FILE BETA1
+
+    $CONFIG1: sb qa_bp
+
+    $CONFIG1: svr 6.0
+
+    $CONFIG1: se qa_shr 
+
+    $CONFIG1: sdv run=
+
+    $CONFIG1: sdv cc=bcc32
+
+    $CONFIG1: sdv link=tlink32
+
+    $CONFIG1: sdv make=make
+
+    $CONFIG1: srn TEST_RUN_60
+
+    ################### BODY #########################
+
+    daf
+
+    c
+
+    # Run the series 
+
+    # rs CF_ISQL
+
+    # rs C_DSQL
+
+    # rs C_GPRE
+
+    quit
+
+    -------tcsrun.input file ends ------------------------------------------
+
+    The tcsrun.input file has two main sections, the CONFIG section, and the 
+    BODY section. Below is a description of each section.
+
+    CONFIG: 
+
+    Each line in this section must start with $CONFIG1:. This tells tcsrun.ksh 
+    that this section of the input file is setting up the testing environment. 
+
+    For example, the following lines tells tscrun.ksh that your are setting an 
+    environment variable through the current shell and exporting it to the current
+    environment. Note that SHELL lines are currently ignored on NT systems, 
+    but recognized on UNIX systems.
+     
+    $CONFIG1: SHELL WHERE_GDB="C:/TEST_BED" 
+
+    $CONFIG1: SHELL export WHERE_GDB
+
+     
+    The next line tells tcsrun.ksh what name to use when it creates a log file 
+    that will contain a list of the tests that passed and differences from tests that
+    failed for this test run. You will need to specify this line in order 
+    for the tests to run. You can call your particular output file anything you like, 
+    but the name of the file you choose will always have the tcs.log prefix added 
+    to it by the script file.
+
+    $CONFIG1: FILE My_Test
+     
+
+    The next lines are used by tcsrun.ksh to pass specific commands to TCS to set 
+    up the boilerplate name, environment name, run version, compiler,
+    linker, make, and run name. The tcsrun.ksh create a .tcs_config file 
+    containing this information after parsing the tcsrun.input file, 
+    then TCS will read .tcs_config file at startup and use this information.
+
+    $CONFIG1: sb qa_bp
+
+    $CONFIG1: se qa_shr
+
+    $CONFIG1: svr 6.0
+
+    $CONFIG1: sdv cc=bcc32
+
+    $CONFIG1: sdv link=tlink32
+
+    $CONFIG1: make=make
+
+    $CONFIG1: srn <name of run>
+
+     
+
+    BODY:
+
+    This section contains commands that TCS will recognize. The tcsrun.ksh 
+    script will parse this section, create a temporary file, redirect STDIN, and pass
+    this file of commands into TCS. For example, the following two commands 
+    will help ensure that TCS is running in a clean enviroment.
+
+
+    Daf <delete all previous failures>
+
+    C <commits all changes to the database>
+
+
+    Next in the file are a list of test metaseries or series to run. 
+    An example of the syntax for these commands follows:
+
+    rs <series_name> 
+
+    rms <metaseries_name>
+
+     
+    Note that there are additional commands and flags that can be used with them. 
+    You can find further information in TCS by type a question mark at the
+    TCS command line.
+     
+
+    You can comment the test you wish not to run with a #, and the tcsrun.ksh 
+    file will run only the tests that are uncommented.
+
+    Finally the last line in the input file is quit. This will tell TCS to quit 
+    and return to the shell.
+
+  7.Now you are ready to run the tcsrun.ksh file and execute the tests.
