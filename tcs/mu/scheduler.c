@@ -151,7 +151,7 @@ do
 
 			execvp(current_pcb_ptr->pclient_name,current_pcb_ptr->pclient_args);
 			kill (getppid(),SIGURG);
-			_exit();
+			_exit(1);
 			break;
 		}			
 

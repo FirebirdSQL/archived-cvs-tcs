@@ -34,7 +34,7 @@ rlp->rlim_cur = time_limit;
 setrlimit(RLIMIT_CPU,rlp);
 free(rlp);
 }
-#endif sun 
+#endif /* sun */
 
 int main(argc,argv)
 int argc;
@@ -46,7 +46,7 @@ current_jib_ptr = NULL;
 #ifdef sun
 /* Limit mu and kids to 90 minutes of cpu time */
 limit_cpu_time(90 * SEC_PER_MIN); 
-#endif sun
+#endif /* sun */
  
 init_signal_handlers(); 
 
