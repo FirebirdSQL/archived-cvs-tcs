@@ -1,0 +1,173 @@
+#
+# expectations that clean up in case of error. Note that `$test' is
+# a purely local variable.
+#
+# The first of these is used to match any bad responses, and resynchronise
+# things by finding a prompt. The second is a timeout error, and shouldn't
+# ever be triggered.
+#
+
+expect_after {
+
+
+	-re "\[^\n\r\]*$prompt$" {
+		fail "${moduleName}_$test (bad match)"
+		if { $verbose > 0 } {
+			regexp ".*\r\n(\[^\r\n\]+)(\[\r\n\])+$prompt$" \
+					$expect_out(buffer) "" output
+			send_user "\tUnmatched output: \"$output\"\n"
+	}
+	}
+	timeout {
+		fail "${moduleName}_$test (timeout)"
+	}
+}
+
+
+
+# Build the database used for testing limit
+
+proc runBuildLimitDb {} {
+
+    global moduleName
+    global prompt
+
+    set test "buildLimitDB"
+    send "[exec cat data/builddb.sql]\n"
+
+    expect {
+        "$prompt$"   { }
+        "Statement failed" { fail "${moduleName}_$test (unable to build database)" }
+    }
+}
+
+
+# Build the database used for testing limit
+
+proc runConnectLimitDb {} {
+
+    global moduleName
+    global prompt
+    global databaseName
+
+    set test "connectLimitDB"
+    send "connect $databaseName;\n"
+
+    expect {
+        "$prompt$"   { }
+        "Statement failed" { fail "${moduleName}_$test (unable to connect to database)" }
+    	timeout 			{ fail "${moduleName}_$test (timeout)"  }
+    }
+}
+
+
+#______________________________________________________________________________
+# This process runs an sqlStmt and counts the number of results returned
+# checking them against the match mattern
+# success if the results equal fail if they do not.
+
+proc runBasicLimitTest { test sqlStmt matchPattern expectNum } {
+    global moduleName
+    global prompt
+    global verbose
+
+    set counter 0
+        
+    send "$sqlStmt\n"
+
+    expect {        
+        -re "$matchPattern"  { set counter  [expr $counter + 1]     
+            exp_continue
+        } 
+    	timeout 			{ fail "${moduleName}_$test (timeout)"  }
+    	-re "$prompt$"	 { }
+    }
+
+
+# In the following expected counts is one more than real since we also match
+# the value as passed in so we decrement it.
+# maybe this could be done by setting echo off, or having a bit previously that
+# sucks up until we the echoed sql stmt, or the first "=====" which is the title
+# header.
+
+    set counter [ expr $counter - 1 ]
+
+    if { $counter == $expectNum  } {
+        pass "${moduleName}_$test"
+    } else {
+        fail "${moduleName}_$test (wrong count - $counter records found expected $expectNum )"
+    }
+
+}
+
+#______________________________________________________________________________
+# We expect these stmt to get back 'Statment failed' result;
+
+proc runMatchStmtTest { test sqlStmt matchPattern } {
+    global moduleName
+    global prompt
+    global verbose
+
+    set counter 0
+        
+    send "$sqlStmt\n"
+
+    expect {        
+        -re "$matchPattern"  {    
+            pass "${moduleName}_$test"
+        } 
+    	timeout 			{ fail "${moduleName}_$test (timeout)"  }
+#    	-re "$prompt$"	 { 
+#            fail "${moduleName}_$test (statement did not fail)"
+#        }
+    }
+
+}
+
+
+
+# Here are the tests
+#
+
+
+set moduleName DSQL_Limit
+set databaseName "work/limits.gdb"
+
+#send_user "$argv0\n"
+
+set timeout 1000
+#set verbose 1
+
+runBuildLimitDb
+
+
+set timeout 3
+runConnectLimitDb
+
+runBasicLimitTest "basicSelect" "select 'XXXX' from project;" "XXXX" 11
+runBasicLimitTest "basic1" "select first 4 'XXXX' from project;" "XXXX" 4
+runBasicLimitTest "basic2" "select first 4 skip 3 'XXXX' from project;" "XXXX" 4
+runBasicLimitTest "basic4" "select first 5 skip 8 'XXXX' from project;" "XXXX" 4
+
+runBasicLimitTest "skip1" "select skip 10 'XXXX' from project;" "XXXX" 2
+runBasicLimitTest "skip2" "select skip 1 'XXXX' from project;" "XXXX" 11
+runBasicLimitTest "skip3" "select skip 5 'XXXX' from project;" "XXXX" 7
+
+
+runBasicLimitTest "first1" "select first 5 'XXXX' from project;" "XXXX" 5
+runBasicLimitTest "first2" "select first 20 'XXXX' from project;" "XXXX" 11
+runBasicLimitTest "first3" "select first 1 'XXXX' from project;" "XXXX" 1
+
+
+# Some error cases that result in failure
+
+runMatchStmtTest "skipFail1" "select skip -1 'XXXX' from project;" "Statement failed"
+runMatchStmtTest "skipFail2" "select skip 0 'XXXX' from project;" "Statement failed"
+runMatchStmtTest "skipFail3" "select skip 1.8 'XXXX' from project;" "Statement failed"
+
+
+runMatchStmtTest "firstFail1" "select first -1 'XXXX' from project;" "Statement failed"
+runMatchStmtTest "firstFail2" "select first 0 'XXXX' from project;" "Statement failed"
+runMatchStmtTest "firstFail3" "select first 1.8 'XXXX' from project;" "Statement failed"
+
+

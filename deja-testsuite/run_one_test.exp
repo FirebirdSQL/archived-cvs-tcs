@@ -1,0 +1,11 @@
+#!/usr/bin/expect -f
+
+set verbose 1
+
+source site.exp
+source $srcdir/config/unix.exp 
+
+#source $srcdir/isql.test/limit/isql_sample2.exp
+source $srcdir/tcs.test/tcs.exp
+
+#isql_exit

@@ -1,0 +1,84 @@
+
+This is the dejagnu test suite trial area, and it still is evolving at 
+this stage.
+
+First you need to extract the TCS tests into flat files using Franks
+utility in ../extractScript
+
+Then you need to run
+
+./extractTCS.exp  
+
+in this directory.  This will extract all the TCS test cases into testcases/tcs.test/data
+Then 
+
+make 
+
+to run them
+
+Have a look at testsuite/tcs.test/tcs.exp to see what actually happens and 
+how to simulate the tcs suite.
+
+Or at testsuite/isql.test/limit/isql_limit.exp to see a simple example
+
+And as I said it's all still experimental.
+
+Cheers
+
+Mark
+
+
+
+To run tests
+
+$make
+
+or
+
+$runtest
+
+or to run an individual test
+
+
+$runtest testsuite/isql.test/isql_sample.exp
+
+
+Existing TCS layout
+
+Data is stored in two levels, looks in <platform> database then <global> database for answers.
+When expanded they come out as 
+export/<platform>  - Where platform is win32/linux/darwin/solaris
+export/global
+
+In the flat file formats
+
+Global files 
+
+TESTS.csv    - pointers to test scripts
+INIT.csv     - pointers to init scripts
+
+
+
+Platform Files
+
+BOILER_PLATE.csv     - script to put at the front of every file sets up a few env
+                       variables
+ENV.csv              - points to PROLOG files which contain pattern substitutions
+                       for parsing the script files.
+
+
+Platform can also override TESTS and INIT, (but in practive it doesn't happen much)
+and global contains ENV and BOILER_PLATE but they are empty.
+
+
+
+
+So to convert need to build testsuite/data/<platform>
+script_prologue.sh needs to come from <platform>/*BOILER_PLATE*
+and script_subst.txt needs to come from a <platform>/*PROLOG*
+
+Usually the QA_BP is a good template.
+
+Conversion program
+
+PROC_POWER 
