@@ -1,0 +1,4 @@
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "./ext_rel.gdb"
+External file: external.dat
+FIELD1                          VARCHAR(10) Nullable 

@@ -1,0 +1,12 @@
+Use CONNECT or CREATE DATABASE to specify a database
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "./ext_rel.gdb"
+Statement failed, SQLCODE = -607
+
+unsuccessful metadata update
+-Operation not supported for EXTERNAL FILE table EXT_TABLE
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "./ext_rel.gdb"
+External file: external.dat
+FIELD1                          SMALLINT Not Null 
+FIELD2                          CHAR(10) Nullable 

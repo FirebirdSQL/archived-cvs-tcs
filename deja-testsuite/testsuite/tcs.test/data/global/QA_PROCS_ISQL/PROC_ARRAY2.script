@@ -1,0 +1,32 @@
+/*      Reference Bug   : NONE
+ *      Dependencies    : NONE
+ *      Description     : 
+ *      Expected Result : 
+ */
+HISTORY:
+1998-Dec-16 David Schnepper & Stas Tsikin
+Bulk edit of WHERE_EXAMPLES TO WHERE_EXAMPLES_40 performed
+Bulk edit of $RUN drop_gdb TO $DROP performed
+
+$ GBAK -r WHERE_EXAMPLES_40:atlas.gbk WHERE_GDB:atlas.gdb
+$ ISQL -e -m WHERE_GDB:atlas.gdb
+set term go;
+create procedure proc_arr (city_in char(25))
+RETURNS (cit char(25), stat char(5), populatio integer, rain_arra blob) as
+begin
+
+        SELECT city, state, population, rain_array
+        FROM cities
+        WHERE CITY = :city_in
+        INTO :cit, :stat, :populatio, :rain_arra;
+
+SUSPEND;
+end
+go
+set term ; go
+commit;
+select * from  proc_arr ("Sacramento");
+show procedures;
+commit;
+quit;
+$ DROP WHERE_GDB:atlas.gdb

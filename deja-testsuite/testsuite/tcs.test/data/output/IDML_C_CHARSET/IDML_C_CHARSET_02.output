@@ -1,0 +1,352 @@
+rowid:
+  1     ”          O,acute:  ISO 211, DOS850 224  DOS437 undefined 
+        À          E,umlaut: ISO 203, DOS850 211, DOS437 undefined
+  2     Á          c,cedilla:ISO 231, DOS850 135, DOS437 135
+        ˛          thorn:    ISO 254, DOS850 231, DOS437 undefined
+  3     ¢          cent sign:ISO 162, DOS850 189, DOS437 155
+        Û          o, acute: ISO 243, DOS850 162, DOS437 162
+  4     Ê          ae(as one)ISO 230, DOS850 145, DOS437 145
+        µ          scrip u:  ISO 181, DOS850 230, DOS437 230       
+  5     ÿ          O, slash: ISO 216, DOS850 157, DOS437 undefined
+        œ          I,umlaut: ISO 207, DOS850 216, DOS437 undefined   
+        ‡          a, acute: ISO 224, DOS850 133, DOS437 undefined
+
+  PASS 1: LOADING DATA WITH SET NAMES = ISO8859_1--selecting DOS850 fields
+
+Use CONNECT or CREATE DATABASE to specify a database
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+---------------------------------------------------------------
+1.
+  RUNNING...                
+  set names iso8859_1;
+  connect "tests.gdb";
+  select t_rowid, t_850,a_desc from t2;
+  quit;
+---------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+
+T_ROWID T_850      A_DESC                                                  
+======= ========== ======================================================= 
+
+      1 ”          O,acute: set names is iso                               
+     11 À          _DOS or _ISO O,acute,iso 211,dos850 224                 
+      3 Á          c cedilla                                               
+     33 ˛          _DOS or _ISO c cedilla,iso 231,dos850 135               
+      2 ¢          cent sign                                               
+     22 Û          _DOS or _ISO cent,iso 162, dos850 189                   
+      4 Ê          ae(as one)                                              
+     44 µ          _DOS or _ISO ae(as one),iso 230, dos850 145             
+      5 ÿ          O, slash                                                
+     55 œ          _DOS or _ISO O, slash,iso 216, dos850 157               
+
+---------------------------------------------------------------
+2.
+  Then RUNNING...
+
+  set names dos850;     
+  connect "tests.gdb";
+  select t_rowid, t_850,a_desc from t2;
+---------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+
+T_ROWID T_850      A_DESC                                                  
+======= ========== ======================================================= 
+
+      1 ‡          O,acute: set names is iso                               
+     11 ”          _DOS or _ISO O,acute,iso 211,dos850 224                 
+      3 á          c cedilla                                               
+     33 Á          _DOS or _ISO c cedilla,iso 231,dos850 135               
+      2 Ω          cent sign                                               
+     22 ¢          _DOS or _ISO cent,iso 162, dos850 189                   
+      4 ë          ae(as one)                                              
+     44 Ê          _DOS or _ISO ae(as one),iso 230, dos850 145             
+      5 ù          O, slash                                                
+     55 ÿ          _DOS or _ISO O, slash,iso 216, dos850 157               
+
+---------------------------------------------------------------
+3.
+  Then RUNNING...selects on ISO field w/various set names:
+
+  set names iso8859_1;  
+  connect "tests.gdb";
+  select t_rowid, t_ISO, a_desc from t2;
+---------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+
+T_ROWID T_ISO      A_DESC                                                  
+======= ========== ======================================================= 
+
+      1 ”          O,acute: set names is iso                               
+     11 ”          _DOS or _ISO O,acute,iso 211,dos850 224                 
+      3 Á          c cedilla                                               
+     33 Á          _DOS or _ISO c cedilla,iso 231,dos850 135               
+      2 ¢          cent sign                                               
+     22 ¢          _DOS or _ISO cent,iso 162, dos850 189                   
+      4 Ê          ae(as one)                                              
+     44 Ê          _DOS or _ISO ae(as one),iso 230, dos850 145             
+      5 ÿ          O, slash                                                
+     55 ÿ          _DOS or _ISO O, slash,iso 216, dos850 157               
+
+---------------------------------------------------------------
+4.
+  Then RUNNING...selects on ISO field w/various set names:
+
+  set names dos850;     
+  connect "tests.gdb";
+  select t_rowid, t_ISO, a_desc from t2;
+---------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+
+T_ROWID T_ISO      A_DESC                                                  
+======= ========== ======================================================= 
+
+      1 ‡          O,acute: set names is iso                               
+     11 ‡          _DOS or _ISO O,acute,iso 211,dos850 224                 
+      3 á          c cedilla                                               
+     33 á          _DOS or _ISO c cedilla,iso 231,dos850 135               
+      2 Ω          cent sign                                               
+     22 Ω          _DOS or _ISO cent,iso 162, dos850 189                   
+      4 ë          ae(as one)                                              
+     44 ë          _DOS or _ISO ae(as one),iso 230, dos850 145             
+      5 ù          O, slash                                                
+     55 ù          _DOS or _ISO O, slash,iso 216, dos850 157               
+
+  PASS 2: Same thing, but LOAD THE DATA WITH SET NAMES = DOS850
+
+Use CONNECT or CREATE DATABASE to specify a database
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+---------------------------------------------------------------
+1.
+  RUNNING...                
+  set names iso8859_1;
+  connect "tests.gdb";
+  select t_rowid, t_850,a_desc from t2;
+  quit;
+---------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+
+T_ROWID T_850      A_DESC                                                  
+======= ========== ======================================================= 
+
+      1 À          O,acute: set names is iso                               
+     11 À          _DOS or _ISO O,acute,iso 211,dos850 224                 
+      3 ˛          c cedilla                                               
+     33 ˛          _DOS or _ISO c cedilla,iso 231,dos850 135               
+      2 Û          cent sign                                               
+     22 Û          _DOS or _ISO cent,iso 162, dos850 189                   
+      4 µ          ae(as one)                                              
+     44 µ          _DOS or _ISO ae(as one),iso 230, dos850 145             
+      5 œ          O, slash                                                
+     55 œ          _DOS or _ISO O, slash,iso 216, dos850 157               
+
+---------------------------------------------------------------
+2.
+  Then RUNNING...
+
+  set names dos850;     
+  connect "tests.gdb";
+  select t_rowid, t_850,a_desc from t2;
+---------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+
+T_ROWID T_850      A_DESC                                                  
+======= ========== ======================================================= 
+
+      1 ”          O,acute: set names is iso                               
+     11 ”          _DOS or _ISO O,acute,iso 211,dos850 224                 
+      3 Á          c cedilla                                               
+     33 Á          _DOS or _ISO c cedilla,iso 231,dos850 135               
+      2 ¢          cent sign                                               
+     22 ¢          _DOS or _ISO cent,iso 162, dos850 189                   
+      4 Ê          ae(as one)                                              
+     44 Ê          _DOS or _ISO ae(as one),iso 230, dos850 145             
+      5 ÿ          O, slash                                                
+     55 ÿ          _DOS or _ISO O, slash,iso 216, dos850 157               
+
+---------------------------------------------------------------
+3.
+  Then RUNNING...selects on ISO field w/various set names:
+
+  set names iso8859_1;  
+  connect "tests.gdb";
+  select t_rowid, t_ISO, a_desc from t2;
+---------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+
+T_ROWID T_ISO      A_DESC                                                  
+======= ========== ======================================================= 
+
+      1 À          O,acute: set names is iso                               
+     11 ”          _DOS or _ISO O,acute,iso 211,dos850 224                 
+      3 ˛          c cedilla                                               
+     33 Á          _DOS or _ISO c cedilla,iso 231,dos850 135               
+      2 Û          cent sign                                               
+     22 ¢          _DOS or _ISO cent,iso 162, dos850 189                   
+      4 µ          ae(as one)                                              
+     44 Ê          _DOS or _ISO ae(as one),iso 230, dos850 145             
+      5 œ          O, slash                                                
+     55 ÿ          _DOS or _ISO O, slash,iso 216, dos850 157               
+
+---------------------------------------------------------------
+4.
+  Then RUNNING...selects on ISO field w/various set names:
+
+  set names dos850;     
+  connect "tests.gdb";
+  select t_rowid, t_ISO, a_desc from t2;
+---------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+
+T_ROWID T_ISO      A_DESC                                                  
+======= ========== ======================================================= 
+
+      1 ”          O,acute: set names is iso                               
+     11 ‡          _DOS or _ISO O,acute,iso 211,dos850 224                 
+      3 Á          c cedilla                                               
+     33 á          _DOS or _ISO c cedilla,iso 231,dos850 135               
+      2 ¢          cent sign                                               
+     22 Ω          _DOS or _ISO cent,iso 162, dos850 189                   
+      4 Ê          ae(as one)                                              
+     44 ë          _DOS or _ISO ae(as one),iso 230, dos850 145             
+      5 ÿ          O, slash                                                
+     55 ù          _DOS or _ISO O, slash,iso 216, dos850 157               
+
+  PASS 3: Same thing, but LOAD THE DATA WITH SET NAMES = DOS437
+
+Use CONNECT or CREATE DATABASE to specify a database
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+Statement failed, SQLCODE = -802
+
+arithmetic exception, numeric overflow, or string truncation
+-Cannot transliterate character between character sets
+Statement failed, SQLCODE = -802
+
+arithmetic exception, numeric overflow, or string truncation
+-Cannot transliterate character between character sets
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+Statement failed, SQLCODE = -802
+
+arithmetic exception, numeric overflow, or string truncation
+-Cannot transliterate character between character sets
+---------------------------------------------------------------
+1.
+  RUNNING...                
+  set names iso8859_1;
+  connect "tests.gdb";
+  select t_rowid, t_850,a_desc from t2;
+  quit;
+---------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+
+T_ROWID T_850      A_DESC                                                  
+======= ========== ======================================================= 
+
+     11 À          _DOS or _ISO O,acute,iso 211,dos850 224                 
+     33 ˛          _DOS or _ISO c cedilla,iso 231,dos850 135               
+      2 Û          cent sign                                               
+     22 Û          _DOS or _ISO cent,iso 162, dos850 189                   
+      4 µ          ae(as one)                                              
+     44 µ          _DOS or _ISO ae(as one),iso 230, dos850 145             
+     55 œ          _DOS or _ISO O, slash,iso 216, dos850 157               
+
+---------------------------------------------------------------
+2.
+  Then RUNNING...
+
+  set names dos850;     
+  connect "tests.gdb";
+  select t_rowid, t_850,a_desc from t2;
+---------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+
+T_ROWID T_850      A_DESC                                                  
+======= ========== ======================================================= 
+
+     11 ”          _DOS or _ISO O,acute,iso 211,dos850 224                 
+     33 Á          _DOS or _ISO c cedilla,iso 231,dos850 135               
+      2 ¢          cent sign                                               
+     22 ¢          _DOS or _ISO cent,iso 162, dos850 189                   
+      4 Ê          ae(as one)                                              
+     44 Ê          _DOS or _ISO ae(as one),iso 230, dos850 145             
+     55 ÿ          _DOS or _ISO O, slash,iso 216, dos850 157               
+
+---------------------------------------------------------------
+3.
+  Then RUNNING...selects on ISO field w/various set names:
+
+  set names iso8859_1;  
+  connect "tests.gdb";
+  select t_rowid, t_ISO, a_desc from t2;
+---------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+
+T_ROWID T_ISO      A_DESC                                                  
+======= ========== ======================================================= 
+
+     11 ”          _DOS or _ISO O,acute,iso 211,dos850 224                 
+     33 Á          _DOS or _ISO c cedilla,iso 231,dos850 135               
+      2 Û          cent sign                                               
+     22 ¢          _DOS or _ISO cent,iso 162, dos850 189                   
+      4 µ          ae(as one)                                              
+     44 Ê          _DOS or _ISO ae(as one),iso 230, dos850 145             
+     55 ÿ          _DOS or _ISO O, slash,iso 216, dos850 157               
+
+---------------------------------------------------------------
+4.
+  Then RUNNING...selects on ISO field w/various set names:
+
+  set names dos850;     
+  connect "tests.gdb";
+  select t_rowid, t_ISO, a_desc from t2;
+---------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ./charset.gdb
+
+T_ROWID T_ISO      A_DESC                                                  
+======= ========== ======================================================= 
+
+     11 ‡          _DOS or _ISO O,acute,iso 211,dos850 224                 
+     33 á          _DOS or _ISO c cedilla,iso 231,dos850 135               
+      2 ¢          cent sign                                               
+     22 Ω          _DOS or _ISO cent,iso 162, dos850 189                   
+      4 Ê          ae(as one)                                              
+     44 ë          _DOS or _ISO ae(as one),iso 230, dos850 145             
+     55 ù          _DOS or _ISO O, slash,iso 216, dos850 157               
+

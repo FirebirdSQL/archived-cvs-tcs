@@ -1,0 +1,12 @@
+  Used to display user name too, but this would change for each
+  test runner.  Inserting a default user is tested elsewhere.
+
+Use CONNECT or CREATE DATABASE to specify a database
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "d:/testbed/ext_rel.gdb"
+
+FIELD2     
+========== 
+
+Success    
+

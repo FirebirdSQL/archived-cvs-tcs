@@ -1,0 +1,108 @@
+$CREATE COMMENT
+*******************************************************************************
+ 
+Test Name:  	EXT_REL_0_33_G
+Test Level:     0
+Series Name:    EXT_LEV_0
+Date:  		July 5, 1994
+Author:  	Scott Van Voris
+ 
+Description:    This is a Level 0 test which is designed to verify that 
+		a table created in an external file is not created with
+		an automatic index.
+
+		In this case 'UNIQUE' is the cause of the index.
+ 
+history:
+15-May-95:      failing. had no init record and when I initialized it, it
+		fails on the index create. Either due to the UNIQUE or to the
+		DDL for index.
+
+Expected Output: produces an error on create index stmt. Doubt that this
+                is what the test had in mind, but GDEF doesn't like the
+		define index in the same program w/the define table.
+History:
+2-Oct-95:  Mark
+  Removed the Cleanup / Setup comments from the test.
+  Also, added WHERE_GDB and RUN drop_gdb to the tests.		
+
+3-Oct-95: Marco
+  Added the WHERE_GDB_EXTERNAL, so the external file can be created 
+  by the server in the correct place when accessing data remotely.
+  Also, I removed any referance to DIR external.dat and TYPE external.dat
+  which would also fail when running remotely.
+2-Nov-95: clare
+  commented out the ISQL command since the test fails on the .gdl execute.
+  NCR was producing a slightly different result and I am trying to eliminate
+  a local init.  Actually, the global init is outdated.  We must not have
+  reinitialized this test w/the V4.0 certification runs.  A new and improved
+  error occurs due to the index create in gdef.  Trying this test w/TMP set
+  will core dump!! Apparently TMP doesn't work w/QLI or GDEF (at least not
+  on NCR).
+
+3-Oct-99: Linda Begley
+  Added rm_file.sh so that external file external.dat can be removed remotely.
+
+*******************************************************************************
+
+$CREATE create.gdl
+
+DEFINE DATABASE "WHERE_GDB:ext_rel.gdb";
+
+DEFINE RELATION ext_table EXTERNAL_FILE "WHERE_GDB_EXTERNAL:external.dat"
+        field1 SHORT,
+        field2 SHORT;
+DEFINE INDEX ext_table_idx for ext_table
+	unique field1;
+
+$CREATE isql2.in
+
+CONNECT "WHERE_GDB:ext_rel.gdb";
+
+SHOW TABLE ext_table;
+
+$CREATE rm_file.sh
+machine=`uname -s`
+node=`uname -n`
+echo $WHERE_GDB_EXTERNAL > awk.tst
+
+echo $WHERE_GDB > ls.out
+proto=`cut -c 1,2 ls.out`
+
+if [ $machine = "Windows_NT" ] || [ $machine = "Windows_95" ] || [ $machine = "Windows_98" ]
+   then 
+      if [ $WHERE_GDB = $WHERE_GDB_EXTERNAL ]
+        then  
+           rm -f WHERE_GDB_EXTERNAL:external.dat 
+        else
+           if [ $proto = "//" ]
+              then
+              machine_name=`awk -F"/" '{print $3}' ls.out`
+              else
+              machine_name=`awk -F":" '{print $1}' ls.out` 
+           fi
+           echo `awk -F":" '{print $1}' awk.tst` > awk.out
+           server_testbed=`cat awk.out`
+           ls_string=//$machine_name/$server_testbed/testbed/external.dat
+           rm -f $ls_string 
+      fi
+else
+      if [ $WHERE_GDB = $WHERE_GDB_EXTERNAL ]
+        then  
+           rm -f WHERE_GDB_EXTERNAL:external.dat 
+        else
+           if [ $proto = "//" ]
+              then
+              machine_name=`awk -F"/" '{print $3}' ls.out`
+              else
+              machine_name=`awk -F":" '{print $1}' ls.out` 
+           fi
+           rsh $machine_name /bin/rm -f WHERE_GDB_EXTERNAL:external.dat
+      fi
+fi
+
+$GDEF create.gdl
+#ISQL -m -input isql2.in
+$RUN drop_gdb WHERE_GDB:ext_rel.gdb
+$SH rm_file.sh
+$DELETE COMMENT create.gdl rm_file.sh isql2.in

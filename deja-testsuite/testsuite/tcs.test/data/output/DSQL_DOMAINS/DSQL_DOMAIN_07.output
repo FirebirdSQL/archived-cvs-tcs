@@ -1,0 +1,49 @@
+Database:  WI-VECTOR3:d:/testbed/atlas.gdb
+SQL> CON> SQL> DOM07A                          SMALLINT Nullable
+                                check (value >=0 and value < 100)
+SQL> CON> SQL> DOM07A                          SMALLINT Nullable
+SQL> CON> SQL> DOM07A                          SMALLINT Nullable
+                                check (value = 5000)
+SQL> CON> SQL> DOM07B                          INTEGER Nullable
+                                check (value > 5000)
+SQL> CON> SQL> DOM07B                          INTEGER Nullable
+SQL> CON> SQL> DOM07B                          INTEGER Nullable
+                                check (value <= 0)
+SQL> CON> SQL warning code = 301
+-DATE data type is now called TIMESTAMP
+SQL> DOM07C                          TIMESTAMP Nullable
+                                check (value >= 'today')
+SQL> CON> SQL> DOM07C                          TIMESTAMP Nullable
+SQL> CON> SQL> DOM07C                          TIMESTAMP Nullable
+                                check (value < 'today')
+SQL> CON> SQL> DOM07D                          CHAR(20) Nullable
+                                check (value in (select river from rivers))
+SQL> CON> SQL> DOM07D                          CHAR(20) Nullable
+SQL> CON> SQL> DOM07D                          CHAR(20) Nullable
+                                check (value in ("TEST1","TEST2","TEST3"))
+SQL> CON> SQL> DOM07E                          VARCHAR(25) Nullable
+                                check (value in (select river from river_states))
+SQL> CON> SQL> DOM07E                          VARCHAR(25) Nullable
+SQL> CON> SQL> DOM07E                          VARCHAR(25) Nullable
+                                check (value is null)
+SQL> CON> SQL> DOM07F                          DECIMAL(6, 2) Nullable
+                                check (value > 0)
+SQL> CON> SQL> DOM07F                          DECIMAL(6, 2) Nullable
+SQL> CON> SQL> DOM07F                          DECIMAL(6, 2) Nullable
+                                check (value in (1,4,6,10))
+SQL> CON> SQL> DOM07G                          FLOAT Nullable
+                                check (value < 50000.00)
+SQL> CON> SQL> DOM07G                          FLOAT Nullable
+SQL> CON> SQL> DOM07G                          FLOAT Nullable
+                                check (value > 0)
+SQL> CON> SQL> DOM07H                          DOUBLE PRECISION Nullable
+                                check (value > 99.999)
+SQL> CON> SQL> DOM07H                          DOUBLE PRECISION Nullable
+SQL> CON> SQL> DOM07H                          DOUBLE PRECISION Nullable
+                                check (value > (select count(*) from rivers))
+SQL> CON> SQL> DOM07I                          BLOB segment 80, subtype UNKNOWN Nullable
+                                check (value > 500)
+SQL> CON> SQL> DOM07I                          BLOB segment 80, subtype UNKNOWN Nullable
+SQL> CON> SQL> DOM07I                          BLOB segment 80, subtype UNKNOWN Nullable
+                                check (value is not null)
+SQL> 

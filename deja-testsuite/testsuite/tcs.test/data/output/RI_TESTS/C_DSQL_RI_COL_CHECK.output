@@ -1,0 +1,25 @@
+Starting to update metadata.
+View TABLE_CONSTRAINTS created ok.
+View REFERENTIAL_CONSTRAINTS created ok.
+View CHECK_CONSTRAINTS created ok.
+View CONSTRAINTS_COLUMN_USAGE created ok.
+books created successfully.
+Inserted 4 records, 2 check constraint violations.
+BU1032,The Busy Executive's Database Guide,172-32-1176
+BU2075,You Can Combat Computer Stress!,238-95-7766
+Number expected: 2, number found: 2.
+
+
+TABLE_CONSTRAINTS:
+------------------
+INTEG_1                        ,BOOKS                          ,NOT NULL   ,NO ,NO 
+BOOK_ID_FORMAT                 ,BOOKS                          ,CHECK      ,NO ,NO 
+
+
+CONSTRAINTS_COLUMN_USAGE:
+-------------------------
+BOOK_ID_FORMAT                 ,BOOKS                          ,BOOK_ID                        
+
+
+REFERENTIAL_CONSTRAINTS:
+------------------------

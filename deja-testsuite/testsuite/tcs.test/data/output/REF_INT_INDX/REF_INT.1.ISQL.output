@@ -1,0 +1,6 @@
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  ref_int1.gdb
+alter table employee
+ drop constraint ref_key;
+alter table department
+ drop constraint dept_key;

@@ -1,0 +1,57 @@
+Database:  /usr/src/ib_test/sp1.gdb
+SQL> SQL> CON> CON> CON> CON> CON> CON> CON> SQL> SQL> 
+A                    B                 C 
+==================== ====== ============ 
+Nut                  Red              12 
+
+SQL> 
+A                    B                 C 
+==================== ====== ============ 
+
+Nut                  Red              12 
+Screw                Red              14 
+Cog                  Red              19 
+
+SQL> 
+MAX                  
+==================== 
+
+Screw                
+
+SQL> 
+           C 
+============ 
+
+          12 
+          14 
+          19 
+
+SQL> 
+A                               C 
+==================== ============ 
+
+Cog                            19 
+Nut                            12 
+Screw                          14 
+
+SQL> 
+A                                      AVG 
+==================== ===================== 
+
+Cog                                     19 
+
+SQL> 
+A                                      AVG 
+==================== ===================== 
+
+Cog                                     19 
+Nut                                     12 
+Screw                                   14 
+
+SQL> CON> 
+A                               C 
+==================== ============ 
+
+Cog                            19 
+
+SQL> 

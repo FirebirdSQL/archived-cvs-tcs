@@ -1,0 +1,20 @@
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  /usr/gds.so-vector1/tester/vector/events1.gdb
+SQL> SQL> SQL> 
+PNAME                PNUMBER 
+=============== ============ 
+
+ProductX                   1 
+ProductY                  22 
+ProductZ                   3 
+
+SQL> 
+         SSN      PNUMBER        HOURS 
+============ ============ ============ 
+
+           1            1            1 
+           2           22            2 
+           3            3            3 
+
+SQL> 
+foo2 done, event (abc) was posted.

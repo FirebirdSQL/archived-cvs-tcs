@@ -1,0 +1,118 @@
+$CREATE COMMENT
+*******************************************************************************
+ 
+Test Name:  	EXT_REL_0_33_E
+Test Level:     0
+Series Name:    EXT_LEV_0
+Date:  		July 5, 1994
+Author:  	Scott Van Voris
+Bug: 
+Description:    This is a Level 0 test which is designed to verify that 
+                a table created in an external file is not created with
+                an automatic index.
+
+                In this case 'UNIQUE' is the cause of the index.
+ 
+Expected Output:       **  We should get some appropriate error message and 
+			InterBase should gracefully exit without creating
+			the index (or table?).  **
+History:
+2-Oct-95:  Mark
+  Removed the Cleanup / Setup comments from the test.
+  Also, added WHERE_GDB and RUN drop_gdb to the tests.
+
+3-Oct-95: Marco
+  Added the WHERE_GDB_EXTERNAL, so the external file can be created 
+  by the server in the correct place when accessing data remotely.
+  Also, I removed any referance to DIR external.dat and TYPE external.dat
+  which would also fail when running remotely.
+
+10-Oct-99: Linda Begley
+  Added rm_file.sh so that external file external.dat can be removed remotely.
+
+*******************************************************************************
+$CREATE column.e
+#include <stdio.h>
+#include <stdlib.h>
+ 
+EXEC SQL
+    INCLUDE SQLCA
+ 
+EXEC SQL
+    WHENEVER SQLERROR GO TO ERR;
+ 
+ 
+main()
+{
+ 
+EXEC SQL
+   CREATE DATABASE "WHERE_GDB:ext_rel.gdb";
+
+EXEC SQL
+   CREATE TABLE ext_table EXTERNAL FILE "WHERE_GDB_EXTERNAL:external.dat"
+        (field1 SMALLINT NOT NULL,
+         field2 SMALLINT,
+         CONSTRAINT uniq_key UNIQUE(field1));
+
+exit(0);
+ERR:  printf ("Data base error, SQLCODE = %d\n", SQLCODE);
+   isc_print_status (gds_$status);
+ 
+    EXEC SQL
+        ROLLBACK RELEASE;
+ 
+    exit(1);
+}
+$CREATE isql.in
+
+CONNECT "WHERE_GDB:ext_rel.gdb";
+SHOW TABLE ext_table;
+
+$CREATE rm_file.sh
+machine=`uname -s`
+node=`uname -n`
+echo $WHERE_GDB_EXTERNAL > awk.tst
+
+echo $WHERE_GDB > ls.out
+proto=`cut -c 1,2 ls.out`
+
+if [ $machine = "Windows_NT" ] || [ $machine = "Windows_95" ] || [ $machine = "Windows_98" ]
+   then 
+      if [ $WHERE_GDB = $WHERE_GDB_EXTERNAL ]
+        then  
+           rm -f WHERE_GDB_EXTERNAL:external.dat 
+        else
+           if [ $proto = "//" ]
+              then
+              machine_name=`awk -F"/" '{print $3}' ls.out`
+              else
+              machine_name=`awk -F":" '{print $1}' ls.out` 
+           fi
+           echo `awk -F":" '{print $1}' awk.tst` > awk.out
+           server_testbed=`cat awk.out`
+           ls_string=//$machine_name/$server_testbed/testbed/external.dat
+           rm -f $ls_string 
+      fi
+else
+      if [ $WHERE_GDB = $WHERE_GDB_EXTERNAL ]
+        then  
+           rm -f WHERE_GDB_EXTERNAL:external.dat 
+        else
+           if [ $proto = "//" ]
+              then
+              machine_name=`awk -F"/" '{print $3}' ls.out`
+              else
+              machine_name=`awk -F":" '{print $1}' ls.out` 
+           fi
+           rsh $machine_name /bin/rm -f WHERE_GDB_EXTERNAL:external.dat
+      fi
+fi
+
+$GPRE column.e
+$CC FLAG_CC column.c
+$LINK FLAG_LINK column
+$RUN column
+$ISQL -m -input isql.in
+$RUN drop_gdb WHERE_GDB:ext_rel.gdb
+$SH rm_file.sh
+$DELETE COMMENT isql.in rm_file.sh column*

@@ -1,0 +1,10 @@
+Use CONNECT or CREATE DATABASE to specify a database
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "/usr/gds.so-vector2/tester/vector/ext_rel.gdb"
+
+ FIELD1 FIELD2     
+======= ========== 
+
+  12000 Success    
+      0 Success    
+

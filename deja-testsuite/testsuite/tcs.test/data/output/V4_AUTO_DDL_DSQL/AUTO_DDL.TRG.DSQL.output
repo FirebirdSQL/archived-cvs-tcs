@@ -1,0 +1,18 @@
+Use CONNECT or CREATE DATABASE to specify a database
+unsuccessful metadata update
+-DEFINE TRIGGER failed
+-attempt to store duplicate value (visible to active transactions) in unique index "RDB$INDEX_8"
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "/usr/gds.so-vector2/tester/vector/test.gdb"
+
+           A 
+============ 
+
+          10 
+
+
+           A 
+============ 
+
+          20 
+

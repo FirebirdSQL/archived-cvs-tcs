@@ -1,0 +1,49 @@
+Database:  WI-VECTOR3:d:/testbed/atlas.gdb
+SQL> CON> SQL> DOM06A1                         SMALLINT Nullable
+                                default 0
+SQL> CON> SQL> DOM06A1                         SMALLINT Nullable
+SQL> CON> SQL> DOM06A1                         SMALLINT Nullable
+                                 default 5000
+SQL> CON> SQL> DOM06B1                         INTEGER Nullable
+                                default 0
+SQL> CON> SQL> DOM06B1                         INTEGER Nullable
+SQL> CON> SQL> DOM06B1                         INTEGER Nullable
+                                 default -200
+SQL> CON> SQL warning code = 301
+-DATE data type is now called TIMESTAMP
+SQL> DOM06C1                         TIMESTAMP Nullable
+                                default '12-12-57'
+SQL> CON> SQL> DOM06C1                         TIMESTAMP Nullable
+SQL> CON> SQL> DOM06C1                         TIMESTAMP Nullable
+                                 default '01/27/92'
+SQL> CON> SQL> DOM06D1                         CHAR(30) Nullable
+                                default user
+SQL> CON> SQL> DOM06D1                         CHAR(30) Nullable
+SQL> CON> SQL> DOM06D1                         CHAR(30) Nullable
+                                 default 'New default of 30 characters x'
+SQL> CON> SQL> DOM06E1                         VARCHAR(4) Nullable
+                                default 'TEST'
+SQL> CON> SQL> DOM06E1                         VARCHAR(4) Nullable
+SQL> CON> SQL> DOM06E1                         VARCHAR(4) Nullable
+                                 default 'def'
+SQL> CON> SQL> DOM06F1                         NUMERIC(15, 1) Nullable
+                                default 300.1
+SQL> CON> SQL> DOM06F1                         NUMERIC(15, 1) Nullable
+SQL> CON> SQL> DOM06F1                         NUMERIC(15, 1) Nullable
+                                 default null
+SQL> CON> SQL> DOM06G1                         FLOAT Nullable
+                                default 2.2
+SQL> CON> SQL> DOM06G1                         FLOAT Nullable
+SQL> CON> SQL> DOM06G1                         FLOAT Nullable
+                                 default 55.55
+SQL> CON> SQL> DOM06H1                         DOUBLE PRECISION Nullable
+                                default 0
+SQL> CON> SQL> DOM06H1                         DOUBLE PRECISION Nullable
+SQL> CON> SQL> DOM06H1                         DOUBLE PRECISION Nullable
+                                 default -100
+SQL> CON> SQL> DOM06I1                         BLOB segment 80, subtype UNKNOWN Nullable
+                                default null
+SQL> CON> SQL> DOM06I1                         BLOB segment 80, subtype UNKNOWN Nullable
+SQL> CON> SQL> DOM06I1                         BLOB segment 80, subtype UNKNOWN Nullable
+                                 default 'default blob'
+SQL> 

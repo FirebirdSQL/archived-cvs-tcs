@@ -1,0 +1,16 @@
+Database:  sp1.gdb
+SQL> SQL> SQL> SQL> SQL> CON> CON> CON> CON> SQL> CON> CON> CON> CON> Statement failed, SQLCODE = -104
+
+Dynamic SQL Error
+-SQL error code = -104
+-Token unknown - line 3, char 22
+-;
+SQL> SQL> SQL> 
+           X 
+============ 
+
+           1 
+           2 
+           3 
+
+SQL> 

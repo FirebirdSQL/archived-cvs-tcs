@@ -1,0 +1,67 @@
+Database:  /usr/src/ib_test/sp1.gdb
+SQL> SQL> CON> CON> CON> CON> CON> Statement failed, SQLCODE = -607
+
+Dynamic SQL Error
+-SQL error code = -607
+-Array/BLOB/DATE data types not allowed in arithmetic
+SQL> CON> CON> CON> CON> CON> Statement failed, SQLCODE = -607
+
+Dynamic SQL Error
+-SQL error code = -607
+-Array/BLOB/DATE data types not allowed in arithmetic
+SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> Statement failed, SQLCODE = -607
+
+Dynamic SQL Error
+-SQL error code = -607
+-Array/BLOB/DATE data types not allowed in arithmetic
+SQL> CON> CON> CON> CON> CON> Statement failed, SQLCODE = -607
+
+Dynamic SQL Error
+-SQL error code = -607
+-Array/BLOB/DATE data types not allowed in arithmetic
+SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> SQL> CON> SQL> SQL> Statement failed, SQLCODE = -204
+
+Dynamic SQL Error
+-SQL error code = -204
+-Procedure unknown
+-CAST1
+SQL> Statement failed, SQLCODE = -204
+
+Dynamic SQL Error
+-SQL error code = -204
+-Procedure unknown
+-CAST2
+SQL> 
+          B 
+=========== 
+1978-03-29  
+
+SQL> Statement failed, SQLCODE = -204
+
+Dynamic SQL Error
+-SQL error code = -204
+-Procedure unknown
+-CAST4
+SQL> Statement failed, SQLCODE = -204
+
+Dynamic SQL Error
+-SQL error code = -204
+-Procedure unknown
+-CAST5
+SQL> Statement failed, SQLCODE = -413
+
+conversion error from string "1978-03-29"
+SQL> Statement failed, SQLCODE = -413
+
+conversion error from string "1978-03-29"
+SQL> 
+B          
+========== 
+1978-03-29 
+
+SQL> 
+B          
+========== 
+1978-03-29 
+
+SQL> 

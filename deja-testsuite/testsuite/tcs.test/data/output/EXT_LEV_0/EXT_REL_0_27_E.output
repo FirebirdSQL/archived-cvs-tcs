@@ -1,0 +1,11 @@
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "ext_rel.gdb"
+Statement failed, SQLCODE = -297
+
+Operation violates CHECK constraint SMALLER on view or table EXT_TABLE
+
+ FIELD1  FIELD2 
+======= ======= 
+
+  12000   13000 
+

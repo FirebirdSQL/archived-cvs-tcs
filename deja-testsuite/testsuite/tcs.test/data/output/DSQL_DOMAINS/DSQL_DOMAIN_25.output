@@ -1,0 +1,32 @@
+Database:  WI-VECTOR3:d:/testbed/atlas.gdb
+SQL> CON> CON> SQL> SQL> DOM20A                          SMALLINT Nullable
+                                default 0
+                                check (value >= 0 and value < 100)
+SQL> CON> CON> SQL> SQL> DOM20B                          INTEGER Nullable
+                                default 500
+                                check (value >= 500)
+SQL> CON> SQL warning code = 301
+-DATE data type is now called TIMESTAMP
+SQL> SQL> DOM20C                          TIMESTAMP Nullable
+                                check (value >= 'today')
+SQL> CON> SQL> SQL> DOM20D                          CHAR(20) Nullable
+                                check (value in (select river from rivers))
+SQL> CON> SQL> SQL> DOM20E                          VARCHAR(25) Nullable
+                                default 'VARYING DEFAULT'
+SQL> CON> CON> SQL> SQL> DOM20F                          DECIMAL(6, 2) Nullable
+                                default 4.2
+                                check (value > 0)
+SQL> CON> CON> SQL> SQL> DOM20G                          FLOAT Nullable
+                                default 500.1
+                                check (value < 50000.00)
+SQL> CON> CON> SQL> SQL> DOM20H                          DOUBLE PRECISION Not Null
+                                default 1000
+SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> There is no domain DOM20A in this database
+SQL> There is no domain DOM20B in this database
+SQL> There is no domain DOM20C in this database
+SQL> There is no domain DOM20D in this database
+SQL> There is no domain DOM20E in this database
+SQL> There is no domain DOM20F in this database
+SQL> There is no domain DOM20G in this database
+SQL> There is no domain DOM20H in this database
+SQL> 

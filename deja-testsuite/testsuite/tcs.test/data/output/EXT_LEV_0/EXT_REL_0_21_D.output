@@ -1,0 +1,5 @@
+Use CONNECT or CREATE DATABASE to specify a database
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "./ext_rel.gdb"
+External file: external.dat
+FIELD1                          BLOB segment 80, subtype TEXT Nullable 

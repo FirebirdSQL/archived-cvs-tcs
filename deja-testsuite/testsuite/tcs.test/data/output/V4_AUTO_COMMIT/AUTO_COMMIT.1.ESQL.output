@@ -1,0 +1,22 @@
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "/usr/gds.so-vector2/tester/vector/test.gdb"
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "/usr/gds.so-vector2/tester/vector/test.gdb"
+
+           A 
+============ 
+
+          10 
+
+
+           B 
+============ 
+
+         100 
+
+
+           C 
+============ 
+
+        1000 
+

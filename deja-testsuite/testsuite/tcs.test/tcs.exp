@@ -376,6 +376,11 @@ proc parseEnvFile { fileName } {
         set result [ concat $result [ list [ list "$srcStr" "$rplStr" ] ] ]
         set tcsEnv($srcStr) "$rplStr"
         set localEnv($srcStr) "$rplStr"
+        if { [ string first "WHERE_" ${srcStr} ] == 0 } {
+            if { ! [ string equal "" ${rplStr} ] } {
+                set localEnv($srcStr:) "$rplStr$localEnv(PATH_SEP)"
+            }
+        }
     }
     close $file
     return $result
@@ -399,12 +404,98 @@ proc setup_tcsenv {} {
     set localEnv(gds_\$quad) "gds__quad"
     set localEnv(GDS_\$DECODE_DATE) "GDS__DECODE_DATE"
     set localEnv(gds_\$decode_date) "gds__decode_date"
+    set localEnv(GDS_\$INFO_SWEEP_INTERVAL) "GDS__INFO_SWEEP_INTERVAL"
+    set localEnv(gds_\$info_sweep_interval) "gds__info_sweep_interval"
+    set localEnv(GDS_\$INFO_NO_RESERVE) "GDS__INFO_NO_RESERVE"
+    set localEnv(gds_\$info_no_reserve) "gds__info_no_reserve"
+    set localEnv(GDS_\$EVENTS) "GDS__EVENTS"
+    set localEnv(gds_\$events) "gds__events"
+    set localEnv(GDS_\$INFO_END) "GDS__INFO_END"
+    set localEnv(gds_\$info_end) "gds__info_end"
+    set localEnv(GDS_\$INFO_READS) "GDS__INFO_READS"
+    set localEnv(gds_\$info_reads) "gds__info_reads"
+    set localEnv(GDS_\$INFO_WRITES) "GDS__INFO_WRITES"
+    set localEnv(gds_\$info_writes) "gds__info_writes"
+    set localEnv(GDS_\$INFO_FETCHES) "GDS__INFO_FETCHES"
+    set localEnv(gds_\$info_fetches) "gds__info_fetches"
+    set localEnv(GDS_\$INFO_MARKS) "GDS__INFO_MARKS"
+    set localEnv(gds_\$info_marks) "gds__info_marks"
+    set localEnv(GDS_\$INFO_PAGE_SIZE) "GDS__INFO_PAGE_SIZE"
+    set localEnv(gds_\$info_page_size) "gds__info_page_size"
+    set localEnv(GDS_\$INFO_NUM_BUFFERS) "GDS__INFO_NUM_BUFFERS"
+    set localEnv(gds_\$info_num_buffers) "gds__info_num_buffers"
+    set localEnv(GDS_\$INFO_NUM_WAL_BUFFERS) "GDS__INFO_NUM_WAL_BUFFERS"
+    set localEnv(gds_\$info_num_wal_buffers) "gds__info_num_wal_buffers"
+    set localEnv(GDS_\$INFO_WAL_BUFFER_SIZE) "GDS__INFO_WAL_BUFFER_SIZE"
+    set localEnv(gds_\$info_wal_buffer_size) "gds__info_wal_buffer_size"
+    set localEnv(GDS_\$INFO_WAL_CKPT_LENGTH) "GDS__INFO_WAL_CKPT_LENGTH"
+    set localEnv(gds_\$info_wal_ckpt_length) "gds__info_wal_ckpt_length"
+    set localEnv(GDS_\$INFO_WAL_CUR_CKPT_INTERVAL) "GDS__INFO_WAL_CUR_CKPT_INTERVAL"
+    set localEnv(gds_\$info_wal_cur_ckpt_interval) "gds__info_wal_cur_ckpt_interval"
+    set localEnv(GDS_\$INFO_WAL_GRPC_WAIT_USECS) "GDS__INFO_WAL_GRPC_WAIT_USECS"
+    set localEnv(gds_\$info_wal_grpc_wait_usecs) "gds__info_wal_grpc_wait_usecs"
+    set localEnv(GDS_\$INFO_WAL_NUM_IO) "GDS__INFO_WAL_NUM_IO"
+    set localEnv(gds_\$info_wal_num_io) "gds__info_wal_num_io"
+    set localEnv(GDS_\$INFO_WAL_AVG_IO_SIZE) "GDS__INFO_WAL_AVG_IO_SIZE"
+    set localEnv(gds_\$info_wal_avg_io_size) "gds__info_wal_avg_io_size"
+    set localEnv(GDS_\$INFO_WAL_NUM_COMMITS) "GDS__INFO_WAL_NUM_COMMITS"
+    set localEnv(gds_\$info_wal_num_commits) "gds__info_wal_num_commits"
+    set localEnv(GDS_\$INFO_WAL_AVG_GRPC_SIZE) "GDS__INFO_WAL_AVG_GRPC_SIZE"
+    set localEnv(gds_\$info_wal_avg_grpc_size) "gds__info_wal_avg_grpc_size"
+    set localEnv(GDS_\$INFO_CURRENT_MEMORY) "GDS__INFO_CURRENT_MEMORY"
+    set localEnv(gds_\$info_current_memory) "gds__info_current_memory"
+    set localEnv(GDS_\$INFO_MAX_MEMORY) "GDS__INFO_MAX_MEMORY"
+    set localEnv(gds_\$info_max_memory) "gds__info_max_memory"
+    set localEnv(GDS_\$INFO_ATTACHMENT_ID) "GDS__INFO_ATTACHMENT_ID"
+    set localEnv(gds_\$info_attachment_id) "gds__info_attachment_id"
+    set localEnv(GDS_\$INFO_ODS_VERSION) "GDS__INFO_ODS_VERSION"
+    set localEnv(gds_\$info_ods_version) "gds__info_ods_version"
+    set localEnv(GDS_\$INFO_ODS_MINOR_VERSION) "GDS__INFO_ODS_MINOR_VERSION"
+    set localEnv(gds_\$info_ods_minor_version) "gds__info_ods_minor_version"
+    set localEnv(GDS_\$INFO_ALLOCATION) "GDS__INFO_ALLOCATION"
+    set localEnv(gds_\$info_allocation) "gds__info_allocation"
+    set localEnv(GDS_\$INFO_READ_SEQ_COUNT) "GDS__INFO_READ_SEQ_COUNT"
+    set localEnv(gds_\$info_read_seq_count) "gds__info_read_seq_count"
+    set localEnv(GDS_\$INFO_READ_IDX_COUNT) "GDS__INFO_READ_IDX_COUNT"
+    set localEnv(gds_\$info_read_idx_count) "gds__info_read_idx_count"
+    set localEnv(GDS_\$INFO_UPDATE_COUNT) "GDS__INFO_UPDATE_COUNT"
+    set localEnv(gds_\$info_update_count) "gds__info_update_count"
+    set localEnv(GDS_\$INFO_INSERT_COUNT) "GDS__INFO_INSERT_COUNT"
+    set localEnv(gds_\$info_insert_count) "gds__info_insert_count"
+    set localEnv(GDS_\$INFO_DELETE_COUNT) "GDS__INFO_DELETE_COUNT"
+    set localEnv(gds_\$info_delete_count) "gds__info_delete_count"
+    set localEnv(GDS_\$INFO_BACKOUT_COUNT) "GDS__INFO_BACKOUT_COUNT"
+    set localEnv(gds_\$info_backout_count) "gds__info_backout_count"
+    set localEnv(GDS_\$INFO_PURGE_COUNT) "GDS__INFO_PURGE_COUNT"
+    set localEnv(gds_\$info_purge_count) "gds__info_purge_count"
+    set localEnv(GDS_\$INFO_EXPUNGE_COUNT) "GDS__INFO_EXPUNGE_COUNT"
+    set localEnv(gds_\$info_expunge_count) "gds__info_expunge_count"
+    set localEnv(GDS_\$INFO_IMPLEMENTATION) "GDS__INFO_IMPLEMENTATION"
+    set localEnv(gds_\$info_implementation) "gds__info_implementation"
+    set localEnv(GDS_\$INFO_BASE_LEVEL) "GDS__INFO_BASE_LEVEL"
+    set localEnv(gds_\$info_base_level) "gds__info_base_level"
+    set localEnv(GDS_\$INFO_VERSION) "GDS__INFO_VERSION"
+    set localEnv(gds_\$info_version) "gds__info_version"
+    set localEnv(GDS_\$INFO_LIMBO) "GDS__INFO_LIMBO"
+    set localEnv(gds_\$info_limbo) "gds__info_limbo"
+    set localEnv(GDS_\$DATABASE_INFO) "GDS__DATABASE_INFO"
+    set localEnv(gds_\$database_info) "gds__database_info"
+    set localEnv(GDS_\$TRANS) "GDS__TRANS"
+    set localEnv(gds_\$trans) "gds__trans"
+    set localEnv(GDS_\$SEGSTR_EOF) "GDS__SEGSTR_EOF"
+    set localEnv(gds_\$segstr_eof) "gds__segstr_eof"
+    set localEnv(GDS_\$VERSION) "GDS__VERSION"
+    set localEnv(gds_\$version) "gds__version"
     set localEnv(LINE_TERM) "\n"
 
-    set localEnv(WHERE_GDB) ""
+    set localEnv(WHERE_GDB:) ""
     set tcsEnv(WHERE_GDB) ""
-    set localEnv(WHERE_FILES) "" 
+    set localEnv(WHERE_GDB1:) ""
+    set tcsEnv(WHERE_GDB1) ""
+    set localEnv(WHERE_FILES:) "" 
     set tcsEnv(WHERE_FILES) "" 
+    set localEnv(WHERE_GDB_EXTERNAL:) ""
+    set tcsEnv(WHERE_GDB_EXTERNAL) ""
         
     set tcsEnv(WHERE_BIN) [ file join "$firebird" "bin" ]
     set tcsEnv(WHERE_GSEC) "$firebird"
@@ -542,27 +633,41 @@ proc cmd_sub { line } {
 
         # handle the link variable
         if { [ string compare "FLAG_LINK" "$item" ] == 0      || \
+             [ string compare "FLAG_LINK_MU" "$item" ] == 0      || \
              [ string compare "FLAG_ADA_LINK" "$item" ] == 0     || \
              [ string compare "FLAG_COB_LINK" "$item" ] == 0 } {
 
-            set fileName [ lindex "$cmdList" 0 ]
-            set cmdList [ lrange "$cmdList" 1 end ]
+            set fileNameList ""
+            set fileNameObjs ""
+            while { 0 != [ string first "LIBRARIES" [lindex "$cmdList" 0 ]] && \
+                      [ llength "$cmdList" ] > 0 } {
+                set fileName [ lindex "$cmdList" 0 ]
+                set cmdList [ lrange "$cmdList" 1 end ]
+                if { [ string equal "" "$fileNameList" ] } {
+                    set fileNameList "$fileName"
+                }
+                set fileNameObjs "$fileNameObjs [ platform_code_root $fileName ].o"
+            }
             set prtPat "$tcsEnv($item)"
-            set item [ format "$prtPat" "[platform_code_root $fileName].o" "$fileName" ]
+            set item [ format "$prtPat" "$fileNameObjs" "$fileNameList" ]
             set line "$line $item"
             continue
         }
 
         if { [ string length $item ] != 0 } {
-            set findNames [ array names tcsEnv "$item" ]
-            debugPrint "map: X${item}X Y${findNames}Y"
+            if { [ regexp "^\[A-Za-z0-9\$\]+$" "$item" ] } {
+                set findNames [ array names tcsEnv "$item" ]
+                debugPrint "map: X${item}X Y${findNames}Y"
 
-            # Check lookup to see if we have found a match (done this way so that
-            # wildcards such as 'A*' still work ok.
-            if { $findNames != $item  } {
-                set line "$line $item"
+                # Check lookup to see if we have found a match (done this way so that
+                # wildcards such as 'A*' still work ok.
+                if { $findNames != $item  } {
+                    set line "$line $item"
+                } else {
+                    set line "$line $tcsEnv($item)"
+                }
             } else {
-                set line "$line $tcsEnv($item)"
+                set line "$line $item"
             }
         }
     }
@@ -616,30 +721,21 @@ proc data_sub { str } {
 
         # check to see if need to do a string replacement
 
-        if { [string equal "" [ array names localEnv "$checkStr" ] ] } {
-            # nope
-            set newStr "$newStr$checkStr"
+        set alreadyHandled 0
+        if { [ string first ":" ${str} ] == 0 } {
+            if {![string equal "" [ array names localEnv "$checkStr:"] ] } {
+                set str [ string range "$str" 1 end ]
+                set newStr "$newStr$localEnv($checkStr:)"
+                set alreadyHandled 1
+            }
+        }
 
-        } else {
-            # do an extra check to consume a trailing : for empty substitutions
-            #  needed to handle WHERE_GDB:xxxx.gdb style substitutions
-            set strLen [ string length "$str" ]
-            if { [ string equal "" "$localEnv($checkStr)" ] && $strLen > 0 } {
-                if { [ string equal ":" [ string range "$str" 0 0 ] ] } {
-                    # consume the ":"
-                    set str [ string range "$str" 1 end ]
-                }
-                # no replacement is needed, because the replace pattern is empty
+        if { ! $alreadyHandled } {
+            if { [string equal "" [ array names localEnv "$checkStr" ] ] } {
+                # nope
+                set newStr "$newStr$checkStr"
             } else {
                 set newStr "$newStr$localEnv($checkStr)"
-                # check to see if we need to stick in the path separator
-                if { $strLen > 0 } {
-                    if { [ string equal ":" [ string range "$str" 0 0 ] ] } {
-                        # consume the ":"
-                        set str [ string range "$str" 1 end ]
-                        set newStr "$newStr$localEnv(PATH_SEP)"
-                    }
-                }
             }
         }
         set checkStr ""
@@ -667,7 +763,37 @@ proc data_sub { str } {
 }
 
 proc linesAreEquiv { source comp } {
-    if { [ regexp "((SQL> )|(CON> ))*Database:  " "$source" matchStr ] } {
+    if { [ regexp "((SQL> )|(CON> )|(QLI> ))*Database:" ${source} matchStr ] } {
+        if { [ string first "$matchStr" "$comp" ] == 0 } {
+            return 1
+        }
+    }
+
+    if { [ regexp "(QLI> )*\\*\\* QLI error from database " ${source} matchStr ] } {
+        if { [ string first "$matchStr" "$comp" ] == 0 } {
+            return 1
+        }
+    }
+
+    if { [ regexp "\\(W\\) \[^\r\n\]*database " ${source} matchStr ] } {
+        if { [ string first "$matchStr" "$comp" ] == 0 } {
+            return 1
+        }
+    }
+
+    if { [ regexp {^ *Infinity $} "$source" matchStr ] } {
+        if { [ regexp {^ *Inf $} "$comp" matchStr ] } {
+            return 1
+        }
+    }
+
+    if { [ regexp "database \[^\r\n\]+ shutdown" ${source} ] } {
+        if { [ regexp "database \[^\r\n\]+ shutdown" ${comp} ] } {
+            return 1
+        }
+    }
+
+    if { [ regexp "((SQL> )|(CON> )|(QLI> ))*External file: " "$source" matchStr ] } {
         if { [ string first "$matchStr" "$comp" ] == 0 } {
             return 1
         }
@@ -718,10 +844,13 @@ proc stop_shell {} {
     send "exit$localEnv(LINE_TERM)"
     set timeout 10
     expect {
-        eof { return 1 }
+        eof { wait; return 1 }
         timeout { }
     }
-    return 0
+    close
+    #exec kill $pid
+    wait
+    return 1
 }
 
 
@@ -729,7 +858,7 @@ proc stop_shell {} {
 # This is the fun little procedure that correctly handles the stdout/stderr
 # streams.
 
-proc doTcsDiff { srcScript outputFile } {
+proc doTcsDiff { srcScript outputFile configFile } {
     global testTimeout
     global localEnv
     global spawn_id
@@ -747,6 +876,29 @@ proc doTcsDiff { srcScript outputFile } {
     set stderrMatch 0
     set timeout 5
 
+    match_max -d
+    set thisTestTimeout $testTimeout
+
+    if { [ file exists "$configFile" ] } {
+        set file [ open "$configFile" r ]
+        while { ! [ eof $file ] } {
+            gets $file line
+            if { [eof $file] } { break }
+
+            set line [ string trim "$line" ]
+            if { [ string equal "" "$line" ] } { continue }
+            set line [ split "$line" "=" ]
+            set key [ string toupper [ string trim [ lindex "$line" 0 ] ] ]
+            set value [ string trim [ lindex "$line" 1 ] ]
+            switch "$key" {
+                "TIMEOUT" { set thisTestTimeout $value }
+                "BUFFER" { match_max $value }
+            }
+        }
+        close $file
+    }
+
+    set timeout 5
     send "$localEnv(LINE_TERM)"
     expect {
         -re "$shellPrompt" { }
@@ -760,7 +912,6 @@ proc doTcsDiff { srcScript outputFile } {
         eof { set fileOpen 0; fail "Premature EOF!!"; start_shell; return }
     }
 
-    set timeout $testTimeout
     send "source $srcScript$localEnv(LINE_TERM)"
 
 #        -re {^[^\r\n]*$srcScript\r\n} { }
@@ -773,6 +924,7 @@ proc doTcsDiff { srcScript outputFile } {
             }
             return "TIMEOUT waiting for script command echo"
         }
+        "$shellPrompt" { set failMsg "Premature end of output" }
         eof { set fileOpen 0; set failMsg "Premature EOF!!" }
     }
 
@@ -799,7 +951,7 @@ proc doTcsDiff { srcScript outputFile } {
         set stdoutMatch 0
         set stderrMatch 0
         set wildcardMatch 0
-        set timeout $testTimeout
+        set timeout $thisTestTimeout
 
 # On win32 some of the returned lines have \r\r\n as the delimiter
 # the [ have to be escaped, and # comments cannot appear in the
@@ -809,6 +961,8 @@ proc doTcsDiff { srcScript outputFile } {
                 set output [ string range "$expect_out(buffer)" 0 end-3 ] }
             -re "^\[^\r\n\]*\r\n" {
                 set output [ string range "$expect_out(buffer)" 0 end-2 ] }
+            -re "^\[^\r\n\]*\r" {
+                set output [ string range "$expect_out(buffer)" 0 end-1 ] }
 
             timeout {
                 stop_shell
@@ -819,12 +973,20 @@ proc doTcsDiff { srcScript outputFile } {
                 set failMsg "TIMEOUT waiting for: $output"
                 break
             }
+            "$shellPrompt" { set failMsg "Premature end of output"; break }
             eof { set fileOpen 0; set failMsg "Premature EOF!!"; break }
         }
 
 #        set output [ string trim "$expect_out(buffer)" ]
 #        set line   [ string trim $line ]
 #        send_user "$output\n"
+
+        # There are some lines that just need to be skipped in the output.
+        # For example some shells report the process number when a background
+        # process is created.  This code handles those special lines of output.
+        if { [ regexp {^\[[0-9]+\] [0-9]+$} ${output} ] } {
+            continue
+        }
 
         if { [ linesAreEquiv "$line" "$output" ] } {
             # This is a funny case.  It basically says if the last matched line
@@ -851,6 +1013,10 @@ proc doTcsDiff { srcScript outputFile } {
         if { $wildcardMatch == 1 } {
             # test error case
             if { $splitFile != 0 } {
+                stop_shell
+                if { ! [ start_shell ] } {
+                    send_user "Unrecoverable error!\n"
+                }
                 set failMsg "Unexpected output: $output"
                 break
             }
@@ -883,6 +1049,10 @@ proc doTcsDiff { srcScript outputFile } {
                         set errBuff [ concat $errBuff [ list "$checkLine" ] ]
                     }
                     if { $foundMatch == 0 } {
+                        stop_shell
+                        if { ! [ start_shell ] } {
+                            send_user "Unrecoverable error!\n"
+                        }
                         set failMsg "Unexpected output: $output"
                         break
                     }
@@ -914,8 +1084,10 @@ proc doTcsDiff { srcScript outputFile } {
         }
     }
     if { $fileOpen == 0 } { return $failMsg }
+    close $file
+    if { ! [ string equal "" "$failMsg" ] } { return $failMsg }
 
-    set timeout $testTimeout
+    set timeout $thisTestTimeout
     expect {
         -re "$shellPrompt" { }
         timeout { set failMsg "TIMEOUT waiting for last shell prompt" }
@@ -929,7 +1101,6 @@ proc doTcsDiff { srcScript outputFile } {
         eof { set fileOpen 0; set failMsg "Premature EOF!!"; break }
     }
 
-    close $file
     return $failMsg
 }
 
@@ -944,6 +1115,7 @@ proc runKnownTest { scriptFile dataFiles outputFile bpFile envFile keep_files } 
     global saveSeriesDataRoot
     global saveSeriesResultsRoot
     global testData
+    global spawn_id
 
     set lastCmd ""
 
@@ -953,14 +1125,40 @@ proc runKnownTest { scriptFile dataFiles outputFile bpFile envFile keep_files } 
     set testFiles "work/tcs.script"
 
     if { ! [ file exists "$scriptFile" ] } {
-        return "XFAIL: no test script"
+        return "XFAIL no test script"
     }
 
-    set file [open "$scriptFile" r]
+    if { ! [ file exists "$outputFile" ] } {
+        return "XFAIL no expected output file"
+    }
+
+    set fileRoot [ file rootname "$scriptFile" ]
+    set configFile "$fileRoot.config"
     set script [open "work/tcs.script" w]
     set env [ parseEnvFile "$envFile" ]
+    set expectPass 1
+
+    if { [ file exists "$configFile" ] } {
+        set file [ open "$configFile" r ]
+        while { ! [ eof $file ] } {
+            gets $file line
+            if { [eof $file] } { break }
+
+            set line [ string trim "$line" ]
+            if { [ string equal "" "$line" ] } { continue }
+            set line [ split "$line" "=" ]
+            set key [ string toupper [ string trim [ lindex "$line" 0 ] ] ]
+            set value [ string trim [ lindex "$line" 1 ] ]
+            switch "$key" {
+                "RESULT" { if { [ string equal "FAIL" [ string toupper ${value} ] ] } { set expectPass 0 } }
+            }
+        }
+        close $file
+    }
+
 
     # Copy over the boiler plate
+    set file [open "$scriptFile" r]
     set bp [ open "$bpFile" r ]
     while { ! [ eof $bp ] } {
         set count [ gets $bp line ]
@@ -974,10 +1172,11 @@ proc runKnownTest { scriptFile dataFiles outputFile bpFile envFile keep_files } 
         set count [gets $file line]
         if { $count < 0 } { continue }
 
-        set matchPos [string last {$} "$line" ]
+        set matchPos [string first {$} ${line} ]
         if { $matchPos != 0 } {
-            if { $lastWasCmd == 1 && [ string length "$line" ] > 0 } {
+            if { $lastWasCmd == 1 } {
                 set lastWasCmd 0
+                set lastCmdLine ""
                 set dataCnt [ expr $dataCnt + 1 ]
                 set dataFile [open "work/tcs.data$dataCnt" w]
                 set dataFileOpen 1
@@ -985,7 +1184,7 @@ proc runKnownTest { scriptFile dataFiles outputFile bpFile envFile keep_files } 
                 puts $script "$lastCmd < tcs.data$dataCnt"
             }
             if { $dataFileOpen == 1 } {
-                puts $dataFile [ data_sub "$line" ]
+                puts $dataFile [ data_sub ${line} ]
             }
         } else {
             if { $dataFileOpen == 1 } {
@@ -995,7 +1194,7 @@ proc runKnownTest { scriptFile dataFiles outputFile bpFile envFile keep_files } 
             if { $lastWasCmd == 1 } { puts $script "$lastCmd" }
             set lastWasCmd 1
             set line [ string trim [ string range "$line" 1 end ] ]
-            set lastCmd [ cmd_sub $line ]
+            set lastCmd [ cmd_sub ${line} ]
         }
     }
     if { $lastWasCmd == 1 } { puts $script "$lastCmd" }
@@ -1021,7 +1220,7 @@ proc runKnownTest { scriptFile dataFiles outputFile bpFile envFile keep_files } 
     }
 
     # Now that all the files have been extracted, lets run the test!!
-    set testResult [ doTcsDiff "tcs.script" "$outputFile" ]
+    set testResult [ doTcsDiff "tcs.script" "$outputFile" "$configFile" ]
 
     # delete the files we created
     if { ! $keep_files } {
@@ -1030,6 +1229,18 @@ proc runKnownTest { scriptFile dataFiles outputFile bpFile envFile keep_files } 
             { file delete -force [ file tail "$filename" ] }
     }
     file delete -force "tcs.log"
+
+    if { $expectPass != 0 } {
+        if { ![ string equal "" ${testResult} ] } {
+            return "FAIL $testResult"
+        }
+    } else {
+        if { [ string equal "" ${testResult} ] } {
+            return "XPASS"
+        } else {
+            return "XFAIL $testResult"
+        }
+    }
 
     return $testResult
 }
@@ -1065,16 +1276,15 @@ proc runKnownSeries { seriesName subSeries platform } {
           0} errMsg ] } {
             fail "Exception caught: $errMsg"
         } else {
-            if { [ string first "XFAIL: " "$errMsg" ] == 0 } {
-                set errMsg [ string range "$errMsg" 7 end ]
-                send_user "Expected failure" $errMsg\n"
-                xfail "$line $errMsg"
+            if { [ string equal "" "$errMsg" ] } {
+                send_user "PASS\n"
+                pass "$line"
             } else {
-                if { [ string equal "" "$errMsg" ] } {
-                    send_user "PASS\n"
-                    pass "$line"
-                } else {
-                    fail "$line $errMsg"
+                switch [ lindex ${errMsg} 0 ] {
+                    "PASS" { send_user "PASS\n"; pass "$line" }
+                    "XPASS" { xpass "$line" }
+                    "FAIL" { fail "$line [ string range ${errMsg} 5 end ]" }
+                    "XFAIL" { send_user "EXPECTED FAILUE: [ string range ${errMsg} 6 end ]\n"; xfail "$line [ string range ${errMsg} 6 end ]" }
                 }
             }
         }
@@ -1135,12 +1345,18 @@ proc runTest { testName platform saveFiles } {
                               [ file join "$envprefix" "ENV.$platform" ] \
       $saveFiles } errMsg ] } {
         fail "Exception caught: $errMsg"
-    }
-    if { [ string equal "" "$errMsg" ] } {
-        send_user "PASS\n"
-        pass "$testName"
     } else {
-        fail "$testName $errMsg"
+        if { [ string equal "" "$errMsg" ] } {
+            send_user "PASS\n"
+            pass "$testName"
+        } else {
+            switch [ lindex ${errMsg} 0 ] {
+                "PASS" { send_user "PASS\n"; pass "$testName" }
+                "XPASS" { xpass "$testName" }
+                "FAIL" { fail "$testName [ string range ${errMsg} 5 end ]" }
+                "XFAIL" { send_user "EXPECTED FAILUE: [ string range ${errMsg} 6 end ]\n"; xfail "$testName [ string range ${errMsg} 6 end ]" }
+            }
+        }
     }
 }
 
@@ -1191,73 +1407,76 @@ if { ! [start_shell] } {
     send_user "Failed to start shell!!\n"
 }
 
-#runMetaSeries VECTOR_12HOUR    $platform
 
-#runSeries CF_ISQL             $platform
-
-#runSeries C_SQL_PRED          $platform
-#runSeries ISC_ARRBLOB_CK      $platform
-
-#runSeries DSQL_DOMAINS        $platform
-#runSeries DSQL_EXCEPTIONS     $platform
-#runSeries SQL_EVENTS          $platform
-#runSeries C_SQL_BLOB          $platform
-#runSeries C_SQL_JOIN          $platform
-#runSeries V4_AUTO_COMMIT      $platform
-#runSeries V4_EXCLUSIVE        $platform
-#runSeries IDML_C_CHARSET      $platform
-#runSeries IDML_C_SUBQUERYS    $platform
-
-#set testTimeout 60000
-#runSeries EVENT_MISC          $platform
-
-#set testTimeout 60
-
-#runSeries EXT_LEV_0           $platform
-#runSeries GF_SHUTDOWN         $platform
-#runSeries QA_PROC_IES_ERR     $platform
-#runSeries REF_INT_INDX        $platform
-#runSeries RICH_FLD_GEN_V40    $platform
-#runSeries RI_TESTS            $platform
-#runSeries V4_AUTO_DDL_DSQL    $platform
-#runSeries V4_TRANS_BLOB       $platform
-#runSeries QA_PROCS_ISQL       $platform
-#runSeries FB_SQL              $platform
-
-
-#runTest ISC_ER36 $platform 1
-#runTest C_DSQL_RI_INIT  $platform 1
-#runTest C_DSQL_RI_ALT_ADD  $platform 1
-#runTest C_DSQL_RI_CLEAN_UP  $platform 1
-
-#runTest C_SQL_JOIN_0  $platform 1
-#runTest CF_ISQL_01  $platform 1
-#runTest CF_ISQL_11  $platform 1
-#runTest CF_ISQL_16  $platform 1
-
-#runTest DSQL_DOMAIN_08  $platform 1
-#runTest DSQL_EXCEPT_01  $platform 1
-
-#set timeout 20000
-#runTest SQL_EVENT_12  $platform 1
-#runTest GF_SHUT_2  $platform 1
-
-
-# The following has a problem with LD -> ld in the input file.
-#runTest CF_ISQL_17  $platform 1
-
-
-# just testing
-#runTest C_SQL_PRED_0  $platform 1
-#runTest AUTO_COMMIT.1.ESQL $platform 1
-#runTest IDML_C_SUBQ_10 $platform 1
-
-if { ! [ string equal "" "$TCS_TEST" ] } {
-    if { ! [ runMetaSeries "$TCS_TEST" "$platform" ] } {
-        if { ! [ runSeries "$TCS_TEST" $platform ] } {
-            runTest "$TCS_TEST" "$platform" 1
+if { [ info exists TCS_TEST ] && ! [ string equal "" "$TCS_TEST" ] } {
+    foreach test "$TCS_TEST" {
+        if { ! [ runMetaSeries "$test" "$platform" ] } {
+            if { ! [ runSeries "$test" $platform ] } {
+                runTest "$test" "$platform" 1
+            }
         }
     }
+} else {
+    runMetaSeries VECTOR_12HOUR    $platform
+
+    #runSeries CF_ISQL             $platform
+
+    #runSeries C_SQL_PRED          $platform
+    #runSeries ISC_ARRBLOB_CK      $platform
+
+    #runSeries DSQL_DOMAINS        $platform
+    #runSeries DSQL_EXCEPTIONS     $platform
+    #runSeries SQL_EVENTS          $platform
+    #runSeries C_SQL_BLOB          $platform
+    #runSeries C_SQL_JOIN          $platform
+    #runSeries V4_AUTO_COMMIT      $platform
+    #runSeries V4_EXCLUSIVE        $platform
+    #runSeries IDML_C_CHARSET      $platform
+    #runSeries IDML_C_SUBQUERYS    $platform
+
+    #set testTimeout 60000
+    #runSeries EVENT_MISC          $platform
+    
+    #set testTimeout 60
+    
+    #runSeries EXT_LEV_0           $platform
+    #runSeries GF_SHUTDOWN         $platform
+    #runSeries QA_PROC_IES_ERR     $platform
+    #runSeries REF_INT_INDX        $platform
+    #runSeries RICH_FLD_GEN_V40    $platform
+    #runSeries RI_TESTS            $platform
+    #runSeries V4_AUTO_DDL_DSQL    $platform
+    #runSeries V4_TRANS_BLOB       $platform
+    #runSeries QA_PROCS_ISQL       $platform
+    #runSeries FB_SQL              $platform
+
+
+    #runTest ISC_ER36 $platform 1
+    #runTest C_DSQL_RI_INIT  $platform 1
+    #runTest C_DSQL_RI_ALT_ADD  $platform 1
+    #runTest C_DSQL_RI_CLEAN_UP  $platform 1
+
+    #runTest C_SQL_JOIN_0  $platform 1
+    #runTest CF_ISQL_01  $platform 1
+    #runTest CF_ISQL_11  $platform 1
+    #runTest CF_ISQL_16  $platform 1
+
+    #runTest DSQL_DOMAIN_08  $platform 1
+    #runTest DSQL_EXCEPT_01  $platform 1
+
+    #set timeout 20000
+    #runTest SQL_EVENT_12  $platform 1
+    #runTest GF_SHUT_2  $platform 1
+
+
+    # The following has a problem with LD -> ld in the input file.
+    #runTest CF_ISQL_17  $platform 1
+
+
+    # just testing
+    #runTest C_SQL_PRED_0  $platform 1
+    #runTest AUTO_COMMIT.1.ESQL $platform 1
+    #runTest IDML_C_SUBQ_10 $platform 1
 }
 
 stop_shell

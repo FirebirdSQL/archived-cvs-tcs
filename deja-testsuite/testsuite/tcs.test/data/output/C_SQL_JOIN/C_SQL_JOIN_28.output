@@ -1,0 +1,20 @@
+Test:
+ select count(*) from (st5 x full join st1 y on x.s2 = y.s2)
+--------------------------------------------------------------------------------
+11  
+
+* Total Records Listed >>> 1
+
+   COUNT
+===========
+
+         11
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  /usr/gds.so-vector1/tester/vector/sh_join.gdb
+
+       COUNT 
+============ 
+
+          11 
+

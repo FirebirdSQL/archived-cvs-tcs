@@ -1,0 +1,58 @@
+Database:  /usr/src/ib_test/sp1.gdb
+SQL> set term go;
+SQL> CON> CON> CON> CON> CON> create procedure proc9  RETURNS (a integer) as
+begin
+  for select distinct max(qty) from sp where qty > 300 into :a
+  do  SUSPEND;
+end
+go
+SQL> set term ; go
+SQL> set echo;
+SQL> 
+           A 
+============ 
+         400 
+
+SQL> 
+           A 
+============ 
+
+         400 
+
+SQL> 
+         MAX 
+============ 
+
+         400 
+
+SQL> 
+           A 
+============ 
+
+         400 
+
+SQL> 
+           A 
+============ 
+
+         400 
+
+SQL> 
+           A                   AVG 
+============ ===================== 
+
+         400                   400 
+
+SQL> 
+           A                   AVG 
+============ ===================== 
+
+         400                   400 
+
+SQL> CON> 
+           A 
+============ 
+
+         400 
+
+SQL> 

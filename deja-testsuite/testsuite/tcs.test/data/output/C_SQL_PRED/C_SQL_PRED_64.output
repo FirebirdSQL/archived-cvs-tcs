@@ -1,0 +1,22 @@
+Test:
+ SELECT PROJ_NO FROM PROJECTS WHERE PROJ_DESC NOT STARTING WITH 'Porting'
+--------------------------------------------------------------------------------
+
+
+* Total Records Listed >>> 0
+
+* Using GDML to print blob 
+
+   COUNT
+===========
+
+          0
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  /usr/gds.so-vector1/tester/vector/sh_test.gdb
+
+       COUNT 
+============ 
+
+           0 
+

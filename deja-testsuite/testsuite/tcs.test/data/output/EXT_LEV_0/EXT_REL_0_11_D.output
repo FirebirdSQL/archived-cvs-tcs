@@ -1,0 +1,8 @@
+Use CONNECT or CREATE DATABASE to specify a database
+Use CONNECT or CREATE DATABASE to specify a database
+Statement failed, SQLCODE = -413
+
+conversion error from string "BLOB"
+Database:  "d:/testbed/ext_rel.gdb"
+********************  15-May-95: conversion error is proper result
+

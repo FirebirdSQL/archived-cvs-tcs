@@ -1,0 +1,37 @@
+invalid switch -enable
+please retry, specifying an option
+plausible options are:
+
+	-activate	activate shadow file for database usage
+	-attach		shutdown new database attachments
+	-begin_log	begin logging for replay utility
+	-buffers	set page buffers <n>
+	-commit		commit transaction <tr / all>
+	-cache		shutdown cache manager
+	-disable	disable WAL
+	-full		validate record fragments (-v)
+	-force		force database shutdown
+	-housekeeping	set sweep interval <n>
+	-ignore		ignore checksum errors
+	-kill		kill all unavailable shadow files
+	-list		show limbo transactions
+	-mend		prepare corrupt database for backup
+	-no_update	read-only validation (-v)
+	-online		database online
+	-prompt		prompt for commit/rollback (-l)
+	-password	default password
+	-quit_log	quit logging for replay utility
+	-rollback	rollback transaction <tr / all>
+	-sweep		force garbage collection
+	-shut		shutdown
+	-two_phase	perform automated two-phase recovery
+	-tran		shutdown transaction startup
+	-use		use full or reserve space for versions
+	-user		default user name
+	-validate	validate database structure
+	-write		write synchronously or asynchronously
+	-x		set debug on
+	-z		print software version number
+
+    qualifiers show the major option in parenthesis
+"wal" required

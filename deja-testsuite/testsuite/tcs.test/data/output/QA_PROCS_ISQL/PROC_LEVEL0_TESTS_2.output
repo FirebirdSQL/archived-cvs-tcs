@@ -1,0 +1,9 @@
+Use CONNECT or CREATE DATABASE to specify a database
+SQL> SQL> SQL> CON> CON> CON> CON> CON> SQL> SQL> CON> CON> CON> CON> CON> Statement failed, SQLCODE = -607
+
+unsuccessful metadata update
+-Name longer than database column size
+SQL> SQL> SQL> SQL> Procedure Name                    Dependency, Type
+================================= ======================================
+PROC                              
+SQL> 

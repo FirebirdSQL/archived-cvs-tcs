@@ -1,0 +1,26 @@
+Test:
+ SELECT STATE, COUNT(*) FROM CUSTOMERS WHERE STATE STARTING WITH 'C' GROUP BY STATE ORDER BY CUSTNO
+--------------------------------------------------------------------------------
+CT	1
+--------------------------------------------------------------------------------
+CA	2
+--------------------------------------------------------------------------------
+
+
+* Total Records Listed >>> 2
+
+State    COUNT
+===== ===========
+
+CT              1
+CA              2
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  /usr/gds.so-vector1/tester/vector/sh_test.gdb
+
+STATE         COUNT 
+====== ============ 
+
+CT                1 
+CA                2 
+

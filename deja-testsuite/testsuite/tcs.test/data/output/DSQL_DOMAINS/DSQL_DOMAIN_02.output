@@ -1,0 +1,60 @@
+Database:  WI-VECTOR3:d:/testbed/atlas.gdb
+SQL> CON> SQL> SQL> DOM02A1                         SMALLINT Nullable
+                                default 0
+SQL> CON> SQL> SQL> DOM02B1                         INTEGER Nullable
+                                default 0
+SQL> CON> SQL> SQL> DOM02D1                         CHAR(30) Nullable
+                                default 0
+SQL> CON> SQL> SQL> DOM02E1                         VARCHAR(4) Nullable
+                                default 0
+SQL> CON> SQL> SQL> DOM02F1                         NUMERIC(15, 1) Nullable
+                                default 0
+SQL> CON> SQL> SQL> DOM02G1                         FLOAT Nullable
+                                default 0
+SQL> CON> SQL> SQL> DOM02H1                         DOUBLE PRECISION Nullable
+                                default 0
+SQL> CON> SQL> SQL> DOM02D2                         CHAR(30) Nullable
+                                default 'def'
+SQL> CON> SQL> SQL> DOM02E2                         VARCHAR(4) Nullable
+                                default 'def'
+SQL> CON> SQL warning code = 301
+-DATE data type is now called TIMESTAMP
+SQL> SQL> DOM02C3_1                       TIMESTAMP Nullable
+                                default '27-JAN-1992'
+SQL> CON> SQL warning code = 301
+-DATE data type is now called TIMESTAMP
+SQL> SQL> DOM02C3_2                       TIMESTAMP Nullable
+                                default 'today'
+SQL> CON> SQL warning code = 301
+-DATE data type is now called TIMESTAMP
+SQL> SQL> DOM02C3_3                       TIMESTAMP Nullable
+                                default '01/27/92'
+SQL> CON> SQL> SQL> DOM02D3                         CHAR(30) Nullable
+                                default '28-OCT-1990'
+SQL> CON> SQL> SQL> DOM02E3                         VARCHAR(8) Nullable
+                                default '09/01/82'
+SQL> CON> SQL> SQL> DOM02J                          SMALLINT Nullable
+                                default null
+SQL> CON> SQL> SQL> DOM02K                          INTEGER Nullable
+                                default null
+SQL> CON> SQL warning code = 301
+-DATE data type is now called TIMESTAMP
+SQL> SQL> DOM02L                          TIMESTAMP Nullable
+                                default null
+SQL> CON> SQL> SQL> DOM02M                          CHAR(2) Nullable
+                                default null
+SQL> CON> SQL> SQL> DOM02N                          VARCHAR(15) Nullable
+                                default null
+SQL> CON> SQL> SQL> DOM02O                          DECIMAL(4, 1) Nullable
+                                default null
+SQL> CON> SQL> SQL> DOM02P                          FLOAT Nullable
+                                default null
+SQL> CON> SQL> SQL> DOM02Q                          DOUBLE PRECISION Nullable
+                                default null
+SQL> CON> SQL> SQL> DOM02R                          BLOB segment 80, subtype UNKNOWN Nullable
+                                default null
+SQL> CON> SQL> SQL> DOM02V                          CHAR(15) Nullable
+                                default user
+SQL> CON> SQL> SQL> DOM02W                          VARCHAR(60) Nullable
+                                default user
+SQL> 

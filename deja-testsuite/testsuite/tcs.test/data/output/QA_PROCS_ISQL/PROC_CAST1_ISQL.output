@@ -1,0 +1,45 @@
+Database:  /usr/src/ib_test/sp1.gdb
+SQL> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> SQL> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> SQL> SQL> 
+      B 
+======= 
+     50 
+
+SQL> 
+           B 
+============ 
+       10000 
+
+SQL> 
+             B 
+============== 
+     10000.000 
+
+SQL> 
+                      B 
+======================= 
+      10000.00000000000 
+
+SQL> 
+           B 
+============ 
+    10000.00 
+
+SQL> Statement failed, SQLCODE = -413
+
+conversion error from string "100"
+SQL> 
+           B 
+============ 
+      100.00 
+
+SQL> 
+B          
+========== 
+100        
+
+SQL> 
+B          
+========== 
+100        
+
+SQL> 

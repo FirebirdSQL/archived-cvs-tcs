@@ -1,0 +1,7 @@
+unsuccessful metadata update
+-Table EXT_TABLE already exists
+Data base error, SQLCODE = -607
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "./ext_rel.gdb"
+External file: external.dat
+FIELD1                          CHAR(10) Nullable 

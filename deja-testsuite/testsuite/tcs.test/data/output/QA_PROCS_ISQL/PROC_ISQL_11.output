@@ -1,0 +1,68 @@
+Database:  sp1.gdb
+SQL> SQL> CON> CON> CON> CON> CON> CON> SQL warning code = 204
+-Ambiguous field name between table/view SP and table/view P
+-PNO
+SQL> SQL> 
+A      B                                C 
+====== ===================== ============ 
+P1     Nut                              2 
+
+SQL> 
+A      B                                C 
+====== ===================== ============ 
+
+P1     Nut                              2 
+P2     Bolt                             1 
+P3     Screw                            1 
+P4     Screw                            1 
+P5     Cam                              1 
+
+SQL> 
+MAX    
+====== 
+
+P5     
+
+SQL> 
+           C 
+============ 
+
+           2 
+           1 
+           1 
+           1 
+           1 
+
+SQL> 
+           C A      
+============ ====== 
+
+           1 P2     
+           1 P3     
+           1 P4     
+           1 P5     
+           2 P1     
+
+SQL> 
+A                        AVG 
+====== ===================== 
+
+P1                         2 
+
+SQL> 
+A                        AVG 
+====== ===================== 
+
+P1                         2 
+P2                         1 
+P3                         1 
+P4                         1 
+P5                         1 
+
+SQL> CON> 
+A                 C 
+====== ============ 
+
+P1                2 
+
+SQL> 

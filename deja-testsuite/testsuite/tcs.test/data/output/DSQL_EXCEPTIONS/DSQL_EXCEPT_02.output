@@ -1,0 +1,7 @@
+Database:  /usr/gds/rstats/hendrix/interbase/qa/tcs/atlas.gdb
+SQL> SQL> SQL> SQL> SQL> SQL> Statement failed, SQLCODE = -607
+
+unsuccessful metadata update
+-DEFINE EXCEPTION failed
+-attempt to store duplicate value (visible to active transactions) in unique index "RDB$INDEX_23"
+SQL> SQL> SQL> SQL> SQL> SQL> SQL> 

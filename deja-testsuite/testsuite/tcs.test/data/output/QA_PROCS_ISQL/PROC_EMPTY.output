@@ -1,0 +1,32 @@
+Use CONNECT or CREATE DATABASE to specify a database
+SQL> SQL> SQL> SQL> CON> CON> CON> Statement failed, SQLCODE = -104
+
+Dynamic SQL Error
+-SQL error code = -104
+-Token unknown - line 3, char 1
+-end
+SQL> CON> CON> CON> Statement failed, SQLCODE = -104
+
+Dynamic SQL Error
+-SQL error code = -104
+-Token unknown - line 3, char 1
+-end
+SQL> CON> CON> CON> Statement failed, SQLCODE = -104
+
+Dynamic SQL Error
+-SQL error code = -104
+-Token unknown - line 3, char 1
+-end
+SQL> CON> CON> CON> CON> Statement failed, SQLCODE = -104
+
+Dynamic SQL Error
+-SQL error code = -104
+-Token unknown - line 4, char 1
+-end
+SQL> CON> CON> CON> CON> CON> Statement failed, SQLCODE = -104
+
+Dynamic SQL Error
+-SQL error code = -104
+-Token unknown - line 4, char 3
+-end
+SQL> CON> 

@@ -1,0 +1,9 @@
+Use CONNECT or CREATE DATABASE to specify a database
+unsuccessful metadata update
+-Table T_VIEW already exists
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "xie2://xie2/d:/gds.xie2/narayan/tcs1/test.gdb"
+A                               INTEGER Nullable 
+View Source:
+==== ======
+ SELECT * FROM T WHERE a > 1

@@ -1,0 +1,4 @@
+$ DROP WHERE_GDB:intlemp.gdb
+$ DROP WHERE_GDB:charset.gdb
+$ DROP WHERE_GDB:assign.gdb
+$ DELETE tcs.dat* assign2* btest5* intlemp.gbk comment

@@ -1,0 +1,12 @@
+/*******************************************************************************
+ Test Name:    DSQL_EXCEPT_SETUP
+ Series:       DSQL_EXCEPTIONS
+ Description:  This will set up the atlas database for use within the suite of
+               tests DSQL_EXCEPTIONS. 
+*******************************************************************************/
+HISTORY:
+1998-Dec-16 David Schnepper & Stas Tsikin
+Bulk edit of WHERE_EXAMPLES TO WHERE_EXAMPLES_40 performed
+Bulk edit of $RUN drop_gdb TO $DROP performed
+
+$ GBAK -r WHERE_EXAMPLES_40:atlas.gbak WHERE_GDB:atlas.gdb

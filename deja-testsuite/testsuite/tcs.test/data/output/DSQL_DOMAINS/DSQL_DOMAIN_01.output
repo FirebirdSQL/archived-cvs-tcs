@@ -1,0 +1,58 @@
+Database:  atlas.gdb
+SQL> SQL> SQL> DOM01A_1                        SMALLINT Nullable
+SQL> SQL> SQL> DOM01A_2                        NUMERIC(3, 1) Nullable
+SQL> SQL> SQL> DOM01B_1                        INTEGER Nullable
+SQL> SQL> SQL> DOM01B_2                        INTEGER Nullable
+SQL> SQL> SQL> DOM01B_3                        NUMERIC(9, 0) Nullable
+SQL> SQL> SQL> DOM01B_4                        NUMERIC(6, 2) Nullable
+SQL> SQL warning code = 301
+-DATE data type is now called TIMESTAMP
+SQL> SQL> DOM01C                          TIMESTAMP Nullable
+SQL> SQL> SQL> DOM01D_1                        CHAR(20) Nullable
+SQL> SQL> SQL> DOM01D_2                        CHAR(99) Nullable
+SQL> SQL> SQL> DOM01E_1                        VARCHAR(25) Nullable
+SQL> SQL> SQL> DOM01E_2                        VARCHAR(100) Nullable
+SQL> SQL> SQL> DOM01E_3                        VARCHAR(2) Nullable
+SQL> SQL> SQL> DOM01F_1                        DECIMAL(6, 2) Nullable
+SQL> SQL> SQL> DOM01G_1                        FLOAT Nullable
+SQL> SQL> SQL> DOM01G_2                        DOUBLE PRECISION Nullable
+SQL> SQL> SQL> DOM01G_3                        FLOAT Nullable
+SQL> SQL> SQL> DOM01H                          DOUBLE PRECISION Nullable
+SQL> SQL> SQL> DOM01I_1                        BLOB segment 80, subtype UNKNOWN Nullable
+SQL> SQL> SQL> DOM01I_2                        BLOB segment 60, subtype TEXT Nullable
+SQL> Database:  atlas.gdb
+SQL> SQL> SQL> LONG_DOMAIN_NAME_OF_31_CHARSXXX INTEGER Nullable
+SQL> Statement failed, SQLCODE = -607
+
+unsuccessful metadata update
+-Name longer than database column size
+SQL> SQL> Statement failed, SQLCODE = -104
+
+Dynamic SQL Error
+-SQL error code = -104
+-Token unknown - line 1, char 15
+-23456789
+SQL> SQL> Statement failed, SQLCODE = -104
+
+Dynamic SQL Error
+-SQL error code = -104
+-Token unknown - line 1, char 15
+-$
+SQL> SQL> Statement failed, SQLCODE = -607
+
+unsuccessful metadata update
+-STORE RDB$FIELDS failed
+-attempt to store duplicate value (visible to active transactions) in unique index "RDB$INDEX_2"
+SQL> SQL> Statement failed, SQLCODE = -104
+
+Dynamic SQL Error
+-SQL error code = -104
+-Token unknown - line 1, char 25
+-rubbish
+SQL> SQL> Statement failed, SQLCODE = -104
+
+Dynamic SQL Error
+-SQL error code = -104
+-Token unknown - line 1, char 15
+-table
+SQL> SQL> 

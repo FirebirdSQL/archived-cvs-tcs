@@ -1,0 +1,22 @@
+Database:  WI-VECTOR3:d:/testbed/atlas.gdb
+SQL> CON> SQL> SQL> DOM04A                          SMALLINT Nullable
+                                check (value >=0 and value < 100)
+SQL> CON> SQL> SQL> DOM04B                          INTEGER Nullable
+                                check (value > 5000)
+SQL> CON> SQL warning code = 301
+-DATE data type is now called TIMESTAMP
+SQL> SQL> DOM04C                          TIMESTAMP Nullable
+                                check (value >= 'today')
+SQL> CON> SQL> SQL> DOM04D                          CHAR(20) Nullable
+                                check (value in (select river from rivers))
+SQL> CON> SQL> SQL> DOM04E                          VARCHAR(25) Nullable
+                                check (value in (select river from river_states))
+SQL> CON> SQL> SQL> DOM04F                          DECIMAL(6, 2) Nullable
+                                check (value > 0)
+SQL> CON> SQL> SQL> DOM04G                          FLOAT Nullable
+                                check (value < 50000.00)
+SQL> CON> SQL> SQL> DOM04H                          DOUBLE PRECISION Nullable
+                                check (value > 99.999)
+SQL> CON> SQL> SQL> DOM04I                          BLOB segment 80, subtype UNKNOWN Nullable
+                                check (value > 500)
+SQL> 

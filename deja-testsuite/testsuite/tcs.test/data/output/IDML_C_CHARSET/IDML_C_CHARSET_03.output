@@ -1,0 +1,77 @@
+
+-------------------------------------------------------------------------
+
+  RUNNING...                
+			    Data with rowid X inserted with set names = iso
+  set names ISO8859_1;         Data with rowid XX inserted with _charset
+  connect "charset.gdb";
+  select t_rowid, t_iso from T2;
+  quit;
+-------------------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  charset.gdb
+
+T_ROWID T_ISO      
+======= ========== 
+
+     11 Ó          
+     33 ç          
+      2 ó          
+     22 ¢          
+      4 µ          
+     44 æ          
+     55 Ø          
+
+-------------------------------------------------------------------------
+
+  Then RUNNING...
+
+  set names ISO8859_1;     
+  connect "charset.gdb";
+  select t_rowid, t_850 from T2;
+-------------------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  charset.gdb
+
+T_ROWID T_850      
+======= ========== 
+
+     11 Ë          
+     33 þ          
+      2 ó          
+     22 ó          
+      4 µ          
+     44 µ          
+     55 Ï          
+
+-------------------------------------------------------------------------
+
+  Then RUNNING...
+
+  set names ISO8859_1;     
+  connect "charset.gdb";
+  select t_rowid, t_uni from T2;
+-------------------------------------------------------------------------
+
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  charset.gdb
+
+T_ROWID T_UNI                          
+======= ============================== 
+
+     11 <null>                         
+     33 <null>                         
+      2 <null>                         
+     22 <null>                         
+      4 <null>                         
+     44 <null>                         
+     55 <null>                         
+
+bug 6671, 6002 prevents this from running --we get errs that say
+    T2 does not exist when it does.  I changed all OCTET references
+    to ISO references to initialize the test with something besides
+    error messages.  Changing the test back to OCTETS, but leaving
+    this bad init.  When the bug is fixed, reinit this test w/OCTET
+    results.

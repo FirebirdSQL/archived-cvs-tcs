@@ -1,0 +1,7 @@
+Use CONNECT or CREATE DATABASE to specify a database
+unsuccessful metadata update
+-Table T already exists
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "xie2://xie2/d:/gds.xie2/narayan/tcs1/test.gdb"
+A                               INTEGER Nullable 
+B                               INTEGER Nullable 

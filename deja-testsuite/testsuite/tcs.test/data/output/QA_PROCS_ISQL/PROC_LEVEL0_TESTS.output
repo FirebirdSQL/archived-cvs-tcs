@@ -1,0 +1,39 @@
+Use CONNECT or CREATE DATABASE to specify a database
+SQL> CON> /* This script checks how long a procedure name can be. */
+create database "WI-VECTOR3:d:/testbed/foo.gdb";
+SQL> set term go;
+SQL> CON> CON> CON> CON> CON> create procedure pabcdefghijklmnopqrstuvwxyzabcd  RETURNS (a int) as
+begin
+   a = 10;
+   SUSPEND;
+end
+go
+SQL> SQL> CON> CON> CON> CON> CON> create procedure qabcdefghijklmnopqrstuvwxyzabcde  RETURNS (a int) as
+begin
+   a = 10;
+   SUSPEND;
+end
+go
+Statement failed, SQLCODE = -607
+
+unsuccessful metadata update
+-Name longer than database column size
+SQL> SQL> set term ; go
+SQL> show proc;
+Procedure Name                    Dependency, Type
+================================= ======================================
+PABCDEFGHIJKLMNOPQRSTUVWXYZABCD   
+SQL> execute procedure pabcdefghijklmnopqrstuvwxyzabcd;
+
+           A 
+============ 
+          10 
+
+SQL> execute procedure qabcdefghijklmnopqrstuvwxyzabcde;
+Statement failed, SQLCODE = -204
+
+Dynamic SQL Error
+-SQL error code = -204
+-Procedure unknown
+-QABCDEFGHIJKLMNOPQRSTUVWXYZABCDE
+SQL> exit;

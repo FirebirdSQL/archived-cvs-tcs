@@ -1,0 +1,52 @@
+Database:  d:/testbed/atlas.gdb
+SQL> CON> CON> SQL> SQL> DOM20A                          SMALLINT Nullable
+                                default 0
+                                check (value >= 0 and value < 100)
+SQL> CON> CON> SQL> SQL> DOM20B                          INTEGER Nullable
+                                default 500
+                                check (value >= 500)
+SQL> CON> SQL warning code = 301
+-DATE data type is now called TIMESTAMP
+SQL> SQL> DOM20C                          TIMESTAMP Nullable
+                                check (value >= 'today')
+SQL> CON> SQL> SQL> DOM20D                          CHAR(20) Nullable
+                                check (value in (select river from rivers))
+SQL> CON> SQL> SQL> DOM20E                          VARCHAR(25) Nullable
+                                default 'VARYING DEFAULT'
+SQL> CON> CON> SQL> SQL> DOM20F                          DECIMAL(6, 2) Nullable
+                                default 4.2
+                                check (value > 0)
+SQL> CON> CON> SQL> SQL> DOM20G                          FLOAT Nullable
+                                default 500.1
+                                check (value < 50000.00)
+SQL> CON> CON> SQL> SQL> DOM20H                          DOUBLE PRECISION Nullable
+                                default 1000
+                                check (value > 99.999)
+SQL> CON> CON> SQL> SQL> FLD1                            (DOM20A) SMALLINT Nullable default 0
+                                check (value >= 0 and value < 100)
+FLD2                            (DOM20B) INTEGER Nullable default 500
+                                check (value >= 500)
+FLD3                            (DOM20C) TIMESTAMP Nullable 
+                                check (value >= 'today')
+FLD4                            (DOM20D) CHAR(20) Nullable 
+                                check (value in (select river from rivers))
+FLD5                            (DOM20E) VARCHAR(25) Nullable default 'VARYING DEFAULT'
+FLD6                            (DOM20F) DECIMAL(6, 2) Nullable default 4.2
+                                check (value > 0)
+FLD7                            (DOM20G) FLOAT Nullable default 500.1
+                                check (value < 50000.00)
+FLD8                            (DOM20H) DOUBLE PRECISION Nullable default 1000
+                                check (value > 99.999)
+SQL> --> CON> SQL> SQL> CON> SQL> CON> SQL> SQL> CON> SQL> SQL> DOM20A                          SMALLINT Nullable
+                                constraint check (value > 100)
+SQL> SQL> Database:  d:/testbed/atlas.gdb
+SQL> DOM20A                          SMALLINT Nullable
+                                constraint check (value > 100)
+SQL> SQL> SQL> 
+   FLD1         FLD2        FLD3 FLD4                 FLD5                              FLD6           FLD7                    FLD8 
+======= ============ =========== ==================== ========================= ============ ============== ======================= 
+
+      0          500  1-JAN-2050 Sacramento           VARYING DEFAULT                   4.20      500.10001       1000.000000000000 
+    250          500  1-JAN-2050 Sacramento           VARYING DEFAULT                   4.20      500.10001       1000.000000000000 
+
+SQL> SQL> 

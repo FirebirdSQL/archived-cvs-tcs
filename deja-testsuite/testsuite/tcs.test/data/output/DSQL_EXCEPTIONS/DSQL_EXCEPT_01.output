@@ -1,0 +1,47 @@
+Database:  atlas.gdb
+SQL> SQL> SQL> SQL> SQL> SQL> Exception Name                  Used by, Type
+=============================== =============================================
+ERROR                           
+  This error message comes from exception handling
+
+NORIVER                         
+  River does not currently exist in Rivers relation
+
+NOSTATE                         
+  State does not currently exist in State relation
+
+NOUPDATE                        
+  Update cannot be completed because of errors
+
+SQL> SQL> SQL> Exception Name                  Used by, Type
+=============================== =============================================
+NOUPDATE                        
+  Update cannot be completed because of data errors
+
+SQL> SQL> SQL> There is no exception ERROR in this database
+SQL> CON> CON> CON> CON> SQL> Statement failed, SQLCODE = -104
+
+Dynamic SQL Error
+-SQL error code = -104
+-Token unknown - line 1, char 18
+-123
+SQL> SQL> Statement failed, SQLCODE = -104
+
+Dynamic SQL Error
+-SQL error code = -104
+-Token unknown - line 1, char 18
+-$
+SQL> SQL> Statement failed, SQLCODE = -607
+
+unsuccessful metadata update
+-DEFINE EXCEPTION failed
+-attempt to store duplicate value (visible to active transactions) in unique index "RDB$INDEX_23"
+SQL> SQL> SQL> Statement failed, SQLCODE = -607
+
+unsuccessful metadata update
+-Exception not found
+SQL> SQL> Statement failed, SQLCODE = -607
+
+unsuccessful metadata update
+-Exception not found
+SQL> SQL> SQL> CON> CON> SQL> SQL> SQL> SQL> SQL> 

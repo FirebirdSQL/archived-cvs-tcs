@@ -1,0 +1,9 @@
+Use CONNECT or CREATE DATABASE to specify a database
+Statement failed, SQLCODE = -607
+
+unsuccessful metadata update
+-ERASE RDB$INDICES failed
+-action cancelled by trigger (1) to preserve data integrity
+-Cannot delete index used by an Integrity Constraint
+Database:  ref_int3.gdb
+drop index rdb$primary1;

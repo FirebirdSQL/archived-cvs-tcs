@@ -1,0 +1,26 @@
+Database:  WI-VECTOR3:d:/testbed/sp1.gdb
+SQL> SQL> SQL> SQL> 
+           I            J 
+============ ============ 
+
+           1            1 
+
+SQL> SQL> CON> CON> CON> CON> CON> SQL> SQL> 
+X      
+====== 
+
+1      
+
+SQL> SQL> SQL> SQL> SQL> CON> CON> CON> CON> CON> SQL> SQL> 
+X      
+====== 
+Statement failed, SQLCODE = -413
+
+conversion error from string " "
+SQL> SQL> SQL> SQL> SQL> CON> CON> CON> CON> CON> SQL> SQL> 
+X          
+========== 
+
+10001      
+
+SQL> 

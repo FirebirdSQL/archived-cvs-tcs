@@ -1,0 +1,11 @@
+Use CONNECT or CREATE DATABASE to specify a database
+unsuccessful metadata update
+-Procedure INS already exists
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "/usr/gds.so-vector2/tester/vector/test.gdb"
+
+           A 
+============ 
+
+          20 
+

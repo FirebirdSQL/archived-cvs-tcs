@@ -1,0 +1,7 @@
+Database:  test.gdb. User: shut1
+Statement failed, SQLCODE = -902
+
+database test.gdb shutdown
+Use CONNECT or CREATE DATABASE to specify a database
+SQL> Database:  test.gdb. User: shut1
+SQL> 

@@ -1,0 +1,29 @@
+Database:  WI-VECTOR3:d:/testbed/atlas.gdb
+SQL> SQL> DOM11A_1                        SMALLINT Nullable
+SQL> SQL> DOM11A_2                        NUMERIC(3, 1) Nullable
+SQL> SQL> DOM11B_1                        INTEGER Nullable
+SQL> SQL> DOM11B_2                        INTEGER Nullable
+SQL> SQL> DOM11B_3                        NUMERIC(9, 0) Nullable
+SQL> SQL> DOM11B_4                        NUMERIC(6, 2) Nullable
+SQL> SQL warning code = 301
+-DATE data type is now called TIMESTAMP
+SQL> DOM11C                          TIMESTAMP Nullable
+SQL> SQL> DOM11D_1                        CHAR(20) Nullable
+SQL> SQL> DOM11D_2                        CHAR(99) Nullable
+SQL> SQL> DOM11E_1                        VARCHAR(25) Nullable
+SQL> SQL> DOM11E_2                        VARCHAR(100) Nullable
+SQL> SQL> DOM11E_3                        VARCHAR(2) Nullable
+SQL> SQL> DOM11F_1                        DECIMAL(6, 2) Nullable
+SQL> SQL> DOM11F_2                        NUMERIC(15, 10) Nullable
+SQL> SQL> DOM11G_1                        FLOAT Nullable
+SQL> SQL> DOM11G_2                        DOUBLE PRECISION Nullable
+SQL> SQL> DOM11G_3                        FLOAT Nullable
+SQL> SQL> DOM11H                          DOUBLE PRECISION Nullable
+SQL> SQL> DOM11I_1                        BLOB segment 80, subtype UNKNOWN Nullable
+SQL> SQL> DOM11I_2                        BLOB segment 60, subtype TEXT Nullable
+SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> SQL> Database:  WI-VECTOR3:d:/testbed/atlas.gdb
+SQL> Statement failed, SQLCODE = -607
+
+unsuccessful metadata update
+-Column not found
+SQL> 

@@ -1,0 +1,80 @@
+Database:  /usr/src/ib_test/sp1.gdb
+SQL> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> SQL> CON> CON> CON> CON> SQL> CON> CON> CON> CON> CON> SQL> CON> CON> CON> CON> SQL> SQL> CON> SQL> SQL> 
+      B 
+======= 
+     50 
+
+SQL> Statement failed, SQLCODE = -413
+
+conversion error from string "x"
+SQL> 
+           B 
+============ 
+       10000 
+
+SQL> Statement failed, SQLCODE = -413
+
+conversion error from string "x"
+SQL> 
+             B 
+============== 
+     10000.000 
+
+SQL> Statement failed, SQLCODE = -413
+
+conversion error from string "x"
+SQL> 
+                      B 
+======================= 
+      10000.00000000000 
+
+SQL> Statement failed, SQLCODE = -413
+
+conversion error from string "abc"
+SQL> 
+           B 
+============ 
+    10000.00 
+
+SQL> Statement failed, SQLCODE = -413
+
+conversion error from string "abc"
+SQL> 
+          B 
+=========== 
+1992-03-12  
+
+SQL> 
+          B 
+=========== 
+1992-03-12  
+
+SQL> 
+           B 
+============ 
+    21000.98 
+
+SQL> Statement failed, SQLCODE = -413
+
+conversion error from string "abc"
+SQL> 
+B          
+========== 
+100        
+
+SQL> 
+B          
+========== 
+abc        
+
+SQL> 
+B          
+========== 
+100        
+
+SQL> 
+B          
+========== 
+abc        
+
+SQL> 

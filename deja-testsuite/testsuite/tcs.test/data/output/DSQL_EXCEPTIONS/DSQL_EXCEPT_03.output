@@ -1,0 +1,15 @@
+Database:  /usr/gds/rstats/hendrix/interbase/qa/tcs2/atlas.gdb
+SQL> SQL> CON> CON> CON> CON> SQL> SQL> Statement failed, SQLCODE = -607
+
+unsuccessful metadata update
+-cannot delete
+-EXCEPTION TRIG03_NULLRIVER
+-there are 1 dependencies
+SQL> SQL> Exception Name                  Used by, Type
+=============================== =============================================
+TRIG03_NULLRIVER                TEST03A, Trigger
+  River field cannot be left blank
+
+SQL> SQL> SQL> SQL> SQL> There are no triggers on table RIVER_STATES in this database
+SQL> There is no exception TRIG03_NULLRIVER in this database
+SQL> 

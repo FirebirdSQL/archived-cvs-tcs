@@ -1,0 +1,12 @@
+Use CONNECT or CREATE DATABASE to specify a database
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "./ext_rel.gdb"
+External file: external.dat
+FIELD1                          CHAR(10) Nullable 
+
+FIELD1     
+========== 
+
+Success    
+
+There is no table EXT_TABLE in this database

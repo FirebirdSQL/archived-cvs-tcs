@@ -1,0 +1,185 @@
+$CREATE COMMENT
+*******************************************************************************
+ 
+Test Name:  	EXT_REL_0_35_E
+Test Level:     0
+Series Name:    EXT_LEV_0
+Date:  		July 3, 1994
+Author:  	Scott Van Voris
+Bug: 		#6984
+ 
+Description:    This is a Level 0 test which is designed to verify that 
+                DROP TABLE drops the internal representation of the external
+                table, but does NOT remove the external file.
+ 
+                The external table is created, a tuple is inserted, the
+                relation is SELECT'ed, the table is DROP'ped, the metadata
+                in the database is displayed (there should be none), and
+                the contents of the external file are displayed.
+
+Expected Output:       Due to bug #6984, the table cannot be DROP'ped
+History:
+15-May-95:      Added a RELEASE to the COMMIT.  I believe that this was
+		the cause of the reported bug on this test.  Works now. clare
+2-Oct-95:  Mark
+  Removed the Cleanup / Setup comments from the test.
+  Also, added WHERE_GDB and RUN drop_gdb to the tests.
+
+3-Oct-95: Marco
+  Added the WHERE_GDB_EXTERNAL, so the external file can be created 
+  by the server in the correct place when accessing data remotely.
+  Also, I removed any referance to DIR external.dat and TYPE external.dat
+  which would also fail when running remotely.
+
+
+10-Oct-99: Linda Begley
+  Added rm_file.sh so that external file external.dat can be removed remotely.
+
+14-Oct-00: Frank Schlottmann-Goedde
+  replaced double with single quotes where necessary to run with version 6.x
+
+*******************************************************************************
+
+$CREATE fixedL.e
+#include <stdio.h>
+#include <stdlib.h>
+ 
+EXEC SQL
+    INCLUDE SQLCA
+
+EXEC SQL
+    WHENEVER SQLERROR GO TO ERR;
+ 
+main()
+{
+
+EXEC SQL
+   CREATE DATABASE 'WHERE_GDB:ext_rel.gdb';
+ 
+EXEC SQL
+   DECLARE ext_table TABLE
+       (field1 CHARACTER(10)) ;
+ 
+EXEC SQL
+   CREATE TABLE ext_table EXTERNAL FILE 'WHERE_GDB_EXTERNAL:external.dat'
+       (field1 CHARACTER(10)) ;
+ 
+EXEC SQL
+   CREATE TABLE int_table 
+       (field1 CHARACTER(10)) ;
+ 
+exit(0);
+ERR:  printf ("Data base error, SQLCODE = %d\n", SQLCODE);
+   fflush (stdout);
+   isc_print_status (gds_$status);
+ 
+    EXEC SQL
+        ROLLBACK RELEASE;
+ 
+    exit(1);
+ 
+}
+$CREATE drop.e
+#include <stdio.h>
+#include <stdlib.h>
+
+EXEC SQL
+    INCLUDE SQLCA
+ 
+EXEC SQL
+    WHENEVER SQLERROR GO TO ERR;
+ 
+EXEC SQL
+    SET DATABASE DB = 'WHERE_GDB:ext_rel.gdb';
+
+main()
+{
+EXEC SQL 
+   BEGIN DECLARE SECTION;
+
+   BASED ON EXT_TABLE.FIELD1 value;
+EXEC SQL 
+   END DECLARE SECTION;
+
+EXEC SQL
+   INSERT INTO ext_table (field1) VALUES ('Success');
+
+EXEC SQL
+   SELECT field1 INTO :value FROM EXT_TABLE;
+
+printf ("This is value:  %s\n",value);
+
+EXEC SQL
+   COMMIT RELEASE;
+
+EXEC SQL
+   DROP TABLE ext_table;
+
+
+exit(0);
+ERR:  printf ("Data base error, SQLCODE = %d\n", SQLCODE);
+   fflush (stdout);
+   isc_print_status (gds_$status);
+ 
+    EXEC SQL
+        ROLLBACK RELEASE;
+ 
+    exit(1);
+ 
+}
+$CREATE isql.in
+CONNECT 'WHERE_GDB:ext_rel.gdb';
+SHOW TABLE ext_table;
+
+$CREATE rm_file.sh
+machine=`uname -s`
+node=`uname -n`
+echo $WHERE_GDB_EXTERNAL > awk.tst
+
+echo $WHERE_GDB > ls.out
+proto=`cut -c 1,2 ls.out`
+
+if [ $machine = "Windows_NT" ] || [ $machine = "Windows_95" ] || [ $machine = "Windows_98" ]
+   then 
+      if [ $WHERE_GDB = $WHERE_GDB_EXTERNAL ]
+        then  
+           rm -f WHERE_GDB_EXTERNAL:external.dat 
+        else
+           if [ $proto = "//" ]
+              then
+              machine_name=`awk -F"/" '{print $3}' ls.out`
+              else
+              machine_name=`awk -F":" '{print $1}' ls.out` 
+           fi
+           echo `awk -F":" '{print $1}' awk.tst` > awk.out
+           server_testbed=`cat awk.out`
+           ls_string=//$machine_name/$server_testbed/testbed/external.dat
+           rm -f $ls_string 
+      fi
+else
+      if [ $WHERE_GDB = $WHERE_GDB_EXTERNAL ]
+        then  
+           rm -f WHERE_GDB_EXTERNAL:external.dat 
+        else
+           if [ $proto = "//" ]
+              then
+              machine_name=`awk -F"/" '{print $3}' ls.out`
+              else
+              machine_name=`awk -F":" '{print $1}' ls.out` 
+           fi
+           rsh $machine_name /bin/rm -f WHERE_GDB_EXTERNAL:external.dat
+      fi
+fi
+
+$GPRE fixedL.e
+$CC FLAG_CC fixedL.c
+$LINK FLAG_LINK fixedL
+$RUN fixedL
+$GPRE drop.e
+$CC FLAG_CC drop.c
+$LINK FLAG_LINK drop
+$RUN drop
+$ISQL -m -input isql.in 
+$DROP WHERE_GDB:ext_rel.gdb
+$SH rm_file.sh
+$DELETE COMMENT fixedL* rm_file.sh drop* isql.in

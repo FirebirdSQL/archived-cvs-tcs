@@ -1,0 +1,13 @@
+Database:  WI-VECTOR3:d:/testbed/atlas.gdb
+SQL> CON> SQL> SQL> DOM03A                          SMALLINT Not Null
+SQL> CON> SQL> SQL> DOM03B                          INTEGER Not Null
+SQL> CON> SQL warning code = 301
+-DATE data type is now called TIMESTAMP
+SQL> SQL> DOM03C                          TIMESTAMP Not Null
+SQL> CON> SQL> SQL> DOM03D                          CHAR(20) Not Null
+SQL> CON> SQL> SQL> DOM03E                          VARCHAR(25) Not Null
+SQL> CON> SQL> SQL> DOM03F                          DECIMAL(6, 2) Not Null
+SQL> CON> SQL> SQL> DOM03G                          FLOAT Not Null
+SQL> CON> SQL> SQL> DOM03H                          DOUBLE PRECISION Not Null
+SQL> CON> SQL> SQL> DOM03I                          BLOB segment 80, subtype UNKNOWN Not Null
+SQL> 

@@ -1,0 +1,11 @@
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "/usr/gds.so-vector2/tester/vector/test.gdb"
+attempt to store duplicate value (visible to active transactions) in unique index "UNI_IND"
+Use CONNECT or CREATE DATABASE to specify a database
+Database:  "/usr/gds.so-vector2/tester/vector/test.gdb"
+
+           C 
+============ 
+
+        1000 
+
