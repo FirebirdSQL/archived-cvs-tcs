@@ -1,4 +1,7 @@
 /* $Log$
+/* Revision 1.3  2000/12/08 08:21:10  fsg
+/* test for auto increment
+/*
 /* Revision 1.2  2000/12/08 08:16:03  fsg
 /* test for auto increment
 /*
@@ -12,6 +15,7 @@ Just add a line and commit it.
 Then checkout TCS/this_build, it should have been
 incremented.
 
+More things that may work
 I hope this works
 
 Frank
