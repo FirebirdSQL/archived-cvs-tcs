@@ -27,7 +27,7 @@
 #include <string.h>
 #include <time.h>
 #include "tcs.h"
-#define OLD_STYLE_DIFF
+#undef OLD_STYLE_DIFF
 
 extern USHORT   sw_ignore_init,sw_quiet,sw_save,sw_times,quit;
 
@@ -771,7 +771,7 @@ static compare (blob_id, output_file, global)
  *      (FALSE).
  *
  **************************************/
-FILE    *file;
+FILE    *file,*blob_file;
 STATUS  status_vector [20];
 ULONG   *blob;
 TEXT    f_buff [2048], b_buff [2048], *p, *q, c, lastc;
@@ -784,6 +784,9 @@ if (!(file = fopen (output_file, FOPEN_READ_TYPE)))
 
 /*      If the global flag is not set then grab the blob from the       *
  *      local DB.                                                       */
+
+
+
 
 if (!global)
 
@@ -1062,11 +1065,170 @@ return (test_result);
 }
 #else
 /* !OLD_STYLE_DIFF */
+static compare (compare_file, output_file, global)
+    TEXT        *compare_file;
+    TEXT        *output_file;
+    SSHORT      global;
+{
+/**************************************
+ *
+ *      c o m p a r e
+ *
+ **************************************
+ *
+ * Functional description
+ *      Do a quick compare of two files.
+ *      Return identical (TRUE) or difference
+ *      (FALSE).
+ *
+ **************************************/
+FILE    *file,*blob_file;
+STATUS  status_vector [20];
+ULONG   *blob;
+TEXT    f_buff [2048], b_buff [2048], *p, *q, c, lastc;
+USHORT  eof_blob, eof_file;
+
+/*      Check to make sure an output file exists.                       */
+
+if (!(file = fopen (output_file, FOPEN_READ_TYPE)))
+    return FALSE;
+
+if (!(blob_file = fopen (compare_file, FOPEN_READ_TYPE)))
+    return FALSE;
+
+do 
+{
+    eof_blob = next_line (blob_file, b_buff, sizeof (b_buff));
+    eof_file = next_line (file, f_buff, sizeof (f_buff));
+    if (eof_blob || eof_file)
+	break;
+
+
+    /* Map multiple white space characters to single spaces */
+    p = q = f_buff;
+    lastc = 0;
+
+    while (c = *p++)
+
+    {
+	if (c == '\t')
+	    c = ' ';
+	if (c != ' ' || lastc != ' ')
+	    lastc = *q++ = c;
+    }
+
+    if (q != f_buff && *q == '\n')
+	q--;
+    if (q != f_buff && *q == ' ')
+	q--;
+    *q = 0;
+
+    /* Map multiple white space characters to single spaces */
+    p = q = b_buff;
+    lastc = 0;
+
+    while (c = *p++)
+
+    {
+	if (c == '\t')
+	    c = ' ';
+	if (c != ' ' || lastc != ' ')
+	    lastc = *q++ = c;
+    }
+
+    if (q != b_buff && *q == '\n')
+	q--;
+    if (q != b_buff && *q == ' ')
+	q--;
+    *q = 0;
+
+    /* Scan the lines for a difference */
+    for (p = f_buff, q = b_buff; *p && *p == *q; p++, q++)
+	continue;
+
+    if (*p != *q) 
+	{
+	/* Difference found - check for trivial difference */
+	char *head1,
+	     *head2,
+	     *tail1,
+	     *tail2;
+
+	/* if the lines both have a ".gdb" this ignore anything that
+	 * "looks like" a filename 
+	 * Note that some platforms have only UPCASE filenames
+	 * This will fail for any lines that have TWO filenames on them.
+	 *
+	 *  Added 24-Jan-96:  Remove .dat, .gbk from files as well
+	 */
+
+	if (((tail1 = (char*)strstr(f_buff, ".gdb")) ||
+	     (tail1 = (char*)strstr(f_buff, ".gbk")) ||
+	     (tail1 = (char*)strstr(f_buff, ".GBK")) ||
+	     (tail1 = (char*)strstr(f_buff, ".dat")) ||
+	     (tail1 = (char*)strstr(f_buff, ".DAT")) ||
+	     (tail1 = (char*)strstr(f_buff, ".GDB")))
+	   &&
+	    ((tail2 = (char*)strstr(b_buff, ".gdb")) ||
+	     (tail2 = (char*)strstr(b_buff, ".gbk")) ||
+	     (tail2 = (char*)strstr(b_buff, ".GBK")) ||
+	     (tail2 = (char*)strstr(b_buff, ".dat")) ||
+             (tail2 = (char*)strstr(b_buff, ".DAT")) ||
+	     (tail2 = (char*)strstr(b_buff, ".GDB")))) 
+	    {
+
+	    head1 = tail1;
+	    head2 = tail2;
+
+#define FILECHAR(c) (((c) != ' ') && ((c) != '\'') && ((c) != '\"'))
+
+	    /* Backup to the first character that we're sure 
+	     * isn't a filename part */
+	    while (tail1 > f_buff &&
+		   FILECHAR (*(tail1-1)))
+			tail1--;
+	    while (tail2 > b_buff &&
+		   FILECHAR (*(tail2-1)))
+			tail2--;
+
+	    /* Check from start of line to start of filename */
+	    if ((tail1 - f_buff) != (tail2 - b_buff))
+		goto have_difference;
+
+	    if (strncmp (f_buff, b_buff, (tail1 - f_buff)))
+		goto have_difference;
+
+	    /* Scan past the .GDB extension & anything that follows
+	     * that "looks like" a filename part.
+	     */
+	    while (*head1 &&
+		    FILECHAR (*head1))
+			head1++;
+	    while (*head2 &&
+		    FILECHAR (*head2))
+			head2++;
+
+	    /* Check from end of filename to end of line */
+	    for (p = head1, q = head2; 
+		 *p && *q && *p == *q;
+		 p++, q++)
+		continue;
+	    }
+    }
+} while (*p == *q);
+
+have_difference:
+
+fclose (file);
+fclose (blob_file);
+return (eof_blob && eof_file) ? TRUE : FALSE;
+}
+
 static compare_initialized (blob_id, test_name, run_name, global, version)
-	 ULONG    *blob_id;
-	 TEXT     *test_name, *run_name;
-	 SSHORT   global;
-	 TEXT     *version;
+    ULONG    *blob_id;
+    TEXT     *test_name, *run_name;
+    SSHORT   global;
+    TEXT     *version;
 {
 /**************************************
  *
@@ -1079,26 +1241,46 @@ static compare_initialized (blob_id, test_name, run_name, global, version)
  *    use the stored results for a comparison
  *    
  **************************************/
-USHORT          count, result;
+USHORT           result;
 TEST_RESULT     test_result;
-TEXT            script_name [32], command [128];
 
 test_result = passed;
+
+/*      Check to see if the test passed.  If it didn't then store the   *
+ *      diff of the expected result with the actual result in the DB    */
+
 
 if (!global)
     BLOB_TEXT_DUMP (blob_id, TCS, gds__trans, compare_file);
 else
     BLOB_TEXT_DUMP (blob_id, TCS_GLOBAL, gds__trans, compare_file);
 
-result = do_diffs (compare_file, output_file, diff_file, 0, 0, 0);
 
-if (!result) {
-    printf ("passed\n");
-} else {
-    test_result = failed;
-    printf ("*** failed ****\n");
 
-    STORE F IN TCS.FAILURES USING
+if (!compare (compare_file, output_file, global))
+
+{
+	 test_result = failed;
+
+	 printf ("*** failed ****\n");
+
+/*      If not global then dump the initialization to the compare_file  */
+
+	 if (!global)
+	BLOB_TEXT_DUMP (blob_id, TCS, gds__trans, compare_file);
+	 else
+	BLOB_TEXT_DUMP (blob_id, TCS_GLOBAL, gds__trans, compare_file);
+
+/*      Call do_diffs which is linked in at compile time, in order to   *
+ *      do the actual diff.  Diff the expected result(compare_file)     *
+ *      with the actual result(output_file) and put the diff in the     *
+ *      diff_file.                                                      */
+
+	 result = do_diffs (compare_file, output_file, diff_file, 0, 0, 0);
+
+/*      Store the diff and output in the failure relation...            */
+
+	 STORE F IN TCS.FAILURES USING
 	gds__vtov (test_name, F.TEST_NAME, sizeof (F.TEST_NAME));
 	gds__vtov (version, F.VERSION, sizeof (F.VERSION));
 	gds__vtov (environment_name, F.ENV_NAME, sizeof (F.ENV_NAME));
@@ -1107,42 +1289,69 @@ if (!result) {
 /*      If the run_name is set then store the run name, else leave      *
  *      NULL.                                                           */
 
-	if (NOT_NULL (run_name)) 
-	    {
-	    gds__vtov (run_name, F.RUN, sizeof (F.RUN));
-	    F.RUN.NULL = FALSE;
-	    }
+	if (NOT_NULL (run_name))
+
+	{
+		 gds__vtov (run_name, F.RUN, sizeof (F.RUN));
+		 F.RUN.NULL = FALSE;
+	}
+
 	else
-	    F.RUN.NULL = TRUE;
+		 F.RUN.NULL = TRUE;
 
 	if (!disk_io_error)
-	    {
-	    store_blob (&F.DIFFERENCES, TCS, gds__trans, diff_file);
-	    F.DIFFERENCES.NULL = FALSE;
-	    }
+		 {
+		 store_blob (&F.DIFFERENCES, TCS, gds__trans, diff_file);
+		 F.DIFFERENCES.NULL = FALSE;
+		 }
 	else
-	    F.DIFFERENCES.NULL = TRUE;
+		 F.DIFFERENCES.NULL = TRUE;
 
 /*      Store the output in the failure relation.                       */
 
-	if (result > 0 && !disk_io_error)
-	    {
-	    BLOB_TEXT_LOAD (&F.OUTPUT, TCS, gds__trans, output_file);
-	    F.OUTPUT.NULL = FALSE;
-	    }
+	if (result && !disk_io_error)
+		 {
+		 BLOB_TEXT_LOAD (&F.OUTPUT, TCS, gds__trans, output_file);
+		 F.OUTPUT.NULL = FALSE;
+		 }
 	else
-	    F.OUTPUT.NULL = TRUE;
-	strcpy (F.DATE.CHAR[12], "NOW");
-    END_STORE;
+		 F.OUTPUT.NULL = TRUE;
 
+	strcpy (F.DATE.CHAR[12], "NOW");
+		END_STORE;
+
+/*      If we do not have to save the files -- the '-s' is not set      *
+ *      then clean them up.                                             */
+
+	 if (!sw_save)
+
+	 {
+  	 unlink (diff_file);
+	 }
 }
-if (!sw_save) {
-    unlink (compare_file);
-    unlink (diff_file);
-}
+
+/*      The test passed!                                                */
+
+else
+	 printf ("passed\n");
+
+/*      Commit          */
+
 commit_retaining();
-return test_result;
+
+/*      Clean up again if the '-s' flag is not set.                     */
+
+if (!sw_save)
+
+{
+         unlink (compare_file);
+	 unlink (script_file);
+	 unlink (output_file);
 }
+
+return (test_result);
+}
+
 #endif
 
 static contains (s1, s2)
