@@ -50,7 +50,7 @@ extern unsigned short	disk_io_error;
 #define FOPEN_WRITE_TYPE	"w"
 #endif
                         
-static USHORT	check_match();
+static BOOLEAN	check_match();
 static ULONG	hash();
 static LINE		*read_file();
 static void print_lines(), do_diff();
