@@ -8,12 +8,29 @@
 #
 
 #______________________________________________________________________________
+# A meta-function that causes all the test description data to be loaded into
+# memory
+
+proc load_test_data { filePath platform } {
+    global testData
+
+    set testData(FILE_PATH) "$filePath"
+    loadMetaSeries [ file join "$filePath" [ file join "global" "META_SERIES.csv" ] ]
+    loadSeries [ file join "$filePath" [ file join "global" "SERIES.csv" ] ]
+    loadTestData "$filePath" "$platform"
+    loadInitData "$filePath" "$platform"
+    loadBoilerPlates "$filePath" "$platform"
+    loadEnvironments "$filePath" "$platform"
+}
+
+
+#______________________________________________________________________________
 # A function that loads the series names for the given meta-series
 
-proc loadMetaSeries { fileName metaseries } {
+proc loadMetaSeries { fileName } {
+    global testData
+
     set file [open $fileName r]
-    set result ""
-    set metaseries [ string toupper $metaseries ]
     if { $file == 0 } {
         send_user "Zero file id\n"
     } else {
@@ -31,23 +48,27 @@ proc loadMetaSeries { fileName metaseries } {
             set metaName [ string trim [ lindex $row 0 ] ]
             set testName [ string trim [ lindex $row 1 ] ]
             set seq [ string trim [ lindex $row 2 ] ]
-            if { [ string compare $metaName $metaseries ] == 0} {
-                set result [ concat $result [ list [ list "$testName" $seq ] ] ]
+            if { [ string equal "" [ array names result "$metaName" ] ] } {
+                set result($metaName) ""
             }
+            set result($metaName) [ concat $result($metaName) \
+                            [ list [ list "$testName" $seq ] ] ]
         }
         close $file
     }
-    set result [ lsort -integer -index 1 $result ]
-    return $result
+
+    foreach key [ array names result ] {
+        set testData(META_$key) [ lsort -integer -index 1 $result($key) ]
+    }
 }
 
 #______________________________________________________________________________
-# A function that loads the test names for the given series
+# A function that loads the test names for the different series
 
-proc loadSeries { fileName series } {
+proc loadSeries { fileName } {
+    global testData
+
     set file [open $fileName r]
-    set result ""
-    set series [ string toupper $series ]
     if { $file == 0 } {
         send_user "Zero file id\n"
     } else {
@@ -65,14 +86,18 @@ proc loadSeries { fileName series } {
             set seriesName [ string trim [ lindex $row 0 ] ]
             set testName [ string trim [ lindex $row 1 ] ]
             set seq [ string trim [ lindex $row 3 ] ]
-            if { [ string compare $seriesName $series ] == 0} {
-                set result [ concat $result [ list [ list "$testName" $seq ] ] ]
+            if { [ string equal "" [ array names result "$seriesName" ] ] } {
+                set result($seriesName) ""
             }
+            set result($seriesName) [ concat $result($seriesName) \
+                    [ list [ list "$testName" $seq ] ] ]
         }
         close $file
     }
-    set result [ lsort -integer -index 1 $result ]
-    return $result
+
+    foreach key [ array names result ] {
+        set testData(SERIES_$key) [ lsort -integer -index 1 $result($key) ]
+    }
 }
 
 
@@ -82,13 +107,19 @@ proc loadSeries { fileName series } {
 # A function that loads the TCS init data (ie, expected output) for the
 # given test
 
-proc loadInitData { fileName testName } {
-    set file [open $fileName r]
-    set result ""
-    set testName [ string toupper $testName ]
-    if { $file == 0 } {
-        send_user "Zero file id\n"
-    } else {
+proc loadInitData { filePath platform } {
+    global testData
+    set pass 0
+ 
+    while { $pass < 2 } {
+        set pass [expr $pass + 1]
+        if { $pass == 1 } {
+            set subDir "global"
+        } else {
+            set subDir "$platform"
+        }
+        set file [open [ file join "$filePath" [ file join "$subDir" "INIT.csv" ] ] r]
+
         gets $file line
         gets $file line
 
@@ -102,30 +133,41 @@ proc loadInitData { fileName testName } {
             set row [ split $line ";" ]
             set name [ string trim [ lindex $row 0 ] ]
             set output [ string trim [ lindex $row 1 ] ]
+            set output [ file join "$subDir" "$output" ]
             set vers [ string trim [ lindex $row 6 ] ]
-            if { [ string compare $testName $name ] == 0} {
-                set result [ concat $result [ list [ list "$output" $vers ] ] ]
+            if { [ string equal "" [ array names result "$name" ] ] } {
+                set result($name) [ list "$output" $vers ]
+            } else {
+                if { $vers >= [ lindex $result($name) 1 ] } {
+                    set result($name) [ list "$output" $vers ]
+                }
             }
         }
         close $file
     }
-    set result [ lsort -integer -decreasing -index 1 $result ]
-    return $result
+    foreach key [ array names result ] {
+        set testData(INIT_$key) $result($key)
+    }
 }
-
 
 
 #______________________________________________________________________________
 # A function that loads the test data for a given test.  This data includes
 # the input script.
 
-proc loadTestData { fileName testName } {
-    set file [open $fileName r]
-    set result ""
-    set testName [ string toupper $testName ]
-    if { $file == 0 } {
-        send_user "Zero file id\n"
-    } else {
+proc loadTestData { filePath platform } {
+    global testData
+    set pass 0
+ 
+    while { $pass < 2 } {
+        set pass [expr $pass + 1]
+        if { $pass == 1 } {
+            set subDir "global"
+        } else {
+            set subDir "$platform"
+        }
+        set file [open [ file join "$filePath" [ file join "$subDir" "TESTS.csv" ] ] r]
+
         gets $file line
         gets $file line
 
@@ -139,29 +181,42 @@ proc loadTestData { fileName testName } {
             set row [ split $line ";" ]
             set name [ string trim [ lindex $row 0 ] ]
             set script [ string trim [ lindex $row 1 ] ]
+            set script [ file join "$subDir" "$script" ]
             set vers [ string trim [ lindex $row 9 ] ]
             set runFlag [ string trim [ lindex $row 7 ] ]
             set initFlag [ string trim [ lindex $row 11 ] ]
-            if { [ string compare $testName $name ] == 0} {
-                set result [ concat $result [ list [ list "$script" "$runFlag" "$initFlag" $vers ] ] ]
+            if { [ string equal "" [ array names result "$name" ] ] } {
+                set result($name) [list "$script" "$runFlag" "$initFlag" $vers ]
+            } else {
+                if { $vers >= [ lindex $result($name) 3 ] } {
+                    set result($name) [list "$script" "$runFlag" "$initFlag" $vers ]
+                }
             }
         }
         close $file
     }
-    set result [ lsort -integer -decreasing -index 3 $result ]
-    return $result
+
+    foreach key [ array names result ] {
+        set testData(TEST_$key) $result($key)
+    }
 }
 
-#______________________________________________________________________________
-# A function that locates the boilerplate/env files
 
-proc findBoilerPlate { qaBp fileName } {
-    set file [open $fileName r]
-    set result ""
-    set qaBp [ string toupper $qaBp ]
-    if { $file == 0 } {
-        send_user "Zero file id\n"
-    } else {
+#______________________________________________________________________________
+# A function that loads the boiler plate info
+
+proc loadBoilerPlates { filePath platform } {
+    global testData
+    set pass 0
+ 
+    while { $pass < 2 } {
+        set pass [expr $pass + 1]
+        if { $pass == 1 } {
+            set subDir "global"
+        } else {
+            set subDir "$platform"
+        }
+        set file [open [ file join "$filePath" [ file join "$subDir" "BOILER_PLATE.csv" ] ] r]
         gets $file line
         gets $file line
 
@@ -174,13 +229,52 @@ proc findBoilerPlate { qaBp fileName } {
             set line [ string trim $line ]
             set row [ split $line ";" ]
             set bpName [ string trim [ lindex $row 0 ] ]
-            if { [ string compare $qaBp $bpName ] == 0} {
-                set result [ string trim [ lindex $row 1 ] ]
-            }
+            set result($bpName) [ file join "$subDir" [ string trim [ lindex $row 1 ] ] ]
+
         }
         close $file
     }
-    return $result
+    foreach key [ array names result ] {
+        set testData(BP_$key) $result($key)
+    }
+}
+
+
+#______________________________________________________________________________
+# A function that loads the environment info
+
+proc loadEnvironments { filePath platform } {
+    global testData
+    set pass 0
+ 
+    while { $pass < 2 } {
+        set pass [expr $pass + 1]
+        if { $pass == 1 } {
+            set subDir "global"
+        } else {
+            set subDir "$platform"
+        }
+        set file [open [ file join "$filePath" [ file join "$subDir" "ENV.csv" ] ] r]
+        gets $file line
+        gets $file line
+
+        set count 0
+        set line ""
+        while { ! [eof $file ] } {
+            set count [gets $file line]
+            if { [ eof $file ] } { continue }
+
+            set line [ string trim $line ]
+            set row [ split $line ";" ]
+            set envName [ string trim [ lindex $row 0 ] ]
+            set result($envName) [ file join "$subDir" [ string trim [ lindex $row 1 ] ] ]
+
+        }
+        close $file
+    }
+    foreach key [ array names result ] {
+        set testData(ENV_$key) $result($key)
+    }
 }
 
 
@@ -198,7 +292,6 @@ proc parseEnvFile { fileName } {
         if { [ eof $file ] } { continue }
 
         if { [ string first "::" "$line" ] != 0 } { continue }
-        #        if { [ string last "::" "$line" 1 ] == -1 } { continue }
         set line [ string range "$line" 2 end ]
         set offset [ string first " " "$line" ]
         if { $offset == -1 } {
@@ -226,16 +319,22 @@ proc setup_tcsenv {} {
     global firebird
     global firebirdTCS
 
+    set localEnv(PATH_SEP) "/"
+    set localEnv(gds_\$print_status) "gds__print_status"
+    set localEnv(gds_\$status) "gds__status"
+    set localEnv(GDS_\$QUAD) "GDS__QUAD"
+    set localEnv(gds_\$quad) "gds__quad"
+    set localEnv(LINE_TERM) "\n"
+
     set localEnv(WHERE_GDB) ""
     set tcsEnv(WHERE_GDB) ""
-
-    set localEnv(WHERE_FILES) ""
-    set tcsEnv(WHERE_FILES) ""
-
-    set tcsEnv(WHERE_BIN) "$firebird/bin"
+    set localEnv(WHERE_FILES) "" 
+    set tcsEnv(WHERE_FILES) "" 
+        
+    set tcsEnv(WHERE_BIN) [ file join "$firebird" "bin" ]
     set tcsEnv(WHERE_GSEC) "$firebird"
-    set tcsEnv(WHERE_HELP) "$firebird/help"
-    set tcsEnv(WHERE_INCLUDE3) "$firebird/include"
+    set tcsEnv(WHERE_HELP) [ file join "$firebird" "help" ]
+    set tcsEnv(WHERE_INCLUDE3) [ file join "$firebird" "include" ]
 
     set tcsEnv(ADA_LINK) ""
     set tcsEnv(ADA_MKFAM) ""
@@ -258,28 +357,28 @@ proc setup_tcsenv {} {
     set tcsEnv(DEL) "rm -f "
     set tcsEnv(DIRECTORY) "ls "
     set tcsEnv(DIR) "ls "
-    set tcsEnv(DROP) "$firebirdTCS/drop_gdb"
+    set tcsEnv(DROP) [ file join "$firebirdTCS" "drop_gdb" ]
     set tcsEnv(FORTRAN_LINK) "f77"
     set tcsEnv(FORTRAN) "f77"
     set tcsEnv(FOR) "f77"
-    set tcsEnv(GBAK) "$firebird/bin/gbak"
-    set tcsEnv(GCON) "$firebird/bin/gcon"
-    set tcsEnv(GCSU) "$firebird/bin/gcsu"
-    set tcsEnv(GDEF) "$firebird/bin/gdef"
-    set tcsEnv(GDS_CACHE_MANAGER) "$firebird/bin/gds_cache_manager"
-    set tcsEnv(GFIX) "$firebird/bin/gfix"
-    set tcsEnv(GJRN) "$firebird/bin/gjrn"
-    set tcsEnv(GLTJ) "$firebird/bin/gltj"
-    set tcsEnv(GPRE) "$firebird/bin/gpre"
-    set tcsEnv(GRST) "$firebird/bin/grst"
-    set tcsEnv(GSEC) "$firebird/bin/gsec"
-    set tcsEnv(ISQL) "$firebird/bin/isql"
+    set tcsEnv(GBAK) [ file join "$firebird" [ file join "bin" "gbak" ] ]
+    set tcsEnv(GCON) [ file join "$firebird" [ file join "bin" "gcon" ] ]
+    set tcsEnv(GCSU) [ file join "$firebird" [ file join "bin" "gcsu" ] ]
+    set tcsEnv(GDEF) [ file join "$firebird" [ file join "bin" "gdef" ] ]
+    set tcsEnv(GDS_CACHE_MANAGER) [ file join "$firebird" [ file join "bin" "gds_cache_manager" ] ]
+    set tcsEnv(GFIX) [ file join "$firebird" [ file join "bin" "gfix" ] ]
+    set tcsEnv(GJRN) [ file join "$firebird" [ file join "bin" "gjrn" ] ]
+    set tcsEnv(GLTJ) [ file join "$firebird" [ file join "bin" "gltj" ] ]
+    set tcsEnv(GPRE) [ file join "$firebird" [ file join "bin" "gpre" ] ]
+    set tcsEnv(GRST) [ file join "$firebird" [ file join "bin" "grst" ] ]
+    set tcsEnv(GSEC) [ file join "$firebird" [ file join "bin" "gsec" ] ]
+    set tcsEnv(ISQL) [ file join "$firebird" [ file join "bin" "isql" ] ]
     set tcsEnv(JAVA) "java"
     set tcsEnv(JAVAC) "javac"
     set tcsEnv(MAKE) "make"
     set tcsEnv(PASCAL) "pas"
     set tcsEnv(PAS) "pas"
-    set tcsEnv(QLI) "$firebird/bin/qli"
+    set tcsEnv(QLI) [ file join "$firebird" [ file join "bin" "qli" ] ]
     set tcsEnv(RSH) "rsh"
     set tcsEnv(RUN) ""
     set tcsEnv(SH) "sh"
@@ -298,13 +397,13 @@ proc platform_code_ext { fileName } {
     global tcsEnv
 
     set posOfDot [string last "." $fileName ]
-
-    if { $posOfDot == -1 } { 
+    
+    if { $posOfDot == -1 } {
         return "$tcsEnv(HOST_CODE_EXT_C)"
     }
-
+    
     set curExt [ string range $fileName $posOfDot end ]
-
+        
     if { ! [string compare "$curExt" ".c"] } {
         return "$tcsEnv(HOST_CODE_EXT_C)" }
     if { ! [string compare "$curExt" ".C"] } {
@@ -320,14 +419,16 @@ proc platform_code_ext { fileName } {
 
     # I wonder if we want to do this, or would it be better to return
     # the current extention $curExt even though we don't know it.
+    #
+    # JMB - or we could just fail the test.
     return ""
 }
 
 proc platform_code_root { fileName } {
     set posOfDot [string last "." $fileName ]
-
-    if { $posOfDot == -1 } { 
-        return "$fileName" 
+    
+    if { $posOfDot == -1 } {
+        return "$fileName"
     } else {
         return [ string range $fileName 0 [ expr $posOfDot - 1 ] ]
     }
@@ -335,7 +436,7 @@ proc platform_code_root { fileName } {
 
 proc debugPrint { line } {
 #    send_user "$line\n"
-}
+}       
 
 proc cmd_sub { line } {
     global tcsEnv
@@ -377,15 +478,15 @@ proc cmd_sub { line } {
             continue
         }
 
-        if { [ string length $item ] != 0 } { 
-            set findNames [ array names tcsEnv "$item" ]        
+        if { [ string length $item ] != 0 } {
+            set findNames [ array names tcsEnv "$item" ]
             debugPrint "map: X${item}X Y${findNames}Y"
 
             # Check lookup to see if we have found a match (done this way so that
             # wildcards such as 'A*' still work ok.
             if { $findNames != $item  } {
                 set line "$line $item"
-            } else {            
+            } else {
                 set line "$line $tcsEnv($item)"
             }
         }
@@ -396,40 +497,99 @@ proc cmd_sub { line } {
     return [ data_sub "$line" ]
 }
 
-
-
-
 proc data_sub { str } {
     global localEnv
     global tcsEnv
 
 #    send_user "orig : $str\n"
-    foreach key [ array names localEnv "WHERE_*" ] {
-        if { ! [ string compare "" "$localEnv($key)" ] } {
-            set rplStr ""
+
+    set newStr ""
+    set checkStr ""
+
+    while { [string length "$str"] > 0 } {
+        if { [string is wordchar -failindex stopChar "$str"] } {
+            set checkStr "$checkStr$str"
+            set str ""
         } else {
-            set rplStr "$localEnv($key)/"
+            if { $stopChar == 0 } {
+                # we won't let the rest of the loop complete because it might
+                # call 'array names localEnv "*"', which breaks the rest of
+                # the code.  Since we only pick up funny characters in this
+                # if branch we just update newStr and go to the next iteration
+                #
+                set tmpStr [ string range "$str" 0 0 ]
+                set checkStr ""
+                set str [ string range "$str" 1 end ]
+                set newStr "$newStr$tmpStr"
+                continue
+
+            } else {
+                set tmpStr [ string range "$str" 0 [ expr $stopChar - 1 ] ]
+                set checkStr "$checkStr$tmpStr"
+                set str [ string range "$str" $stopChar end ]
+
+                # check for special characters that are not in the wordchar class
+                # but that should not break words.  Most notably the '$' can't
+                # break words.
+                if { [ string equal {$} [ string range "$str" 0 0 ] ] } {
+                    set checkStr "$checkStr\$"
+                    set str [ string range "$str" 1 end ]
+                    continue
+                }
+            }
         }
 
-        regsub -all "$key:" "$str" "$rplStr" str
+        # check to see if need to do a string replacement
+
+        if { [string equal "" [ array names localEnv "$checkStr" ] ] } {
+            # nope
+            set newStr "$newStr$checkStr"
+
+        } else {
+            # do an extra check to consume a trailing : for empty substitutions
+            #  needed to handle WHERE_GDB:xxxx.gdb style substitutions
+            set strLen [ string length "$str" ]
+            if { [ string equal "" "$localEnv($checkStr)" ] && $strLen > 0 } {
+                if { [ string equal ":" [ string range "$str" 0 0 ] ] } {
+                    # consume the ":"
+                    set str [ string range "$str" 1 end ]
+                }
+                # no replacement is needed, because the replace pattern is empty
+            } else {
+                set newStr "$newStr$localEnv($checkStr)"
+                # check to see if we need to stick in the path separator
+                if { $strLen > 0 } {
+                    if { [ string equal ":" [ string range "$str" 0 0 ] ] } {
+                        # consume the ":"
+                        set str [ string range "$str" 1 end ]
+                        set newStr "$newStr$localEnv(PATH_SEP)"
+                    }
+                }
+            }
+        }
+        set checkStr ""
     }
 
-    foreach key [ array names localEnv ] {
-        regsub -all "$key" "$str" "$localEnv($key)" str
-#        send_user "check for : $key -> $localEnv($key)\n"
-    }
-
-    regsub -all {gds_\$print_status} "$str" {gds__print_status} str
-    regsub -all {gds_\$status} "$str" {gds__status} str
-    regsub -all {GDS_\$QUAD} "$str" {GDS__QUAD} str
-    regsub -all {gds_\$quad} "$str" {gds__quad} str
+    # The old, slow, cruddy substitution code
+    #
+    #foreach key [ array names localEnv "WHERE_*" ] {
+    #    if { ! [ string compare "" "$localEnv($key)" ] } {
+    #        set rplStr ""
+    #    } else {
+    #        set rplStr "$localEnv($key)/"
+    #    }
+    #
+    #    regsub -all "$key:" "$str" "$rplStr" str
+    #}
+    #
+    #foreach key [ array names localEnv ] {
+    #    regsub -all "$key" "$str" "$localEnv($key)" str
+    #}
+    #
 
 #    send_user "new  : $str\n"
-
-    return "$str"
+    return "$newStr"
 }
-
-
 
 proc linesAreEquiv { source comp } {
     set matchPos [ string last "Database:  " "$source" ]
@@ -440,8 +600,7 @@ proc linesAreEquiv { source comp } {
             }
         }
     }
-    
-    
+
     set matchPos [ string last "CREATE DATABASE" [ string toupper "$source"] ]
     if { $matchPos != -1 && $matchPos <= 14 } {
         if { [ string length "$comp" ] > 14 } {
@@ -450,22 +609,19 @@ proc linesAreEquiv { source comp } {
             }
         }
     }
-    
+
     # the default action
     return [ expr [ string compare "$source" "$comp" ] == 0 ]
-
 }
-
-
-
 
 
 # This is the fun little procedure that correctly handles the stdout/stderr
 # streams.
 
 proc doTcsDiff { srcScript outputFile } {
-    global testTimeout 
-    send_user "running..."
+    global testTimeout
+    global localEnv
+
     set errLine ""
     set splitFile 0
     set errBuff ""
@@ -475,31 +631,27 @@ proc doTcsDiff { srcScript outputFile } {
     set blankCount 0
     set lastMatch 1
 
-
-    spawn "/bin/sh" 
-
-
+    spawn "/bin/sh"
 
     set stdoutMatch 1
     set stderrMatch 0
     set timeout 4
 
-
 # Change the shell prompt to something we can recognise, this is mainly
 # for windows where a lot of colour escape characters are used in the prompt.
     set shellPrompt "shell> "
-    send "PS1='$shellPrompt'\r"
+    send "PS1='$shellPrompt'$localEnv(LINE_TERM)"
     expect {
-        -re "\r\n$shellPrompt" { }
+        -re "\[^\]*\[^\'\]$shellPrompt" { }
         timeout { send_user "TIMEOUT\n" }
         eof { set fileOpen 0; set failMsg "Premature EOF!!\n"; break }
     }
 
-    send "sh $srcScript\r"
+    send "sh $srcScript$localEnv(LINE_TERM)"
 
 #        -re {^[^\r\n]*$srcScript\r\n} { }
     expect {
-        "$srcScript\r\n" { }
+        -re "$srcScript\[\r\n\]+" { }
         timeout { send_user "TIMEOUT\n" }
         eof { set fileOpen 0; set failMsg "Premature EOF!!\n"; break }
     }
@@ -529,19 +681,22 @@ proc doTcsDiff { srcScript outputFile } {
         set wildcardMatch 0
 
 # On win32 some of the returned lines have \r\r\n as the delimiter
-# the [ have to be escaped, and # comments cannot appear in the 
+# the [ have to be escaped, and # comments cannot appear in the
 # expect statement.
         expect {
-            -re "^\[^\r\n\]*(\r\n|\r\r\n)" { }
+            -re "^\[^\r\n\]*\r\r\n" {
+                set output [ string range "$expect_out(buffer)" 0 end-3 ] }
+            -re "^\[^\r\n\]*\r\n" {
+                set output [ string range "$expect_out(buffer)" 0 end-2 ] }
+
             timeout { send_user "TIMEOUT\n" }
             eof { set fileOpen 0; set failMsg "Premature EOF!!\n"; break }
         }
 
-#        set output [ string range "$expect_out(buffer)" 0 end-2 ]
-        set output [ string trim "$expect_out(buffer)" ]
-        set line   [ string trim $line ]
+#        set output [ string trim "$expect_out(buffer)" ]
+#        set line   [ string trim $line ]
 #        send_user "$output\n"
-        
+
         if { [ linesAreEquiv "$line" "$output" ] } {
             # This is a funny case.  It basically says if the last matched line
             # came from stderr, the current line is blank (""), and both
@@ -631,7 +786,7 @@ proc doTcsDiff { srcScript outputFile } {
     }
     if { $fileOpen == 0 } { return $failMsg }
 
-    send "exit\r\n"
+    send "exit$localEnv(LINE_TERM)"
     set timeout 10
     expect {
         eof { }
@@ -648,29 +803,47 @@ proc doTcsDiff { srcScript outputFile } {
 #  is a comment.  All lines of code between two $'s constitute a data file
 #   (a tcs.dataX file).
 
-proc runTest { testName seriesName filePath platform qaBp qaEnv keep_files } {
+proc runTest { testName qaBp qaEnv keep_files } {
     global saveSeriesDataRoot
     global saveSeriesResultsRoot
+    global testData
 
-    # Find the correct script file
     send_user "$testName..."
     set lastCmd ""
-    set testData [ loadTestData "$filePath/$platform/TESTS.csv" $testName ]
-    if { [ llength $testData ] > 0 } {
-        set scriptFile [ lindex [ lindex $testData 0 ] 0 ]
-        set scriptFile "$platform/$scriptFile"
+    set qaBp [ string toupper "$qaBp" ]
+    set qaEnv [ string toupper "$qaEnv" ]
+
+    # Find the correct script file
+    if { [ string equal "" [ array names testData "TEST_$testName" ] ] } {
+        fail "No such test: $testName"
+        return
     } else {
-        set testData [ loadTestData "$filePath/global/TESTS.csv" $testName ]
-        if { [ llength $testData ] > 0 } {
-            set scriptFile [ lindex [ lindex $testData 0 ] 0 ]
-            set scriptFile "global/$scriptFile"
-        }
+        set scriptFile [ file join "$testData(FILE_PATH)" [ lindex $testData(TEST_$testName) 0 ] ]
     }
 
-    set scriptFile $saveSeriesDataRoot/$seriesName/$testName.script
-    set outputFile $saveSeriesResultsRoot/$seriesName/$testName.results
-    set bpFile testsuite/config/$platform/script_prologue.sh
-    set envData [ parseEnvFile "testsuite/config/$platform/script_subst.txt" ]
+    if { [ string equal "" [ array names testData "INIT_$testName" ] ] } {
+        fail "Test not inited: $testName"
+        return
+    } else {
+        set outputFile [ file join "$testData(FILE_PATH)" [ lindex $testData(INIT_$testName) 0 ] ]
+    }
+
+    # Get the file path to the correct boiler plate
+    if { [ string equal "" [ array names testData "BP_$qaBp" ] ] } {
+        fail "No such boiler plate: $qaBp"
+        return
+    } else {
+        set bpFile [ file join "$testData(FILE_PATH)" "$testData(BP_$qaBp)" ]
+    }
+
+    # Get the environment file and parse it.  Use findBoilerPlate as a hack
+    if { [ string equal "" [ array names testData "ENV_$qaEnv" ] ] } {
+        fail "No such environment: $qaEnv"
+        return
+    } else {
+        set envFile [ file join "$testData(FILE_PATH)" "$testData(ENV_$qaEnv)" ]
+    }
+    set envData [ parseEnvFile "$envFile" ]
 
     set dataCnt -1
     set lastWasCmd 0
@@ -678,11 +851,9 @@ proc runTest { testName seriesName filePath platform qaBp qaEnv keep_files } {
     set testFiles "tcs.script"
 
     if { [file exists $scriptFile] != 1 } {
-        send_user "FAIL\n"
         fail "TCS_$testName (file $scriptFile not found)"
         return
     }
-
     set file [open "$scriptFile" r]
 
     set script [open "tcs.script" w]
@@ -743,33 +914,45 @@ proc runTest { testName seriesName filePath platform qaBp qaEnv keep_files } {
         foreach filename $testFiles { file delete -force $filename }
     }
 
-    if { [ string compare "$testResult" "" ] == 0 } {
+    if { [ string equal "$testResult" "" ] } {
         send_user "pass\n"
         pass "TCS_$testName"
     } else {
-        send_user "FAIL\n"
+        #send_user "FAIL\n"
         fail "TCS_$testName ($testResult)"
     }
-
 }
 
 
 #______________________________________________________________________________
 # The code to run a series
 
-proc runSeries { seriesName filePath platform qaBp qaEnv } {
+proc runSeries { seriesName qaBp qaEnv } {
+    global testData
+    set seriesName [ string toupper "$seriesName" ]
 
-    foreach tst [ loadSeries "$filePath/global/SERIES.csv" $seriesName ] {
-        runTest [ lindex $tst 0 ] "$seriesName" "$filePath" "$platform" "$qaBp" "$qaEnv" 0
+    if { [ string equal "" [ array names testData "SERIES_$seriesName" ] ] } {
+        fail "Unknown series: $seriesName"
+        return
+    }
+    foreach tst "$testData(SERIES_$seriesName)" {
+        runTest [ lindex "$tst" 0 ] "$qaBp" "$qaEnv" 0
     }
 }
 
 #______________________________________________________________________________
 # The code to run a meta-series
 
-proc runMetaSeries { metaSeries filePath platform qaBp qaEnv } {
-    foreach series [loadMetaSeries "$filePath/global/META_SERIES.csv" $metaSeries ] {
-        runSeries [ lindex $series 0 ] "$filePath" "$platform" "$qaBp" "$qaEnv"
+proc runMetaSeries { metaSeries qaBp qaEnv } {
+    global testData
+    set metaSeries [ string toupper "$metaSeries" ]
+
+    if { [ string equal "" [ array names testData "META_$metaSeries" ] ] } {
+        fail "Unknown meta-series: $metaSeries"
+        return
+    }
+    foreach series "$testData(META_$metaSeries)" {
+        runSeries [ lindex $series 0 ] "$qaBp" "$qaEnv"
     }
 }
 
@@ -782,10 +965,9 @@ proc runMetaSeries { metaSeries filePath platform qaBp qaEnv } {
 set moduleName TCS
 set databaseName "work/limits.gdb"
 setup_tcsenv
+load_test_data "testsuite/tcs.test/data" "darwin"
 
 #send_user "$argv0\n"
-
-set timeout 1000
 
 #set platform linux
 
@@ -797,58 +979,59 @@ set exportedData ../test-files/export
 
 set testTimeout 60
 
-runMetaSeries VECTOR_12HOUR $exportedData $platform qa_bp qa_shr
+#runMetaSeries VECTOR_12HOUR "testsuite/tcs.test/data" darwin qa_bp qa_shr
 
-#runSeries CF_ISQL             $exportedData $platform qa_bp qa_shr
+#runSeries CF_ISQL             qa_bp qa_shr
 
-#runSeries C_SQL_PRED          $exportedData $platform qa_bp qa_shr
-#runSeries ISC_ARRBLOB_CK      $exportedData $platform qa_bp qa_shr
+runSeries C_SQL_PRED          qa_bp qa_shr
+runSeries ISC_ARRBLOB_CK      qa_bp qa_shr
 
-#runSeries DSQL_DOMAINS        $exportedData $platform qa_bp qa_shr
-#runSeries DSQL_EXCEPTIONS     $exportedData $platform qa_bp qa_shr
-#runSeries SQL_EVENTS          $exportedData $platform qa_bp qa_shr
-#runSeries C_SQL_BLOB          $exportedData $platform qa_bp qa_shr
-#runSeries C_SQL_JOIN          $exportedData $platform qa_bp qa_shr
-#runSeries V4_AUTO_COMMIT      $exportedData $platform qa_bp qa_shr
-#runSeries V4_EXCLUSIVE        $exportedData $platform qa_bp qa_shr
-#runSeries IDML_C_CHARSET      $exportedData $platform qa_bp qa_shr
-#runSeries IDML_C_SUBQUERYS    $exportedData $platform qa_bp qa_shr
+runSeries DSQL_DOMAINS        qa_bp qa_shr
+#runSeries DSQL_EXCEPTIONS     qa_bp qa_shr
+#runSeries SQL_EVENTS          qa_bp qa_shr
+#runSeries C_SQL_BLOB          qa_bp qa_shr
+#runSeries C_SQL_JOIN          qa_bp qa_shr
+#runSeries V4_AUTO_COMMIT      qa_bp qa_shr
+#runSeries V4_EXCLUSIVE        qa_bp qa_shr
+#runSeries IDML_C_CHARSET      qa_bp qa_shr
+#runSeries IDML_C_SUBQUERYS    qa_bp qa_shr
 
 #set testTimeout 60000
-#runSeries EVENT_MISC          $exportedData $platform qa_bp qa_shr
+#runSeries EVENT_MISC          qa_bp qa_shr
 
 #set testTimeout 60
 
-#runSeries EXT_LEV_0           $exportedData $platform qa_bp qa_shr
-#runSeries GF_SHUTDOWN         $exportedData $platform qa_bp qa_shr
-#runSeries QA_PROC_IES_ERR     $exportedData $platform qa_bp qa_shr
-#runSeries REF_INT_INDX        $exportedData $platform qa_bp qa_shr
-#runSeries RICH_FLD_GEN_V40    $exportedData $platform qa_bp qa_shr
-#runSeries RI_TESTS            $exportedData $platform qa_bp qa_shr
-#runSeries V4_AUTO_DDL_DSQL    $exportedData $platform qa_bp qa_shr
-#runSeries V4_TRANS_BLOB       $exportedData $platform qa_bp qa_shr
-#runSeries QA_PROCS_ISQL       $exportedData $platform qa_bp qa_shr
-#runSeries FB_SQL $exportedData $platform qa_bp qa_shr
+#runSeries EXT_LEV_0           qa_bp qa_shr
+#runSeries GF_SHUTDOWN         qa_bp qa_shr
+#runSeries QA_PROC_IES_ERR     qa_bp qa_shr
+#runSeries REF_INT_INDX        qa_bp qa_shr
+#runSeries RICH_FLD_GEN_V40    qa_bp qa_shr
+#runSeries RI_TESTS            qa_bp qa_shr
+#runSeries V4_AUTO_DDL_DSQL    qa_bp qa_shr
+#runSeries V4_TRANS_BLOB       qa_bp qa_shr
+#runSeries QA_PROCS_ISQL       qa_bp qa_shr
+#runSeries FB_SQL qa_bp qa_shr
 
-#runTest C_SQL_JOIN_0 $exportedData $platform qa_bp qa_shr 1
-#runTest CF_ISQL_01 $exportedData linux qa_bp qa_shr 1
-#runTest CF_ISQL_11 $exportedData linux qa_bp qa_shr 1
-#runTest CF_ISQL_16 $exportedData linux qa_bp qa_shr 1
 
-#runTest DSQL_DOMAIN_08 $exportedData linux qa_bp qa_shr 1
-#runTest DSQL_EXCEPT_01 $exportedData linux qa_bp qa_shr 1
+
+#runTest C_SQL_JOIN_0 qa_bp qa_shr 1
+#runTest CF_ISQL_01 qa_bp qa_shr 1
+#runTest CF_ISQL_11 qa_bp qa_shr 1
+#runTest CF_ISQL_16 qa_bp qa_shr 1
+
+#runTest DSQL_DOMAIN_08 qa_bp qa_shr 1
+#runTest DSQL_EXCEPT_01 qa_bp qa_shr 1
 
 #set timeout 20000
-#runTest SQL_EVENT_12 $exportedData linux qa_bp qa_shr 1
-#runTest GF_SHUT_2 $exportedData linux qa_bp qa_shr 1
-
+#runTest SQL_EVENT_12 qa_bp qa_shr 1
+#runTest GF_SHUT_2 qa_bp qa_shr 1
 
 
 # The following has a problem with LD -> ld in the input file.
-#runTest CF_ISQL_17 $exportedData $platform qa_bp qa_shr 1
+#runTest CF_ISQL_17 qa_bp qa_shr 1
 
 
-# just testing 
-#runTest C_SQL_PRED_0 C_SQL_PRED $exportedData $platform qa_bp qa_shr 1
-#runTest AUTO_COMMIT.1.ESQL V4_AUTO_COMMIT $exportedData $platform qa_bp qa_shr 1
-#runTest IDML_C_SUBQ_10 IDML_C_SUBQUERYS $exportedData $platform qa_bp qa_shr 1
+# just testing
+#runTest C_SQL_PRED_0 C_SQL_PRED qa_bp qa_shr 1
+#runTest AUTO_COMMIT.1.ESQL V4_AUTO_COMMIT qa_bp qa_shr 1
+#runTest IDML_C_SUBQ_10 IDML_C_SUBQUERYS qa_bp qa_shr 1
