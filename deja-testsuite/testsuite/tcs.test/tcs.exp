@@ -751,7 +751,7 @@ proc doTcsDiff { srcScript outputFile } {
             if { ! [ start_shell ] } {
                 send_user "Unrecoverable error!\n"
             }
-            return "TIMEOUT"
+            return "TIMEOUT waiting for starting shell prompt"
         }
         eof { set fileOpen 0; fail "Premature EOF!!"; start_shell; return }
     }
@@ -767,7 +767,7 @@ proc doTcsDiff { srcScript outputFile } {
             if { ! [ start_shell ] } {
                 send_user "Unrecoverable error!\n"
             }
-            return "TIMEOUT"
+            return "TIMEOUT waiting for script command echo"
         }
         eof { set fileOpen 0; set failMsg "Premature EOF!!" }
     }
@@ -806,7 +806,15 @@ proc doTcsDiff { srcScript outputFile } {
             -re "^\[^\r\n\]*\r\n" {
                 set output [ string range "$expect_out(buffer)" 0 end-2 ] }
 
-            timeout { set failMsg "TIMEOUT"; break }
+            timeout {
+                stop_shell
+                if { ! [ start_shell ] } {
+                    send_user "Unrecoverable error!\n"
+                }
+                set fileOpen 0
+                set failMsg "TIMEOUT waiting for: $output"
+                break
+            }
             eof { set fileOpen 0; set failMsg "Premature EOF!!"; break }
         }
 
@@ -903,10 +911,17 @@ proc doTcsDiff { srcScript outputFile } {
     }
     if { $fileOpen == 0 } { return $failMsg }
 
-    set timeout 10
+    set timeout $testTimeout
     expect {
         -re "$shellPrompt" { }
-        timeout { set failMsg "TIMEOUT" }
+        timeout { set failMsg "TIMEOUT waiting for last shell prompt" }
+        timeout {
+            stop_shell
+            if { ! [ start_shell ] } {
+                send_user "Unrecoverable error!\n"
+            }
+            set failMsg "TIMEOUT waiting for last shell prompt"
+        }
         eof { set fileOpen 0; set failMsg "Premature EOF!!"; break }
     }
 
@@ -921,60 +936,21 @@ proc doTcsDiff { srcScript outputFile } {
 #  is a comment.  All lines of code between two $'s constitute a data file
 #   (a tcs.dataX file).
 
-proc runTest { testName qaBp qaEnv keep_files } {
+proc runKnownTest { scriptFile dataFiles outputFile bpFile envFile keep_files } {
     global saveSeriesDataRoot
     global saveSeriesResultsRoot
     global testData
 
-    send_user "$testName..."
     set lastCmd ""
-    set qaBp [ string toupper "$qaBp" ]
-    set qaEnv [ string toupper "$qaEnv" ]
-
-    # Find the correct script file
-    if { [ string equal "" [ array names testData "TEST_$testName" ] ] } {
-        fail "No such test: $testName"
-        return
-    } else {
-        set scriptFile [ file join "$testData(FILE_PATH)" [ lindex $testData(TEST_$testName) 0 ] ]
-    }
-
-    if { [ string equal "" [ array names testData "INIT_$testName" ] ] } {
-        fail "Test not inited: $testName"
-        return
-    } else {
-        set outputFile [ file join "$testData(FILE_PATH)" [ lindex $testData(INIT_$testName) 0 ] ]
-    }
-
-    # Get the file path to the correct boiler plate
-    if { [ string equal "" [ array names testData "BP_$qaBp" ] ] } {
-        fail "No such boiler plate: $qaBp"
-        return
-    } else {
-        set bpFile [ file join "$testData(FILE_PATH)" "$testData(BP_$qaBp)" ]
-    }
-
-    # Get the environment file and parse it.  Use findBoilerPlate as a hack
-    if { [ string equal "" [ array names testData "ENV_$qaEnv" ] ] } {
-        fail "No such environment: $qaEnv"
-        return
-    } else {
-        set envFile [ file join "$testData(FILE_PATH)" "$testData(ENV_$qaEnv)" ]
-    }
-    set envData [ parseEnvFile "$envFile" ]
 
     set dataCnt -1
     set lastWasCmd 0
     set dataFileOpen 0
     set testFiles "tcs.script"
 
-    if { [file exists $scriptFile] != 1 } {
-        fail "TCS_$testName (file $scriptFile not found)"
-        return
-    }
     set file [open "$scriptFile" r]
-
     set script [open "tcs.script" w]
+    set env [ parseEnvFile "$envFile" ]
 
     # Copy over the boiler plate
     set bp [ open "$bpFile" r ]
@@ -1024,57 +1000,155 @@ proc runTest { testName qaBp qaEnv keep_files } {
     close $script
     close $file
 
+    foreach dataFile "$dataFiles" {
+        set in [ open "$dataFile" r ]
+        set out [ open [ file tail "$dataFile" ] w ]
+        while { ! [ eof $in ] } {
+            gets $in line
+            if { [ eof $in ] } { break }
+            puts $out [ data_sub "$line" ]
+        }
+        close $in
+        close $out
+    }
+
     # Now that all the files have been extracted, lets run the test!!
     set testResult [ doTcsDiff "tcs.script" "$outputFile" ]
 
     # delete the files we created
     if { ! $keep_files } {
         foreach filename $testFiles { file delete -force $filename }
+        foreach filename $dataFiles \
+            { file delete -force [ file tail "$filename" ] }
     }
 
-    if { [ string equal "$testResult" "" ] } {
-        send_user "pass\n"
-        pass "TCS_$testName"
-    } else {
-        #send_user "FAIL\n"
-        fail "TCS_$testName ($testResult)"
-    }
+    return $testResult
 }
 
 
 #______________________________________________________________________________
 # The code to run a series
 
-proc runSeries { seriesName qaBp qaEnv } {
+proc runKnownSeries { seriesName subSeries platform } {
     global testData
     set seriesName [ string toupper "$seriesName" ]
+    set subSeries [ string toupper "$subSeries" ]
+    set prefix "testsuite/tcs.test/data/global/$seriesName"
+    set oprefix "testsuite/tcs.test/data/output/$seriesName"
+    set envprefix "testsuite/tcs.test/data/global/tcs_setup"
+    set errMsg ""
 
-    if { [ string equal "" [ array names testData "SERIES_$seriesName" ] ] } {
-        fail "Unknown series: $seriesName"
+    if { [ catch {open [ file join "$prefix" "$subSeries.series" ] r} fid] } {
+        fail "Failed to open series TOC for $seriesName: $fid"
         return
     }
-    foreach tst "$testData(SERIES_$seriesName)" {
-        runTest [ lindex "$tst" 0 ] "$qaBp" "$qaEnv" 0
+
+    while { ! [eof $fid ] } {
+        gets $fid line
+        if { [ eof $fid ] } { continue }
+
+	send_user "\t$line..."
+        set line [ string trim $line ]
+        if { [ catch {runKnownTest [ file join "$prefix" "$line.script" ] "" \
+                              [ file join "$oprefix" "$line.output" ] \
+                              [ file join "$envprefix" "BP.$platform" ] \
+                              [ file join "$envprefix" "ENV.$platform" ] \
+          0} errMsg ] } {
+            fail "Exception caught: $errMsg"
+        }
+        if { [ string equal "" "$errMsg" ] } {
+            send_user "PASS\n"
+            pass "$line"
+        } else {
+            fail "$line $errMsg"
+        }
     }
+    close $fid
 }
 
 #______________________________________________________________________________
 # The code to run a meta-series
 
-proc runMetaSeries { metaSeries qaBp qaEnv } {
+proc runMetaSeries { metaSeries platform } {
     global testData
     set metaSeries [ string toupper "$metaSeries" ]
 
-    if { [ string equal "" [ array names testData "META_$metaSeries" ] ] } {
-        fail "Unknown meta-series: $metaSeries"
+    if { [ catch {open "testsuite/tcs.test/data/global/$metaSeries.meta" r} fid] } {
+        fail "Failed to open meta series TOC for $metaSeries: $fid"
         return
     }
-    foreach series "$testData(META_$metaSeries)" {
-        runSeries [ lindex $series 0 ] "$qaBp" "$qaEnv"
+    while { ! [eof $fid ] } {
+        gets $fid line
+        if { [ eof $fid ] } { continue }
+
+        set line [ string trim $line ]
+	send_user "$line...\n"
+        runKnownSeries "$line" "$line" "$platform"
+    }
+    close $fid
+}
+
+
+
+#______________________________________________________________________________
+# The code to locate the series a test resides in given the test name
+
+proc runTest { testName platform saveFiles } {
+    set testName [ string toupper "$testName" ]
+
+    send_user "$testName..."
+    if { [ catch { glob "testsuite/tcs.test/data/global/*/$testName.script" } test_list ] } {
+        fail "$testName $test_list"
+        return;
+    }
+    if { [ llength "$test_list" ] != 1 } {
+        fail "$testName Ambigous test name"
+        return
+    }
+    set testScript [ lindex "$test_list" 0 ]
+    set seriesName [ lindex [ file split "$testScript" ] end-1 ]
+
+    set prefix "testsuite/tcs.test/data/global/$seriesName"
+    set oprefix "testsuite/tcs.test/data/output/$seriesName"
+    set envprefix "testsuite/tcs.test/data/global/tcs_setup"
+    set errMsg ""
+
+    if { [ catch {runKnownTest "$testScript" "" \
+                              [ file join "$oprefix" "$testName.output" ] \
+                              [ file join "$envprefix" "BP.$platform" ] \
+                              [ file join "$envprefix" "ENV.$platform" ] \
+      $saveFiles } errMsg ] } {
+        fail "Exception caught: $errMsg"
+    }
+    if { [ string equal "" "$errMsg" ] } {
+        send_user "PASS\n"
+        pass "$testName"
+    } else {
+        fail "$testName $errMsg"
     }
 }
 
 
+
+#______________________________________________________________________________
+# The code to locate a sub-series and run it, given a name
+
+proc runSeries { seriesName platform } {
+    set seriesName [ string toupper "$seriesName" ]
+
+    send_user "$seriesName...\n"
+    if { [ catch { glob "testsuite/tcs.test/data/global/*/$seriesName.series" } test_list ] } {
+        fail "$seriesName $test_list"
+        return;
+    }
+    if { [ llength "$test_list" ] != 1 } {
+        fail "$seriesName Ambigous series name"
+        return
+    }
+
+    set masterSeriesName [ lindex [ file split "$test_list" ] end-1 ]
+    runKnownSeries "$masterSeriesName" "$seriesName" "$platform"
+}
 
 
 #______________________________________________________________________________
@@ -1083,11 +1157,11 @@ proc runMetaSeries { metaSeries qaBp qaEnv } {
 set moduleName TCS
 set databaseName "work/limits.gdb"
 setup_tcsenv
-load_test_data "testsuite/tcs.test/data" "darwin"
+#load_test_data "testsuite/tcs.test/data" "darwin"
 
 #send_user "$argv0\n"
 
-#set platform linux
+set platform darwin
 
 #set saveSeriesDir /tmp/fred1
 set saveSeriesDataRoot testsuite/tcs.test/data
@@ -1095,68 +1169,68 @@ set saveSeriesResultsRoot testsuite/tcs.test/results
 
 set exportedData ../test-files/export
 
-set testTimeout 60
+set testTimeout 180
 
 if { ! [start_shell] } {
     send_user "Failed to start shell!!\n"
 }
 
-runMetaSeries VECTOR_12HOUR qa_bp qa_shr
+#runMetaSeries VECTOR_12HOUR    $platform
 
-#runSeries CF_ISQL             qa_bp qa_shr
+#runSeries CF_ISQL             $platform
 
-#runSeries C_SQL_PRED          qa_bp qa_shr
-#runSeries ISC_ARRBLOB_CK      qa_bp qa_shr
+#runSeries C_SQL_PRED          $platform
+#runSeries ISC_ARRBLOB_CK      $platform
 
-#runSeries DSQL_DOMAINS        qa_bp qa_shr
-#runSeries DSQL_EXCEPTIONS     qa_bp qa_shr
-#runSeries SQL_EVENTS          qa_bp qa_shr
-#runSeries C_SQL_BLOB          qa_bp qa_shr
-#runSeries C_SQL_JOIN          qa_bp qa_shr
-#runSeries V4_AUTO_COMMIT      qa_bp qa_shr
-#runSeries V4_EXCLUSIVE        qa_bp qa_shr
-#runSeries IDML_C_CHARSET      qa_bp qa_shr
-#runSeries IDML_C_SUBQUERYS    qa_bp qa_shr
+#runSeries DSQL_DOMAINS        $platform
+#runSeries DSQL_EXCEPTIONS     $platform
+#runSeries SQL_EVENTS          $platform
+#runSeries C_SQL_BLOB          $platform
+#runSeries C_SQL_JOIN          $platform
+#runSeries V4_AUTO_COMMIT      $platform
+#runSeries V4_EXCLUSIVE        $platform
+#runSeries IDML_C_CHARSET      $platform
+#runSeries IDML_C_SUBQUERYS    $platform
 
 #set testTimeout 60000
-#runSeries EVENT_MISC          qa_bp qa_shr
+#runSeries EVENT_MISC          $platform
 
 #set testTimeout 60
 
-#runSeries EXT_LEV_0           qa_bp qa_shr
-#runSeries GF_SHUTDOWN         qa_bp qa_shr
-#runSeries QA_PROC_IES_ERR     qa_bp qa_shr
-#runSeries REF_INT_INDX        qa_bp qa_shr
-#runSeries RICH_FLD_GEN_V40    qa_bp qa_shr
-#runSeries RI_TESTS            qa_bp qa_shr
-#runSeries V4_AUTO_DDL_DSQL    qa_bp qa_shr
-#runSeries V4_TRANS_BLOB       qa_bp qa_shr
-#runSeries QA_PROCS_ISQL       qa_bp qa_shr
-#runSeries FB_SQL qa_bp qa_shr
+runSeries EXT_LEV_0           $platform
+#runSeries GF_SHUTDOWN         $platform
+#runSeries QA_PROC_IES_ERR     $platform
+#runSeries REF_INT_INDX        $platform
+#runSeries RICH_FLD_GEN_V40    $platform
+#runSeries RI_TESTS            $platform
+#runSeries V4_AUTO_DDL_DSQL    $platform
+#runSeries V4_TRANS_BLOB       $platform
+#runSeries QA_PROCS_ISQL       $platform
+#runSeries FB_SQL              $platform
 
 
-#runTest ISC_ER36 qa_bp qa_shr 1
+#runTest ISC_ER36 $platform 1
 
-#runTest C_SQL_JOIN_0 qa_bp qa_shr 1
-#runTest CF_ISQL_01 qa_bp qa_shr 1
-#runTest CF_ISQL_11 qa_bp qa_shr 1
-#runTest CF_ISQL_16 qa_bp qa_shr 1
+#runTest C_SQL_JOIN_0  $platform 1
+#runTest CF_ISQL_01  $platform 1
+#runTest CF_ISQL_11  $platform 1
+#runTest CF_ISQL_16  $platform 1
 
-#runTest DSQL_DOMAIN_08 qa_bp qa_shr 1
-#runTest DSQL_EXCEPT_01 qa_bp qa_shr 1
+#runTest DSQL_DOMAIN_08  $platform 1
+#runTest DSQL_EXCEPT_01  $platform 1
 
 #set timeout 20000
-#runTest SQL_EVENT_12 qa_bp qa_shr 1
-#runTest GF_SHUT_2 qa_bp qa_shr 1
+#runTest SQL_EVENT_12  $platform 1
+#runTest GF_SHUT_2  $platform 1
 
 
 # The following has a problem with LD -> ld in the input file.
-#runTest CF_ISQL_17 qa_bp qa_shr 1
+#runTest CF_ISQL_17  $platform 1
 
 
 # just testing
-#runTest C_SQL_PRED_0 C_SQL_PRED qa_bp qa_shr 1
-#runTest AUTO_COMMIT.1.ESQL V4_AUTO_COMMIT qa_bp qa_shr 1
-#runTest IDML_C_SUBQ_10 IDML_C_SUBQUERYS qa_bp qa_shr 1
+#runTest C_SQL_PRED_0  $platform 1
+#runTest AUTO_COMMIT.1.ESQL $platform 1
+#runTest IDML_C_SUBQ_10 $platform 1
 
 stop_shell
