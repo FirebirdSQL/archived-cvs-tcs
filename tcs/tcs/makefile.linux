@@ -14,13 +14,15 @@
 # Corporation. All Rights Reserved.
 # 
 # Contributor(s): ______________________________________.
+# $Id$
 .SUFFIXES: .c .e .gdb .gdl
 .e.c :
 	gpre -n  -manual $<
 .gdl.gdb:
 	gdef $<
 
-TARGETS= tcs tan
+TARGETS= tcs 
+# removed tan temporarily FSG 11.Nov.2000
 
 # Purify related flags
 #PFLAGS   = 

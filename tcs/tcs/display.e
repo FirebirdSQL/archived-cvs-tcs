@@ -19,12 +19,13 @@
  * Corporation. All Rights Reserved.
  *
  * Contributor(s): ______________________________________.
+ * $Id$
  */
 
 #include <stdio.h>
 #include <string.h>
 #include "tcs.h"
-
+#include <gds.h>
 #if (defined WIN_NT || defined OS2_ONLY)
 static ULONG *open_blob (SLONG* blob_id, SLONG* db_handle);
 static int response (SCHAR* response_string, int length);
@@ -287,24 +288,40 @@ USHORT	lines = 0;
 /*	Open the BLOB, if not successful then return */
 
 if (!(blob = open_blob (blob_id, db_handle)))
+{
     return TRUE;
+}
 
 /*	Loop through the blob for each segment, printing each segment	*
  *	to stdout as we go.						*/
 
 buf_len = sizeof (buffer) - 1;	/* APOLLO cannot type cast const value */
-while (!gds__get_segment (status_vector,
+
+/*  I changed the following  to handle blobs with segment_length > buf_len
+ *  though I don't know why we don't use BLOB_display directly  
+ *  FSG 11.Nov.2000                                                    */
+
+
+for (;;)
+{ 
+       gds__get_segment (status_vector,
 	GDS_REF (blob),
 	GDS_REF (length),
 	buf_len,		/* SSHORT, not int.	Andrew  */
-	buffer))
+	buffer);
 
-{
+       if (status_vector [1] && status_vector [1] != gds__segment)
+        {
+        if (status_vector [1] != gds__segstr_eof)
+                gds__print_status (status_vector);
+        break;
+        }
     if (lines++ == 0)
 	printf ("-------------------\n");
     buffer [length] = 0;
     fputs (buffer, stdout);
 }
+
 
 /*	Close the BLOB and clean up.					*/	
 
