@@ -377,6 +377,7 @@ proc parseEnvFile { fileName } {
         set tcsEnv($srcStr) "$rplStr"
         set localEnv($srcStr) "$rplStr"
     }
+    close $file
     return $result
 }
 
@@ -396,6 +397,8 @@ proc setup_tcsenv {} {
     set localEnv(gds_\$status) "gds__status"
     set localEnv(GDS_\$QUAD) "GDS__QUAD"
     set localEnv(gds_\$quad) "gds__quad"
+    set localEnv(GDS_\$DECODE_DATE) "GDS__DECODE_DATE"
+    set localEnv(gds_\$decode_date) "gds__decode_date"
     set localEnv(LINE_TERM) "\n"
 
     set localEnv(WHERE_GDB) ""
@@ -664,12 +667,9 @@ proc data_sub { str } {
 }
 
 proc linesAreEquiv { source comp } {
-    set matchPos [ string last "Database:  " "$source" ]
-    if { $matchPos != -1 && $matchPos <= 10  } {
-        if { [ string length "$comp" ] > 10 } {
-            if { [ string compare "Database:  " [ string range "$comp" 0 10 ] ] == 0 } {
-                return 1
-            }
+    if { [ regexp "((SQL> )|(CON> ))*Database:  " "$source" matchStr ] } {
+        if { [ string first "$matchStr" "$comp" ] == 0 } {
+            return 1
         }
     }
 
@@ -713,7 +713,7 @@ proc stop_shell {} {
     set timeout 10
     expect {
         eof { return 1 }
-        timeout { send_user "TIMEOUT\n" }
+        timeout { }
     }
     return 0
 }
@@ -732,7 +732,6 @@ proc doTcsDiff { srcScript outputFile } {
     set errLine ""
     set splitFile 0
     set errBuff ""
-    set file [ open "$outputFile" r ]
     set fileOpen 1
     set failMsg ""
     set blankCount 0
@@ -740,27 +739,40 @@ proc doTcsDiff { srcScript outputFile } {
 
     set stdoutMatch 1
     set stderrMatch 0
-    set timeout 4
+    set timeout 5
 
 # Change the shell prompt to something we can recognise, this is mainly
 # for windows where a lot of colour escape characters are used in the prompt.
     send "$localEnv(LINE_TERM)"
     expect {
         -re "$shellPrompt" { }
-        timeout { send_user "TIMEOUT\n" }
-        eof { set fileOpen 0; set failMsg "Premature EOF!!\n"; break }
+        timeout {
+            stop_shell
+            if { ! [ start_shell ] } {
+                send_user "Unrecoverable error!\n"
+            }
+            return "TIMEOUT"
+        }
+        eof { set fileOpen 0; fail "Premature EOF!!"; start_shell; return }
     }
 
+    set timeout $testTimeout
     send "source $srcScript$localEnv(LINE_TERM)"
 
 #        -re {^[^\r\n]*$srcScript\r\n} { }
     expect {
         -re "source $srcScript\[\r\n\]+" { }
-        timeout { send_user "TIMEOUT\n" }
-        eof { set fileOpen 0; set failMsg "Premature EOF!!\n"; break }
+        timeout {
+            stop_shell
+            if { ! [ start_shell ] } {
+                send_user "Unrecoverable error!\n"
+            }
+            return "TIMEOUT"
+        }
+        eof { set fileOpen 0; set failMsg "Premature EOF!!" }
     }
 
-    set timeout $testTimeout
+    set file [ open "$outputFile" r ]
 
     while { ! [ eof $file ] } {
         if { $stdoutMatch == 1 } {
@@ -783,6 +795,7 @@ proc doTcsDiff { srcScript outputFile } {
         set stdoutMatch 0
         set stderrMatch 0
         set wildcardMatch 0
+        set timeout $testTimeout
 
 # On win32 some of the returned lines have \r\r\n as the delimiter
 # the [ have to be escaped, and # comments cannot appear in the
@@ -793,8 +806,8 @@ proc doTcsDiff { srcScript outputFile } {
             -re "^\[^\r\n\]*\r\n" {
                 set output [ string range "$expect_out(buffer)" 0 end-2 ] }
 
-            timeout { send_user "TIMEOUT\n" }
-            eof { set fileOpen 0; set failMsg "Premature EOF!!\n"; break }
+            timeout { set failMsg "TIMEOUT"; break }
+            eof { set fileOpen 0; set failMsg "Premature EOF!!"; break }
         }
 
 #        set output [ string trim "$expect_out(buffer)" ]
@@ -893,8 +906,8 @@ proc doTcsDiff { srcScript outputFile } {
     set timeout 10
     expect {
         -re "$shellPrompt" { }
-        timeout { send_user "TIMEOUT\n" }
-        eof { set fileOpen 0; set failMsg "Premature EOF!!\n"; break }
+        timeout { set failMsg "TIMEOUT" }
+        eof { set fileOpen 0; set failMsg "Premature EOF!!"; break }
     }
 
     close $file
@@ -1122,6 +1135,7 @@ runMetaSeries VECTOR_12HOUR qa_bp qa_shr
 #runSeries FB_SQL qa_bp qa_shr
 
 
+#runTest ISC_ER36 qa_bp qa_shr 1
 
 #runTest C_SQL_JOIN_0 qa_bp qa_shr 1
 #runTest CF_ISQL_01 qa_bp qa_shr 1
